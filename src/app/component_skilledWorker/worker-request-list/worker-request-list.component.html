@@ -1,0 +1,72 @@
+<div class="request-list">
+  <h2 class="title">Pending Requests</h2>
+
+  <div *ngIf="requests && requests.length > 0; else norequests" class="request-items">
+    <div *ngFor="let request of requests" class="request-item">
+      <div class="request-card">
+        <div class="request-header">
+          <p><strong class="request-name">{{ request.name }} </strong>
+            <span *ngIf="request.average_rating !== 'Not yet rated'">
+              ({{ request.average_rating }}★)
+            </span>
+            <span *ngIf="request.average_rating === 'Not yet rated'">
+              (Not yet rated)
+            </span>
+          </p>          
+          <span class="request-service">requested {{ request.service }}</span>
+        </div>
+        <div class="request-details">
+          <p class="request-date">Scheduled on: {{ request.date }} at {{ request.start_time }} to 
+            {{ request.end_date }}</p>
+          <div class="status">
+            <span>Status: </span>
+            <strong class="status-text">{{ request.status }}</strong>
+          </div>
+        </div>
+        <div class="request-details">
+          <p><strong>Proposed Cost:</strong> ₱{{ request.proposedCost }}</p>
+        </div>
+        <div class="request-actions">
+          <button class="view-btn" (click)="openModal(request)">
+            View Full Request
+          </button>
+
+          <div *ngIf="request.status === 'PENDING'">
+            <button class="approve-btn" (click)="onApprove(request)">
+              Approve
+            </button>
+            <button class="decline-btn" (click)="onDecline(request.id)">
+              Decline
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="selectedRequest === request" class="modal">
+          <div class="modal-content">
+            <h3>Full Request Details:</h3>
+            <p><strong>Service:</strong> {{ selectedRequest.title }}</p>
+            <p><strong>Date:</strong> {{ selectedRequest.date }}</p>
+            <p><strong>Time:</strong> {{ selectedRequest.start_time }}</p>
+            <p><strong>Description:</strong> {{ selectedRequest.description }}</p>
+            <p><strong>Status:</strong> {{ selectedRequest.status }}</p>
+            <p><strong>Proposed Cost:</strong> ₱{{ selectedRequest.proposedCost }}</p>
+
+            <h4>User's Uploaded Picture:</h4>
+            <div *ngIf="selectedRequest.userPicture; else noImage">
+              <img [src]="selectedRequest.userPicture" alt="Uploaded Image" width="200" />
+            </div>
+            <ng-template #noImage>
+              <p>No image uploaded</p>
+            </ng-template>
+
+            <button class="close-btn" (click)="closeModal()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #norequests>
+  <div class="no-worker">No requests found</div>
+</ng-template>

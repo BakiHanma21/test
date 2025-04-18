@@ -1,0 +1,289 @@
+<div class="dashboard-header" [ngClass]="{'header-shifted': !sidebarOpen}">
+    <div class="sidebar-toggle-container">
+      <span class="welcome-message" (click)="toggleSidebar()">Welcome Admin!</span>
+      <button class="sidebar-toggle-inside" (click)="toggleSidebar()">☰</button>
+    </div>
+  </div>
+  
+  <div class="dashboard-container">
+    <!-- Sidebar (Left Side) -->
+    <div class="sidebar" [class.open]="sidebarOpen">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="assets/matain-logo-copy.png" alt="Worker Icon" class="login-icon" />
+        <p class="pol">User Management System</p>
+      </div>
+      <hr class="logo-line" />
+      <!-- Navigation Links -->
+      <ul>
+        <h4 class="menu">Menu</h4>
+        <li class="dash">
+          <a routerLink="/dashboard-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </a>
+        </li>
+        <li class="prof">
+          <a routerLink="/profile-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-user"></i> Profile
+          </a>
+        </li>
+        <li class="rbac">
+          <a routerLink="/role-based-access-control" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-users-cog"></i> Role-Based Access
+          </a>
+        </li>
+        <li class="UV">
+          <a routerLink="/user-verification" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-check-circle"></i> Verifications
+          </a>
+        </li>
+        <li class="chat">
+          <a routerLink="/admin-messages" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-comment"></i> Messages
+          </a>
+        </li>
+      </ul>
+  
+      <!-- Logout Button -->
+      <div class="logout">
+        <a (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  
+    <!-- Main Content Section -->
+    <div class="main-content" [ngClass]="{'content-expanded': !sidebarOpen}">
+      <h2>Manage Users and Skilled Workers</h2>
+  
+      <!-- User List Section -->
+      <!-- User Search Section -->
+  <div class="list-section">
+    <div class="list-header">
+      <h3>Users</h3>
+      <div class="search-container">
+        <input
+          type="text"
+          placeholder="Search Users by Full Name"
+          [(ngModel)]="userSearchTerm"
+          (input)="searchUsers()"
+          class="search-input"
+        />
+      </div>
+    </div>
+    <table class="user-worker-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Date Created</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Disabled Reason</th>
+          <th class="action-column">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filteredUsers; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.created_at | date: 'shortDate' }}</td>
+          <td>{{ user.role }}</td>
+          <td>
+            <span class="status-dot" [ngClass]="{
+              'available': (user.availability === 1 || user.availability === 0),
+              'disabled': user.availability === 4
+            }"></span>
+            <span>
+              {{
+                user.availability === 1 ? 'Available' :
+                user.availability === 4 ? 'Disabled' : 'Available'
+              }}
+            </span>
+          </td>
+          <td>{{ user.report_reason }}</td>
+          <td class="action-buttons">
+            <button class="delete-btn" *ngIf="user.availability !== 4" (click)="deleteUser(user.id)">
+              <i class="fas fa-ban"></i> Disable
+            </button>
+            <button class="enable-btn" *ngIf="user.availability === 4" (click)="deleteUser(user.id)">
+              <i class="fas fa-check"></i> Enable
+            </button>
+          </td>
+          
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Worker Search Section -->
+  <div class="list-section">
+    <div class="list-header">
+      <h3>Skilled Workers</h3>
+      <div class="search-container">
+        <input
+          type="text"
+          placeholder="Search Workers by Full Name"
+          [(ngModel)]="workerSearchTerm"
+          (input)="searchWorkers()"
+          class="search-input"
+        />
+      </div>
+    </div>
+    <table class="user-worker-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Date Created</th>
+          <th>Skills</th>
+          <th>Status</th>
+          <th>Disabled Reason</th>
+          <th class="action-column">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let worker of filteredWorkers; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ worker.name }}</td>
+          <td>{{ worker.created_at | date: 'shortDate' }}</td>
+          <td>{{ worker.skills }}</td>
+          <td>
+            <span class="status-dot" [ngClass]="{
+              'available': worker.availability === 1,
+              'unavailable': worker.availability === 0,
+              'disabled': worker.availability === 4
+            }"></span>
+            <span>
+              {{
+                worker.availability === 1 ? 'Available' :
+                worker.availability === 2 ? 'Suspended' :
+                worker.availability === 0 ? 'Unavailable' :
+                worker.availability === 4 ? 'Disabled' : ''
+              }}
+            </span>
+          </td>
+          <td>{{ worker.report_reason }}</td>
+           
+          <td class="action-buttons">
+            <button class="delete-btn" *ngIf="worker.availability !== 4" (click)="deleteWorker(worker.id)">
+              <i class="fas fa-ban"></i> Disable
+            </button>
+            <button class="enable-btn" *ngIf="worker.availability === 4" (click)="deleteWorker(worker.id)">
+              <i class="fas fa-check"></i> Enable
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- User Edit Modal -->
+  <div *ngIf="isUserModalOpen" class="modal-overlay">
+    <div class="modal-content">
+      <h3>Edit User</h3>
+      <label>Name:</label>
+      <input [(ngModel)]="selectedUser.name" disabled />
+      <label>Role:</label>
+      <input [(ngModel)]="selectedUser.role" disabled />
+      <label>Status:</label>
+      <select [(ngModel)]="selectedUser.availability">
+        <option value="Active">Active</option>
+        <option value="Suspended">Suspended</option>
+        <option value="Unavailable">Unavailable</option>
+      </select>
+      <div class="modal-buttons">
+        <button (click)="saveUser()">Save</button>
+        <button (click)="closeUserModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Skilled Worker Edit Modal -->
+  <div *ngIf="isWorkerModalOpen" class="modal-overlay">
+    <div class="modal-content">
+      <h3>Edit Skilled Worker</h3>
+      <label>Name:</label>
+      <input [(ngModel)]="selectedWorker.name" disabled />
+      <label>Skills:</label>
+      <input [(ngModel)]="selectedWorker.skill" disabled />
+      <label>Status:</label>
+      <select [(ngModel)]="selectedWorker.availability">
+        <option value="0">Unavailable</option>
+        <option value="1">Available</option>
+        <option value="2">Suspended</option>
+      </select>
+      <div class="modal-buttons">
+        <button (click)="saveWorker()">Save</button>
+        <button (click)="closeWorkerModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Delete User Modal -->
+  <div *ngIf="isDeleteUserModalOpen" class="modal-overlay">
+    <div class="modal-content">
+      <h3>Delete User</h3>
+      <p class="delete-confirmation-text">Are you sure you want to delete this user?</p>
+      <div class="reason-dropdown" *ngIf="selectedUser?.availability !== 4">
+        <label for="disableReason">Select a reason for disablement:</label>
+        <select id="disableReason" [(ngModel)]="disableUserReason" class="dropdown" required>
+          <option value="" disabled selected>Select reason</option>
+          <option value="Unpaid Fees">
+            Unpaid Fees: User did not pay the required fees within the grace period.
+          </option>
+          <option value="Misuse of Booking Features">
+            Misuse of Booking Features: User repeatedly booked services without intent to use them, blocking availability for others.
+          </option>
+          <option value="Incomplete Work">
+            Incomplete Work: User failed to provide work for the worker as stated in the booking.
+          </option>
+        </select>
+      </div>
+      <div class="modal-buttons">
+        <button class="cancel-btn" (click)="closeDeleteUserModal()">Close</button>
+  
+        <button class="delete-btn" [disabled]="!disableUserReason" *ngIf="selectedUser?.availability !== 4" (click)="confirmDeleteUser()">
+          <i class="fas fa-ban"></i> Disable
+        </button>
+  
+        <button class="enable-btn" *ngIf="selectedUser?.availability === 4" (click)="confirmDeleteUser()">
+          <i class="fas fa-check"></i> Enable
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- Delete Skilled Worker Modal -->
+  <div *ngIf="isDeleteWorkerModalOpen" class="modal-overlay">
+    <div class="modal-content">
+      <h3>Delete Skilled Worker</h3>
+      <p class="delete-confirmation-text">Are you sure you want to delete this skilled worker?</p>
+      <div class="reason-dropdown" *ngIf="selectedWorker?.availability !== 4">
+        <label for="disableReason">Select a reason for disablement:</label>
+        <select id="disableReason" [(ngModel)]="disableWorkerReason" class="dropdown" required>
+          <option value="" disabled selected>Select reason</option>
+          <option value="Temporary Disablement">
+            Temporary Disablement: User account disabled due to reports or suspected policy violations. Investigation ongoing.
+          </option>
+          <option value="Service Quality Complaints">
+            Service Quality Complaints: Multiple reports regarding poor service quality or non-delivery of services.
+          </option>
+          <option value="False Claims">
+            False Claims: User submitted false or misleading service requests or complaints.
+          </option>
+        </select>
+      </div>
+      <div class="modal-buttons">
+        <button class="cancel-btn" (click)="closeDeleteWorkerModal()">Close</button>
+        <button class="delete-btn" [disabled]="!disableWorkerReason" *ngIf="selectedWorker?.availability !== 4" (click)="confirmDeleteWorker()">
+          <i class="fas fa-ban"></i> Disable
+        </button>
+        <button class="enable-btn" *ngIf="selectedWorker?.availability === 4" (click)="confirmDeleteWorker()">
+          <i class="fas fa-check"></i> Enable
+        </button>
+      </div>
+    </div>
+  </div>
+  

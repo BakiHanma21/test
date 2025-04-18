@@ -1,0 +1,138 @@
+/* Main container */
+.reporting-container {
+  max-width: 600px;
+  width: 100%;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Heading */
+h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Form Field */
+.form-field {
+  margin-bottom: 20px;
+}
+
+/* Label */
+.form-field label {
+  font-size: 1.1rem;
+  color: #555;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Input and Textarea */
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  color: #333;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  border-color: #4caf50;
+  background-color: #fff;
+  outline: none;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+
+/* Error message */
+.error-message {
+  color: #f44336;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Button */
+button {
+  padding: 12px 25px;
+  background: linear-gradient(135deg, #4caf50, #2c8b33);
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  width: 100%;
+  transition: all 0.3s ease, transform 0.3s ease;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2c8b33, #4caf50);
+  transform: scale(1.05);
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Response Info Section */
+.response-info {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.response-info h3 {
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.response-info p {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .reporting-container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+}

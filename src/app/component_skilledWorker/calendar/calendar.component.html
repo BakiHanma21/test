@@ -1,0 +1,25 @@
+<!-- calendar.component.html -->
+<mat-card class="calendar-card">
+  <mat-card-title class="calendar-card-title">Your Bookings</mat-card-title>
+  
+  <!-- Full Calendar -->
+  <full-calendar
+  #calendar
+  [options]="calendarOptions"
+  (datesRender)="onDatesRender($event)">
+</full-calendar>
+
+
+  <div class="booking-info" *ngIf="selectedEvent">
+    <h3>Booking Details:</h3>
+    <p><strong>Title:</strong> {{ selectedEvent.title }}</p>
+    <p><strong>Description:</strong> {{ selectedEvent.description }}</p>
+    <p><strong>Start:</strong> {{ selectedEvent.start | date: 'short' }}</p>
+    <p><strong>End:</strong> {{ selectedEvent.end | date: 'short' }}</p>
+    <p><strong>Booking Status:</strong>
+      <span [ngClass]="{ 'status-active': selectedEvent.extendedProps.status === 'active', 'status-inactive': selectedEvent.extendedProps.status === 'inactive' }">
+        {{ selectedEvent.extendedProps.status }}
+      </span>
+    </p>
+  </div>
+</mat-card>

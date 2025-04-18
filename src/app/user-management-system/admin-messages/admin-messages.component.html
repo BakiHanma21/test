@@ -1,0 +1,214 @@
+<div class="dashboard-header" [ngClass]="{'header-shifted': !sidebarOpen}">
+  <div class="sidebar-toggle-container">
+    <span class="welcome-message" (click)="toggleSidebar()">Welcome Admin!</span>
+    <button class="sidebar-toggle-inside" (click)="toggleSidebar()">☰</button>
+  </div>
+</div>
+
+<div class="dashboard-container">
+  <div class="sidebar" [class.open]="sidebarOpen">
+    <div class="logo">
+      <img src="assets/matain-logo-copy.png" alt="Worker Icon" class="login-icon" />
+      <p class="pol">User Management System</p>
+    </div>
+    <hr class="logo-line" />
+    <ul>
+      <h4 class="menu">Menu</h4>
+      <li class="dash">
+        <a routerLink="/dashboard-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+      </li>
+      <li class="prof">
+        <a routerLink="/profile-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fas fa-user"></i> Profile
+        </a>
+      </li>
+      <li class="rbac">
+        <a routerLink="/role-based-access-control" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fas fa-users-cog"></i> Role-Based Access
+        </a>
+      </li>
+      <li class="UV">
+        <a routerLink="/user-verification" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fas fa-check-circle"></i> Verifications
+        </a>
+      </li>
+      <li class="chat">
+        <a routerLink="/admin-messages" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fas fa-comment"></i> Messages
+        </a>
+      </li>
+    </ul>
+    <div class="logout">
+      <a (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </div>
+
+  <div class="main-content-wrapper" [ngClass]="{'content-shifted': !sidebarOpen}">
+    <div class="chat-page">
+      <!-- Main content area -->
+      <div class="main-content">
+        <!-- Mobile toggle button for conversations -->
+        <button class="mobile-toggle-conversations" (click)="toggleConversations()" *ngIf="isMobileView">
+          <i class="fas" [class.fa-bars]="!showConversations" [class.fa-times]="showConversations"></i>
+        </button>
+        
+        <!-- Connection status indicator -->
+        <div class="connection-status" [class.connected]="isConnected" [class.disconnected]="!isConnected">
+          <span class="status-dot"></span>
+          {{ isConnected ? 'Connected' : 'Connecting...' }}
+        </div>
+
+        <!-- Conversations list -->
+        <div class="conversation-list" [class.show]="showConversations || !isMobileView">
+          <div class="conversation-header">
+            <h3>Conversations</h3>
+          </div>
+          
+          <!-- Search Bar -->
+          <div class="search-container">
+            <input 
+              type="text" 
+              class="search-input" 
+              placeholder="Search conversations..."
+              [(ngModel)]="searchText"
+              (input)="onSearch()">
+          </div>
+          
+          <ul>
+            <li *ngFor="let conv of conversations" 
+                [class.selected]="conv.id === receiverId" 
+                (click)="selectConversation(conv.id)">
+              <div class="conversation-item">
+                <div class="conversation-avatar">
+                  {{ conv.name.charAt(0).toUpperCase() }}
+                </div>
+                <div class="conversation-details">
+                  <div class="conversation-info">
+                    <span class="conv-name">{{ conv.name }}</span>
+                    <span class="conv-role">{{ conv.role }}</span>
+                  </div>
+                  <div class="conversation-preview" *ngIf="conv.latest_message">
+                    <span class="preview-message">{{ conv.latest_message }}</span>
+                    <span class="preview-time">{{ conv.latest_timestamp | date:'shortTime' }}</span>
+                  </div>
+                </div>
+                <div class="unread-badge" *ngIf="conv.unread_count > 0">
+                  {{ conv.unread_count }}
+                </div>
+              </div>
+            </li>
+            <li *ngIf="conversations.length === 0" class="no-conversations">
+              <div class="empty-state">
+                <i class="fas fa-comments"></i>
+                <p *ngIf="searchText">No conversations found</p>
+                <p *ngIf="!searchText">No conversations yet</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Chat window -->
+        <div class="chat-window" *ngIf="receiverId; else noConversation">
+          <div class="chat-header">
+            <div class="chat-header-info">
+              <h4>{{ selectedConversation?.name || 'Chat' }}</h4>
+              <span class="status">{{ selectedConversation?.role }}</span>
+            </div>
+            <!-- Profile Picture -->
+            <div class="chat-header-profile" (click)="viewProfile()" *ngIf="selectedConversation">
+              <div class="profile-avatar">
+                {{ selectedConversation.name.charAt(0).toUpperCase() }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="messages" #messageContainer>
+            <div *ngFor="let msg of messages" 
+                 class="message-wrapper"
+                 [class.sent]="msg.sender_id === currentUserId" 
+                 [class.received]="msg.sender_id !== currentUserId">
+              <div class="message">
+                <div class="message-content">
+                  <p *ngIf="msg.message">{{ msg.message }}</p>
+                  
+                  <!-- Image Preview -->
+                  <div class="media-content" *ngIf="msg.file_url && isImageType(msg.file_type)">
+                    <img [src]="msg.file_url" 
+                         alt="Shared image" 
+                         class="message-image"
+                         (error)="onImageError($event)">
+                  </div>
+                  
+                  <!-- File Attachment -->
+                  <div class="file-attachment" *ngIf="msg.file_url && !isImageType(msg.file_type)">
+                    <i class="fas fa-file"></i>
+                    <a [href]="msg.file_url" target="_blank" class="file-name">
+                      {{ msg.file_name || 'Attachment' }}
+                    </a>
+                  </div>
+                </div>
+                <div class="message-meta">
+                  <span class="time">{{ msg.created_at | date:'shortTime' }}</span>
+                  <span class="status" *ngIf="msg.sender_id === currentUserId">
+                    <i class="fas" [class.fa-check]="!msg.read_at" [class.fa-check-double]="msg.read_at"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngIf="errorMessage" class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ errorMessage }}
+          </div>
+          
+          <form (ngSubmit)="sendMessage()" enctype="multipart/form-data" class="message-form">
+            <div class="attachment-btn">
+              <label for="file-input">
+                <i class="fas fa-paperclip"></i>
+              </label>
+              <input 
+                type="file" 
+                id="file-input"
+                #fileInput 
+                (change)="onFileSelected($event)"
+                [disabled]="isSending || !!errorMessage">
+            </div>
+            
+            <div class="input-wrapper">
+              <input 
+                type="text"
+                [(ngModel)]="newMessage" 
+                name="message" 
+                placeholder="Type a message..." 
+                [disabled]="isSending || !!errorMessage"
+                (keyup.enter)="sendMessage()">
+            </div>
+
+            <button 
+              type="submit" 
+              class="send-btn"
+              [disabled]="isSending || (!newMessage.trim() && !selectedFile) || !isConnected || !!errorMessage">
+              <i class="fas" [class.fa-paper-plane]="!isSending" [class.fa-spinner]="isSending"></i>
+            </button>
+          </form>
+        </div>
+
+        <!-- Placeholder when no conversation is selected -->
+        <ng-template #noConversation>
+          <div class="no-conversation">
+            <div class="empty-state">
+              <i class="fas fa-comments"></i>
+              <h3>Welcome to Messages</h3>
+              <p>Select a conversation or start a new one to begin chatting</p>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

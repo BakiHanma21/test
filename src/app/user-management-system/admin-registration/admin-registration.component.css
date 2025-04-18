@@ -1,0 +1,187 @@
+/* Container Styles */
+.registration-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #ffffff; /* Plain white background */
+    padding: 0 10px; /* Add padding to prevent overflow */
+  }
+  
+  /* Card Styles with Gradient */
+  .registration-card {
+    background: linear-gradient(109.6deg, rgb(0, 37, 84) 11.2%, rgba(0, 37, 84, 0.32) 100.2%);
+    padding: 30px 30px; /* Reduce padding for smaller form */
+    border-radius: 12px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 350px; /* Reduced max-width to make the form smaller */
+    width: 100%; /* Full width with max-width constraint */
+    color: white; /* Make text readable against the gradient */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box; /* Ensure padding is included in width */
+  }
+  
+  /* Icon Styles */
+  .registration-icon {
+    width: 80px; /* Reduced icon size */
+    height: 80px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+  }
+  
+  /* Form Group Styling */
+  .form-group {
+    margin-bottom: 15px; /* Reduced margin for smaller spacing */
+    text-align: left;
+  }
+  
+  label {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px; /* Slightly smaller font size */
+    font-weight: 600;
+    color: #faf6e9; /* Text contrast for gradient background */
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  .form-control {
+    width: 95%;
+    padding: 10px; /* Reduced padding inside input fields */
+    font-size: 12px; /* Maintain readable font size */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  .form-control:focus {
+    outline: none;
+    border-color: #fff;
+    box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.5);
+  }
+  
+  /* Button Styling */
+  .btn-submit {
+    width: 60%;
+    padding: 10px; /* Reduced button padding */
+    font-size: 14px; /* Slightly smaller font size */
+    font-weight: lighter;
+    background: radial-gradient(590px at 8.2% 13.8%, rgb(18, 35, 60) 0%, rgb(187, 187, 187) 90%);
+    color: #fff; /* Orange text */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin-top: 10px;
+  }
+  
+  .btn-submit:hover {
+    background: #1F305E; /* Slight hover effect */
+  }
+  
+  /* Footer Links */
+  .links {
+    margin-top: 15px; /* Reduced margin above footer links */
+  }
+  
+  .link {
+    color: #012169; /* Blue for the Login link */
+    text-decoration: none;
+    font-size: 16px; /* Slightly smaller font size */
+    font-weight: normal;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  }
+  
+  .link:hover {
+    text-decoration: underline;
+    color: #e55b00;
+  }
+  
+  .error-message {
+    color: #ffffff;
+    font-size: 12px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  }
+  
+  .registration-title {
+    text-align: center;
+    font-size: 28px; /* Slightly smaller title */
+    margin-top: 8px;
+    margin-bottom: 18px;
+    color: #faf6e9;
+  }
+
+  .password-wrapper {
+    position: relative;
+  }
+  
+  .eye-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #888;
+  }
+  
+  .eye-icon:hover {
+    color: #333;
+  }
+  
+  .eye-icon i {
+    font-size: 18px;
+    color: #888;
+  }
+  
+  .eye-icon:hover i {
+    color: #333;
+  }
+  
+  /* Responsiveness: Adjustments for smaller screens */
+  @media (max-width: 600px) {
+    .registration-card {
+      padding: 20px; /* Further reduce padding for smaller screens */
+    }
+  
+    .registration-title {
+      font-size: 24px; /* Slightly smaller font size */
+    }
+  
+    .form-control {
+      font-size: 16px; /* Increase input field font size */
+    }
+  
+    .btn-submit {
+      padding: 10px;
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 400px) {
+    .registration-card {
+      padding: 15px; /* Reduce padding more for very small screens */
+      max-width: 280px; /* Reduce max width for very small screens */
+    }
+  
+    .registration-title {
+      font-size: 22px; /* Even smaller title for tiny screens */
+    }
+  
+    .form-control {
+      font-size: 14px; /* Maintain small but readable font size */
+    }
+  
+    .btn-submit {
+      padding: 8px; /* Smaller button padding */
+      font-size: 12px; /* Smaller button text */
+    }
+  }
+  

@@ -1,0 +1,59 @@
+<!-- <div class="chat-page">
+    
+    <div class="main-content">
+      
+      <div class="conversation-list">
+        <h3>Conversations</h3>
+        <ul>
+          <li *ngFor="let conv of conversations" 
+              [class.selected]="conv.id === receiverId" 
+              (click)="selectConversation(conv.id)">
+            <div class="conversation-item">
+              <span class="conv-name">{{ conv.name }}</span>
+              <span class="conv-role">({{ conv.role }})</span>
+            </div>
+          </li>
+          <li *ngIf="conversations.length === 0" class="no-conversations">
+            No conversations yet.
+          </li>
+        </ul>
+      </div>
+  
+      
+      <div class="chat-window" *ngIf="receiverId; else noConversation">
+        <div class="chat-header">
+          <h4>{{ selectedConversation?.name || 'Chat' }}</h4>
+        </div>
+        <div class="messages" #messageContainer>
+          <div *ngFor="let msg of messages" 
+               [class.sent]="msg.sender_id === currentUserId" 
+               [class.received]="msg.sender_id !== currentUserId">
+            <div class="message-content">
+              <p>{{ msg.message }}</p>
+              <img *ngIf="msg.file_path && (msg.file_path.endsWith('.jpg') || msg.file_path.endsWith('.png'))" 
+                   [src]="getFileUrl(msg.file_path)" alt="Image" class="message-image">
+              <a *ngIf="msg.file_path && !(msg.file_path.endsWith('.jpg') || msg.file_path.endsWith('.png'))" 
+                 [href]="getFileUrl(msg.file_path)" target="_blank" class="message-file">
+                 Download File
+              </a>
+              <span class="message-timestamp">{{ msg.created_at | date:'short' }}</span>
+            </div>
+          </div>
+        </div>
+        <form (ngSubmit)="sendMessage()" enctype="multipart/form-data" class="message-form">
+          <input [(ngModel)]="newMessage" name="message" placeholder="Type a message..." [disabled]="isSending">
+          <input type="file" #fileInput (change)="onFileSelected($event)" [disabled]="isSending">
+          <button type="submit" [disabled]="isSending || (!newMessage.trim() && !selectedFile)">
+            {{ isSending ? 'Sending...' : 'Send' }}
+          </button>
+        </form>
+      </div>
+  
+      
+      <ng-template #noConversation>
+        <div class="no-conversation">
+          <p>Select a conversation to start chatting.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div> -->

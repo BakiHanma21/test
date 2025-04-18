@@ -1,0 +1,142 @@
+<div class="dashboard-header" [ngClass]="{'header-shifted': !sidebarOpen}">
+    <div class="sidebar-toggle-container">
+      <span class="welcome-message" (click)="toggleSidebar()">Welcome Admin!</span>
+      <button class="sidebar-toggle-inside" (click)="toggleSidebar()">☰</button>
+    </div>
+  </div>
+  
+  <div class="dashboard-container" [ngClass]="{'full-width': !sidebarOpen}">
+    <!-- Sidebar (Left Side) -->
+    <div class="sidebar" [class.open]="sidebarOpen">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="assets/matain-logo-copy.png" alt="Worker Icon" class="login-icon" />
+        <p class="pol">User Management System</p>
+      </div>
+      <hr class="logo-line" />
+      <!-- Navigation Links -->
+      <ul>
+        <h4 class="menu">Menu</h4>
+        <li class="dash">
+          <a routerLink="/dashboard-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </a>
+        </li>
+        <li class="prof">
+          <a routerLink="/profile-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-user"></i> Profile
+          </a>
+        </li>
+        <li class="rbac">
+          <a routerLink="/role-based-access-control" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-users-cog"></i> Role-Based Access
+          </a>
+        </li>
+        <li class="UV">
+          <a routerLink="/user-verification" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-check-circle"></i> Verifications
+          </a>
+        </li>
+        <li class="chat">
+          <a routerLink="/admin-messages" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-comment"></i> Messages
+          </a>
+        </li>
+      </ul>
+  
+      <!-- Logout Button -->
+      <div class="logout">
+        <a (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  
+    <!-- Main Content (Right Side) -->
+    <div class="main-content" [ngClass]="{'shifted': !sidebarOpen}">
+      <!-- Admin Profile Section -->
+      <div class="admin-profile">
+        <div class="admin-header">
+          <span>Admin Profile</span>
+        </div>
+      </div>
+  
+      <div class="profile-page">
+        <div class="profile-pic">
+          <img id="profile-img" [src]="profile.image" alt="Profile Picture" />
+          <button class="edit-btn" (click)="openFileDialog()">
+            <i class="fas fa-camera"></i>
+          </button>
+          <input type="file" id="fileInput" style="display:none" (change)="onFileChange($event)" />
+        </div>
+        <div class="profile-container">
+          <!-- Profile Details -->
+          <div class="profile-details">
+            <p class="det">PROFILE DETAILS:</p>
+            <div class="detail-row">
+              <p><strong>Email:</strong></p>
+              <p class="detail-text">{{ profile.email }}</p>
+            </div>
+  
+            <div class="detail-row">
+              <p><strong>Password:</strong></p>
+              <p class="detail-text">
+                <span id="password-display">
+                  {{ passwordVisible ?  profile.password : '********'}}
+                </span>
+              </p>
+            </div>  
+            <div class="detail-row">
+              <p><strong>Role:</strong></p>
+              <p class="detail-text">{{ profile.role }}</p>
+            </div>
+          </div>
+  
+          <!-- Update Button -->
+          <div class="update-button">
+            <button (click)="toggleEditForm()">UPDATE</button>
+          </div>
+        </div>
+  
+        <div *ngIf="isSaved" class="confirmation-message">
+          <p>Saved Successfully!</p>
+          <i class="fas fa-check-circle green-check"></i>
+        </div>
+  
+        <!-- Edit Profile Form (Right Side) -->
+        <div *ngIf="isEditFormVisible" class="edit-profile-container">
+          <div class="edit-profile-form">
+            <h3 class="edp">Edit Profile</h3>
+            <form (ngSubmit)="saveChanges()">
+              <div class="form-group">
+                <label for="username">Email:</label>
+                <input type="text" id="username" [(ngModel)]="profile.email" name="username" required placeholder="Enter username"/>
+              </div>
+  
+              <div class="form-group">
+                <label for="password">New Password:</label>
+                <input 
+                  type="text" 
+                  id="password" 
+                  name="password" 
+                  required 
+                  placeholder="Enter new password"  [(ngModel)]="profile.password"
+                />
+              </div>
+  
+              <div class="form-group">
+                <label for="role">Role in Barangay:</label>
+                <input type="text" id="role" [(ngModel)]="profile.role" name="role" required placeholder="Enter your role"/>
+              </div>
+  
+              <div class="button-group">
+                <button type="submit" class="btn save-btn">Save</button>
+                <button type="button" class="btn cancel-btn" (click)="toggleEditForm()">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

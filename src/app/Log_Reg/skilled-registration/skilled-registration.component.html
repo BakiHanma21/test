@@ -1,0 +1,326 @@
+<div class="skilled-registration-container">
+  <div class="registration-form-card">
+    <div class="icon-container">
+      <img src="assets/skilled.jpg" alt="Skilled Worker Icon" class="worker-icon" />
+    </div>
+
+    <h2>Skilled Worker Registration</h2>
+
+    <form (ngSubmit)="onSubmit(skilledRegistrationForm)" #skilledRegistrationForm="ngForm" enctype="multipart/form-data">
+      <!-- General Form Error Message -->
+      <div class="error-message text-center" *ngIf="formSubmitted && !skilledRegistrationForm.valid">
+        Please fill in all the required fields correctly before registering!!.
+      </div>
+
+      <h3>Login Information:</h3>
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="form-control"
+          placeholder="Enter your full name"
+          [(ngModel)]="user.name"
+          #name="ngModel"
+          required
+        />
+        <div class="error-message text-center" *ngIf="name.invalid && name.touched">
+          Please enter your full name.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number:</label>
+        <input
+          type="tel"
+          id="phoneNumber"
+          name="phoneNumber"
+          class="form-control"
+          placeholder="Enter your phone number"
+          [(ngModel)]="user.phoneNumber"
+          #phoneNumber="ngModel"
+          required
+          pattern="^[0-9]{11}$"
+        />
+        <div class="error-message" *ngIf="phoneNumber.invalid && phoneNumber.touched">
+          Please enter a valid phone number (11 digits).
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="Enter your email (e.g., example&#64;gmail.com)"
+          [(ngModel)]="user.email"
+          #email="ngModel"
+          required
+        />
+        <div class="error-message text-center" *ngIf="email.invalid && email.touched">
+          Please enter a valid email address.(e.g., example&#64;gmail.com)
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          placeholder="Enter your password"
+          [(ngModel)]="user.password"
+          #password="ngModel"
+          required
+        />
+        <div class="error-message text-center" *ngIf="password.invalid && password.touched">
+          Password must be at least 6 characters long.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password:</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          class="form-control"
+          placeholder="Confirm your password"
+          [(ngModel)]="user.confirmPassword"
+          #confirmPassword="ngModel"
+          required
+        />
+        <div class="error-message text-center" *ngIf="confirmPassword.touched && user.password !== user.confirmPassword">
+          Passwords do not match.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="profilePicture">Profile Picture:</label>
+        <input
+          type="file"
+          id="profilePicture"
+          name="profilePicture"
+          class="form-control"
+          (change)="onProfilePictureChange($event)"
+          accept="image/*"
+        />
+        <div class="error-message" *ngIf="profilePictureError">
+          {{ profilePictureError }}
+        </div>
+      </div>
+
+      <h3>Additional Information:</h3>
+      <div class="form-group">
+        <label for="location">Location:</label>
+        <input
+          type="text"
+          id="location"
+          name="location"
+          class="form-control"
+          placeholder="Enter your location"
+          [(ngModel)]="user.location"
+          #location="ngModel"
+          required
+        />
+        <div class="error-message text-center" *ngIf="location.invalid && location.touched">
+          Please enter your location.
+        </div>
+      </div>
+
+      <!-- New Skills Field -->
+      <div class="form-group">
+        <label for="skills">Skills:</label>
+        <input
+          type="text"
+          id="skills"
+          name="skills"
+          class="form-control"
+          placeholder="Enter your skills"
+          [(ngModel)]="user.skills"
+          #skills="ngModel"
+          required
+        />
+        <div class="error-message text-center" *ngIf="skills.invalid && skills.touched">
+          Please enter your skills.
+        </div>
+      </div>
+
+      <!-- New Valid ID Field -->
+      <div class="form-group">
+        <label for="valid_id">Upload Valid ID:</label>
+        <input
+          type="file"
+          id="valid_id"
+          name="valid_id"
+          class="form-control"
+          (change)="onValidIdChange($event)"
+          accept="image/*"
+          required
+        />
+      </div>
+
+      <!-- New Years of Experience Field -->
+      <div class="form-group">
+        <label for="years_of_experience">Years of Experience:</label>
+        <input
+          type="number"
+          id="years_of_experience"
+          name="years_of_experience"
+          class="form-control"
+          placeholder="Enter years of experience"
+          [(ngModel)]="user.years_of_experience"
+          #years_of_experience="ngModel"
+          required
+        />
+        <div class="error-message text-center" *ngIf="years_of_experience.invalid && years_of_experience.touched">
+          Please enter your years of experience.
+        </div>
+      </div>
+
+      <!-- New Work Examples Section -->
+      <div class="form-group">
+        <label for="work_example_1_title">Work Example 1 Title:</label>
+        <input
+          type="text"
+          id="work_example_1_title"
+          name="work_example_1_title"
+          class="form-control"
+          placeholder="Enter work title"
+          [(ngModel)]="user.work_examples[0].title"
+          #work_example_1_title="ngModel"
+          required
+        />
+        <div class="error-message text-center" *ngIf="work_example_1_title.invalid && work_example_1_title.touched">
+          Please enter a title for work example 1.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="work_example_1_description">Work Example 1 Description:</label>
+        <textarea
+          id="work_example_1_description"
+          name="work_example_1_description"
+          class="form-control"
+          placeholder="Enter work description"
+          [(ngModel)]="user.work_examples[0].description"
+          #work_example_1_description="ngModel"
+          required
+        ></textarea>
+        <div class="error-message text-center" *ngIf="work_example_1_description.invalid && work_example_1_description.touched">
+          Please enter a description for work example 1.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="work_example_1_image">Work Example 1 Image:</label>
+        <input
+          type="file"
+          id="work_example_1_image"
+          name="work_example_1_image"
+          class="form-control"
+          (change)="onWorkExampleImageChange($event, 0)"
+          accept="image/*"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="work_example_2_title">Work Example 2 Title:</label>
+        <input
+          type="text"
+          id="work_example_2_title"
+          name="work_example_2_title"
+          class="form-control"
+          placeholder="Enter work title"
+          [(ngModel)]="user.work_examples[1].title"
+          #work_example_2_title="ngModel"
+          required
+        />
+        <div class="error-message text-center" *ngIf="work_example_2_title.invalid && work_example_2_title.touched">
+          Please enter a title for work example 2.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="work_example_2_description">Work Example 2 Description:</label>
+        <textarea
+          id="work_example_2_description"
+          name="work_example_2_description"
+          class="form-control"
+          placeholder="Enter work description"
+          [(ngModel)]="user.work_examples[1].description"
+          #work_example_2_description="ngModel"
+          required
+        ></textarea>
+        <div class="error-message text-center" *ngIf="work_example_2_description.invalid && work_example_2_description.touched">
+          Please enter a description for work example 2.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="work_example_2_image">Work Example 2 Image</label>
+        <input
+          type="file"
+          id="work_example_2_image"
+          name="work_example_2_image"
+          class="form-control"
+          (change)="onWorkExampleImageChange($event, 1)"
+          accept="image/*"
+        />
+      </div>
+
+      <!-- Add this before the submit button in your form -->
+      <div class="terms-checkbox">
+        <div class="checkbox-container">
+          <input 
+               type="checkbox" 
+               id="termsAgreement" 
+               name="termsAgreement" 
+               [(ngModel)]="user.termsAgreement" 
+               required>
+               <label for="termsAgreement">
+                I agree to the <a (click)="openTermsModal($event)">Terms and Conditions</a> of Matain Hanap-Serbisyo
+              </label>
+        </div>
+      <div *ngIf="formSubmitted && !user.termsAgreement" class="error-message">
+          <strong>You must agree to the Terms and Conditions to continue!!.</strong>
+      </div>
+  </div>
+
+<!-- Terms and Conditions Modal -->
+<div class="terms-modal" *ngIf="showTermsModal">
+  <div class="terms-modal-content">
+    <span class="close-button" (click)="closeTermsModal()">&times;</span>
+    <h2>Terms and Conditions</h2>
+    
+    <div class="terms-modal-body">
+      <app-terms-and-conditions></app-terms-and-conditions>
+    </div>
+    
+    <div class="terms-modal-footer">
+      <button class="btn-accept" (click)="acceptTerms()">I Agree</button>
+      <button class="btn-decline" (click)="closeTermsModal()">I Disagree</button>
+    </div>
+  </div>
+</div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-submit" (click)="formSubmitted = true">Register</button>
+      </div>
+    </form>
+
+    <div class="links text-center">
+      <p>Already have an account? <a (click)="gotoLogin()" class="link">Login</a></p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .form-control {
+    border: 1px solid #333;
+  }
+</style>

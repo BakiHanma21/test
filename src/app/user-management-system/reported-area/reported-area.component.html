@@ -1,0 +1,102 @@
+<div class="dashboard-header" [ngClass]="{'header-shifted': !sidebarOpen}">
+    <div class="sidebar-toggle-container">
+      <span class="welcome-message" (click)="toggleSidebar()">Welcome Admin!</span>
+      <button class="sidebar-toggle-inside" (click)="toggleSidebar()">☰</button>
+    </div>
+  </div>
+  
+  <div class="dashboard-container">
+    <!-- Sidebar (Left Side) -->
+    <div class="sidebar" [ngClass]="{'open': sidebarOpen}">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="assets/matain-logo-copy.png" alt="Worker Icon" class="login-icon" />
+        <p class="pol">User Management System</p>
+      </div>
+      <hr class="logo-line" />
+      <!-- Navigation Links -->
+      <ul>
+        <h4 class="menu">Menu</h4>
+        <li class="dash">
+          <a routerLink="/dashboard-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </a>
+        </li>
+        <li class="prof">
+          <a routerLink="/profile-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-user"></i> Profile
+          </a>
+        </li>
+        <li class="rbac">
+          <a routerLink="/role-based-access-control" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-users-cog"></i> Role-Based Access
+          </a>
+        </li>
+        <li class="UV">
+          <a routerLink="/user-verification" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-check-circle"></i> Verifications
+          </a>
+        </li>
+      </ul>
+  
+      <!-- Logout Button -->
+      <div class="logout">
+        <a (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  
+  <!-- Main Content Area -->
+  <div class="report-container" [ngClass]="{'sidebar-hidden': !sidebarOpen}">
+    <h2 class="report-title">User & Worker Report</h2>
+  
+    <!-- Search Input -->
+    <div class="search-container">
+      <input
+        type="text"
+        placeholder="Search by Full Name"
+        [(ngModel)]="searchTerm"
+        (input)="searchUser()"
+        class="search-input"
+      />
+    </div>
+  
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Reported Person</th>
+          <th>Reason</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Response</th>
+        </tr>
+      </thead>
+      <tbody>
+    <tr *ngFor="let report of filteredUsers">
+      <td>{{ report.id }}</td>
+      <td>{{ report.reported_person }}</td>
+      <td>{{ report.reason }}</td>
+      <td>{{ report.description }}</td>
+      <td>{{ report.date }}</td>
+      <td><button class="reply-btn" (click)="openReplyForm(report)">Reply</button></td>
+    </tr>
+  </tbody>
+    </table>
+  </div>
+  
+  <!-- Modal for Replying -->
+  <div *ngIf="isReplying" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" (click)="closeReplyForm()">×</span>
+      <h3 class="modal-header">Reply to {{ currentReport.name }}</h3>
+      <form (submit)="sendReply()">
+        <label for="reply">Your Response:</label>
+        <textarea id="reply" [(ngModel)]="response" placeholder="Enter your reply here" name="reply" rows="5" required></textarea>
+        <br>
+        <button type="submit" class="submit-btn">Send Reply</button>
+      </form>
+    </div>
+  </div>
+  

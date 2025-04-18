@@ -1,0 +1,177 @@
+<!-- Chat Page Container -->
+<div class="chat-page">
+  <!-- Main Chat Container -->
+  <div class="chat-container">
+    <!-- Sidebar with Conversations -->
+    <div class="chat-sidebar" [class.mobile-hidden]="isMobileView && showChat">
+      <div class="sidebar-header">
+        <h3>Messages</h3>
+      </div>
+
+      <!-- Connection Status -->
+      <div class="connection-status" [class.connected]="isConnected" [class.disconnected]="!isConnected">
+        <span class="status-dot"></span>
+        {{ isConnected ? 'Connected' : 'Connecting...' }}
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Search conversations..."
+          [(ngModel)]="searchQuery"
+          (input)="filterConversations()">
+      </div>
+
+      <!-- Conversations List -->
+      <div class="conversations-container">
+        <div *ngFor="let conv of filteredConversations" 
+             class="conversation-item" 
+             [class.active]="conv.id === receiverId"
+             (click)="selectConversation(conv.id)">
+          <div class="conversation-avatar">
+            {{ conv.name.charAt(0).toUpperCase() }}
+          </div>
+          <div class="conversation-details">
+            <div class="conversation-info">
+              <span class="name">{{ conv.name }}</span>
+              <span class="role">{{ conv.role }}</span>
+            </div>
+            <div class="conversation-preview" *ngIf="conv.latest_message">
+              <span class="preview-message">{{ conv.latest_message }}</span>
+              <span class="preview-time">{{ conv.latest_timestamp | date:'shortTime' }}</span>
+            </div>
+          </div>
+          <div class="unread-badge" *ngIf="conv.unread_count > 0">
+            {{ conv.unread_count }}
+          </div>
+        </div>
+        <div *ngIf="filteredConversations.length === 0" class="no-conversations">
+          <i class="fas fa-search"></i>
+          <p *ngIf="searchQuery">No conversations found</p>
+          <p *ngIf="!searchQuery">No conversations yet</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="chat-main" [class.mobile-hidden]="isMobileView && !showChat">
+      <ng-container *ngIf="receiverId; else noConversation">
+        <!-- Chat Header -->
+        <div class="chat-header">
+          <button *ngIf="isMobileView" class="back-btn" (click)="toggleView()">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <div class="chat-header-info">
+            <h4>{{ selectedConversation?.name || 'Chat' }}</h4>
+            <span class="status">{{ selectedConversation?.role }}</span>
+          </div>
+          <!-- Profile Picture -->
+          <div class="chat-header-profile" (click)="showProfileDetails()" *ngIf="selectedConversation">
+            <div class="profile-avatar">
+              {{ selectedConversation.name.charAt(0).toUpperCase() }}
+              <!-- <img [src]="selectedConversation.profileImageUrl" *ngIf="selectedConversation.profileImageUrl" alt="Profile"> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="messages-container" #messageContainer>
+          <div *ngFor="let msg of messages" 
+               class="message-wrapper"
+               [class.sent]="msg.sender_id === currentUserId" 
+               [class.received]="msg.sender_id !== currentUserId">
+            <div class="message">
+              <div class="message-content">
+                <p *ngIf="msg.message">{{ msg.message }}</p>
+                
+                <!-- Image Preview -->
+                <div class="media-content" *ngIf="msg.file_url && isImageFile(msg.file_type)">
+                  <img [src]="msg.file_url" 
+                       alt="Shared image" 
+                       class="message-image"
+                       (error)="onImageError($event)"
+                       (click)="openImagePreview(msg.file_url)">
+                </div>
+                
+                <!-- File Attachment -->
+                <div class="file-attachment" *ngIf="msg.file_url && !isImageFile(msg.file_type)">
+                  <i class="fas fa-file"></i>
+                  <a [href]="msg.file_url" target="_blank" class="file-name">
+                    {{ msg.file_name || 'Attachment' }}
+                  </a>
+                </div>
+              </div>
+              <div class="message-meta">
+                <span class="time">{{ msg.created_at | date:'shortTime' }}</span>
+                <span class="status" *ngIf="msg.sender_id === currentUserId">
+                  <i class="fas" [class.fa-check]="!msg.read_at" [class.fa-check-double]="msg.read_at"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="error-message">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ errorMessage }}
+        </div>
+
+        <!-- Message Input Area -->
+        <div class="message-input-container">
+          <form (ngSubmit)="sendMessage()" class="message-form">
+            <div class="attachment-btn">
+              <label for="file-input">
+                <i class="fas fa-paperclip"></i>
+              </label>
+              <input 
+                type="file" 
+                id="file-input"
+                #fileInput 
+                (change)="onFileSelected($event)"
+                [disabled]="isSending || !!errorMessage">
+            </div>
+            
+            <div class="input-wrapper">
+              <input 
+                type="text"
+                [(ngModel)]="newMessage" 
+                name="message" 
+                placeholder="Type a message..." 
+                [disabled]="isSending || !!errorMessage"
+                (keyup.enter)="sendMessage()">
+            </div>
+
+            <button 
+              type="submit" 
+              class="send-btn"
+              [disabled]="isSending || (!newMessage.trim() && !selectedFile) || !isConnected || !!errorMessage">
+              <i class="fas" [class.fa-paper-plane]="!isSending" [class.fa-spinner]="isSending"></i>
+            </button>
+          </form>
+        </div>
+      </ng-container>
+
+      <!-- No Conversation Selected -->
+      <ng-template #noConversation>
+        <div class="no-chat-selected">
+          <div class="empty-state">
+            <i class="fas fa-comments"></i>
+            <h3>Welcome to Messages</h3>
+            <p>Select a conversation or start a new one to begin chatting</p>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div class="image-preview-modal" *ngIf="previewImage" (click)="closeImagePreview()">
+      <button class="image-preview-close">
+        <i class="fas fa-times"></i>
+      </button>
+      <img [src]="previewImage" alt="Preview">
+    </div>
+  </div>
+</div>

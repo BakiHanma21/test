@@ -1,0 +1,204 @@
+<div class="registration-container">
+  <div class="registration-card">
+    <img src="assets/user-login.jpg" alt="Worker Icon" class="registration-icon" />
+
+    <!-- Registration Title -->
+    <h2 class="registration-title">Register your account</h2>
+
+    <!-- Form -->
+    <form (ngSubmit)="onRegister()" #registrationForm="ngForm" enctype="multipart/form-data">
+      <!-- General Form Error Message -->
+      <div class="error-message" *ngIf="formSubmitted && !registrationForm.valid">
+        Please fill in all the required fields correctly before registering!!.
+      </div>
+
+      <!-- Name Field -->
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="form-control"
+          placeholder="Enter your full name"
+          [(ngModel)]="formData.name"
+          #name="ngModel"
+          required
+        />
+        <div class="error-message" *ngIf="name.invalid && name.touched">
+          Please enter your full name.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number:</label>
+        <input
+          type="tel"
+          id="phoneNumber"
+          name="phoneNumber"
+          class="form-control"
+          placeholder="Enter your phone number"
+          [(ngModel)]="formData.phoneNumber"
+          #phoneNumber="ngModel"
+          required
+          pattern="^[0-9]{11}$"
+        />
+        <div class="error-message" *ngIf="phoneNumber.invalid && phoneNumber.touched">
+          Please enter a valid phone number (11 digits).
+        </div>
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="Enter your email (e.g., example&#64;gmail.com)"
+          [(ngModel)]="formData.email"
+          #email="ngModel"
+          required
+          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+        />
+        <div class="error-message" *ngIf="email.invalid && email.touched">
+          Please enter a valid email address (e.g., example&#64;gmail.com).
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          placeholder="Create your password"
+          [(ngModel)]="formData.password"
+          #password="ngModel"
+          required
+          minlength="6"
+        />
+        <div class="error-message" *ngIf="password.invalid && password.touched">
+          Password must be at least 6 characters long.
+        </div>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password:</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          class="form-control"
+          placeholder="Enter your confirmation password"
+          [(ngModel)]="formData.confirmPassword"
+          #confirmPassword="ngModel"
+          required
+        />
+        <div class="error-message" *ngIf="formData.password !== formData.confirmPassword && confirmPassword.touched">
+          Passwords do not match.
+        </div>
+      </div>
+
+      <!-- Location Fields - Split into Purok and Street -->
+      <div class="form-group">
+        <label for="purok">District/Purok:</label>
+        <input
+          type="text"
+          id="purok"
+          name="purok"
+          class="form-control"
+          placeholder="Enter your District/Purok"
+          [(ngModel)]="formData.purok"
+          #purok="ngModel"
+          required
+        />
+        <div class="error-message" *ngIf="purok.invalid && purok.touched">
+          Please enter your District/Purok.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="street">Street:</label>
+        <input
+          type="text"
+          id="street"
+          name="street"
+          class="form-control"
+          placeholder="Enter your Street"
+          [(ngModel)]="formData.street"
+          #street="ngModel"
+          required
+        />
+        <div class="error-message" *ngIf="street.invalid && street.touched">
+          Please enter your Street.
+        </div>
+      </div>
+
+      <!-- Profile Picture Field -->
+      <div class="form-group">
+        <label for="profilePicture">Profile Picture:</label>
+        <input
+          type="file"
+          id="profilePicture"
+          name="profilePicture"
+          class="form-control"
+          (change)="onProfilePictureChange($event)"
+          accept="image/*"
+        />
+        <div class="error-message" *ngIf="profilePictureError">
+          {{ profilePictureError }}
+        </div>
+      </div>
+
+      <!-- Terms and Conditions Checkbox -->
+      <div class="form-group terms-checkbox">
+        <div class="checkbox-container">
+          <input
+            type="checkbox"
+            id="termsAgreement"
+            name="termsAgreement"
+            [(ngModel)]="formData.termsAgreement"
+            #termsAgreement="ngModel"
+            required
+          />
+          <label for="termsAgreement">
+            I agree to the <a (click)="openTermsModal($event)">Terms and Conditions</a> of Matain Hanap-Serbisyo
+          </label>
+        </div>
+        <div class="error-message" *ngIf="formSubmitted && !formData.termsAgreement">
+          <strong>You must agree to the Terms and Conditions to proceed!!</strong>
+        </div>
+      </div>
+
+      <!-- Terms Modal -->
+      <div class="terms-modal" *ngIf="showTermsModal">
+        <div class="terms-modal-content">
+          <span class="close-button" (click)="closeTermsModal()">&times;</span>
+          <h2>Terms and Conditions</h2>
+          <div class="terms-modal-body">
+            <app-terms-and-conditions></app-terms-and-conditions>
+          </div>
+          <div class="terms-modal-footer">
+            <button class="btn-accept" (click)="acceptTerms()">I Agree</button>
+            <button class="btn-decline" (click)="closeTermsModal()">I Disagree</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn-submit">
+        Register now
+      </button>
+    </form>
+
+    <!-- Footer Links -->
+    <div class="links">
+      <p>Already have an account? <a [routerLink]="'/login'" class="link">Login</a></p>
+    </div>
+  </div>
+</div>

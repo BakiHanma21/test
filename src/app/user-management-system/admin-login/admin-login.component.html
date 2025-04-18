@@ -1,0 +1,69 @@
+<div class="login-container">
+    <div class="login-card">
+      <div class="icon-container">
+        <img src="assets/admin-login.jpg" alt="Worker Icon" class="login-icon" />
+      </div>
+  
+      <h2 class="login-title">Login your account</h2>
+  
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <!-- General Error Message -->
+        <div class="error-message" *ngIf="formSubmitted && !loginForm.valid">
+          Please fill in both username and password to login.
+        </div>
+  
+        <!-- Username Field -->
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            class="form-control"
+            placeholder="Enter your username"
+            [(ngModel)]="username"
+            #usernameField="ngModel"
+            required
+          />
+          <div class="error-message" *ngIf="usernameField.invalid && usernameField.touched">
+            Username is required.
+          </div>
+        </div>
+  
+        <!-- Password Field with Eye Icon -->
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <div class="password-wrapper">
+            <button type="button" class="eye-icon" (click)="togglePasswordVisibility()">
+              <i [ngClass]="passwordVisible ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+            </button>
+            <input
+              [type]="passwordVisible ? 'text' : 'password'"
+              id="password"
+              name="password"
+              class="form-control"
+              placeholder="Enter your password"
+              [(ngModel)]="password"
+              #passwordField="ngModel"
+              required
+            />
+          </div>
+          <div class="error-message" *ngIf="passwordField.invalid && passwordField.touched">
+            Password is required.
+          </div>
+        </div>
+  
+        <!-- Login Button -->
+        <button type="submit" class="btn-login">
+          Login
+        </button>
+  
+        <!-- Links -->
+        <div class="links">
+          <a (click)="navigateToRegister()" class="link">Register</a>
+          <a (click)="navigateToForgotPassword()" class="link">Forgot Password?</a>
+        </div>
+      </form>
+    </div>
+  </div>
+  

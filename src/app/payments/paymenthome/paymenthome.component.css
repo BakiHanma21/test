@@ -1,0 +1,249 @@
+/* General Reset */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #F9FAFB; /* Light grayish-white background */
+    color: #333333;
+    overflow: visible;
+  }
+  
+  /* Payment System Layout */
+  .payment-system {
+    display: flex;
+    height: 100vh;
+    box-shadow: inset -5px 0 10px rgba(0, 0, 0, 0.4);
+    overflow: visible;
+    
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    width: 260px;
+    background-color: #4A90E2; /* Soft blue */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 15px 0 15px rgba(0, 0, 0, 0.2); /* Shadow only on the right */
+    z-index: 1;
+  }
+  
+  
+  .sidebar h3 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 30px;
+  }
+  
+  .sidebar nav ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar nav ul li {
+    padding: 12px 20px;
+    margin-bottom: 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .sidebar nav ul li:hover,
+  .sidebar nav ul li.active {
+    background-color: #50C878; /* Emerald green hover */
+    color: #ffffff;
+  }
+  
+  /* Main Content */
+  .content {
+    flex-grow: 1;
+    padding: 40px;
+    background-color: #ffffff; /* White base */
+    overflow-y: auto;
+    overflow: visible;
+  }
+  
+  .content h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #4A90E2; /* Soft blue accent */
+    text-align: center;
+  }
+  
+  /* Wallet Options */
+  .wallet-options {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+  }
+  
+  .wallet-card {
+    width: 220px;
+    background-color: #F9FAFB; /* Light grayish-white */
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    text-align: center;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .wallet-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+  }
+  
+  .wallet-card img {
+    width: 80px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .pay-button {
+    padding: 12px 18px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #F5A623; /* Bright yellow-orange */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .pay-button:hover {
+    background-color: #D48819; /* Darker orange on hover */
+  }
+  
+  .gcash {
+    border-top: 5px solid #4A90E2; /* Blue accent for GCash */
+  }
+  
+  .paymaya {
+    border-top: 5px solid #50C878; /* Green accent for PayMaya */
+  }
+  /* Modal Background */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: white;
+    width: 400px;
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Close Button */
+  .close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #555;
+  }
+  
+  .close:hover {
+    color: #000;
+  }
+  
+  /* Modal Header */
+  .modal-header {
+    background-color: #0056ff; /* Blue background */
+    color: white;
+    padding: 20px 0;
+  }
+  
+  .payment-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  /* Modal Body */
+  .modal-body {
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .merchant-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin: 10px 0;
+    color: #888;
+  }
+  
+  .merchant-details strong {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .amount {
+    color: #0056ff; /* Blue font color for amount */
+  }
+  
+  .login-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0 10px;
+  }
+  
+  .input-group {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .input-group span {
+    background-color: #f9f9f9;
+    padding: 10px;
+    font-size: 16px;
+    border-right: 1px solid #ccc;
+  }
+  
+  .input-group input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  /* Next Button */
+  .next-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #0056ff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .next-button:hover {
+    background-color: #0041d9;
+  }
+  

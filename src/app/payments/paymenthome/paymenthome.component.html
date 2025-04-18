@@ -1,0 +1,85 @@
+<div class="payment-system">
+    <!-- Sidebar Menu -->
+    <aside class="sidebar">
+        <h3>Payment System</h3>
+        <nav>
+          <ul>
+            <li class="active">Payment Options</li>
+            <li>Payment Status</li>
+            <li>Refund</li>
+            <li>Payment History</li>
+          </ul>
+        </nav>
+      </aside>
+      
+  
+    <!-- Main Content -->
+    <main class="content">
+      <h2>Digital Wallet Options</h2>
+      <div class="wallet-options">
+        <!-- GCash Option -->
+        <div class="wallet-card gcash">
+          <div class="card-content">
+            <img src="assets/gcash.png" alt="GCash Logo" />
+          </div>
+          <button class="pay-button" (click)="openModal('PayMaya')">Pay with PayMaya</button>
+        </div>
+        <!-- PayMaya Option -->
+        <div class="wallet-card paymaya">
+          <div class="card-content">
+            <img src="assets/paymaya.png" alt="PayMaya Logo" />
+          </div>
+          <button class="pay-button" (click)="openModal('GCash')">Pay with GCash</button>
+        </div>
+      </div>
+      
+      
+     <!-- Payment Modal -->
+     <div class="modal" *ngIf="isModalOpen">
+      <div class="modal-content">
+        <span class="close" (click)="closeModal()">&times;</span>
+        <div class="modal-header">
+          <h1 class="payment-title">{{ selectedPaymentMethod }}</h1>
+        </div>
+        <div class="modal-body">
+          <p class="merchant-details">
+            <span>Merchant</span>
+            <strong>Software system</strong>
+          </p>
+          <p class="merchant-details">
+            <span>Amount Due</span>
+            <strong class="amount">PHP 1500</strong>
+          </p>
+          <h3 class="login-title">Login to pay with {{ selectedPaymentMethod }}</h3>
+          <p>Input your mobile number</p>
+          <div class="input-group">
+            <span>+63</span>
+            <input type="tel" placeholder="Mobile number" />
+          </div>
+          <button class="next-button" (click)="openMpinModal()">Next</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal" *ngIf="isMpinModalOpen">
+      <div class="modal-content">
+        <span class="close" (click)="closeMpinModal()">&times;</span>
+        <div class="modal-header">
+          <h1 class="payment-title">{{ selectedPaymentMethod }}</h1>
+        </div>
+        <div class="modal-body">
+          <h3 class="login-title">Login to pay with {{ selectedPaymentMethod }}</h3>
+          <p>Enter your 4-digit MPIN</p>
+          <div class="mpin-group">
+            <input type="password" maxlength="1" />
+            <input type="password" maxlength="1" />
+            <input type="password" maxlength="1" />
+            <input type="password" maxlength="1" />
+          </div>
+          <button class="next-button" (click)="confirmPayment()">Next</button>
+        </div>
+      </div>
+    </div>
+    
+    </main>
+  </div>
+  

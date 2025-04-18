@@ -1,0 +1,70 @@
+<h2 mat-dialog-title>Edit Worker Profile</h2>
+<mat-dialog-content>
+  <form #editWorkerForm="ngForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input matInput [(ngModel)]="worker.name" name="name" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Location</mat-label>
+      <input matInput [(ngModel)]="worker.location" name="location" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Phone</mat-label>
+      <input matInput [(ngModel)]="worker.phone" name="phone" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput [(ngModel)]="worker.email" name="email" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Availability</mat-label>
+      <input matInput [(ngModel)]="worker.availability" name="availability" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Years of Experience</mat-label>
+      <input matInput [(ngModel)]="worker.experience" name="experience" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Work Done</mat-label>
+      <textarea matInput [(ngModel)]="worker.workDone" name="workDone"></textarea>
+    </mat-form-field>
+
+    <!-- Image upload input for profile picture -->
+    <mat-form-field appearance="fill">
+      <mat-label>Profile Image</mat-label>
+      <div mat-form-field-control>
+        <input type="file" (change)="onImageSelected($event)" />
+      </div>
+      <img *ngIf="imagePreview" [src]="imagePreview" alt="Profile Image Preview" class="image-preview" />
+    </mat-form-field>
+
+    <h3>Work Examples</h3>
+    <div *ngFor="let work of worker.works; let i = index">
+      <mat-form-field appearance="fill">
+        <mat-label>Title of Work Example {{ i + 1 }}</mat-label>
+        <input matInput [(ngModel)]="work.title" name="workTitle{{i}}" />
+      </mat-form-field>
+
+      <!-- Image upload for work example -->
+      <mat-form-field appearance="fill">
+        <mat-label>Work Image Example {{ i + 1 }}</mat-label>
+        <div mat-form-field-control>
+          <input type="file" (change)="onWorkImageSelected($event, i)" />
+        </div>
+        <img *ngIf="work.imagePreview" [src]="work.imagePreview" alt="Work Image Preview" class="image-preview" />
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="closeDialog()">Cancel</button>
+  <button mat-button color="primary" (click)="saveChanges()">Save Changes</button>
+</mat-dialog-actions>

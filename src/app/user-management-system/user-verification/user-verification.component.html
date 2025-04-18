@@ -1,0 +1,168 @@
+<div class="dashboard-header" [ngClass]="{'header-shifted': !sidebarOpen}">
+  <div class="sidebar-toggle-container">
+    <span class="welcome-message" (click)="toggleSidebar()">Welcome Admin!</span>
+    <button class="sidebar-toggle-inside" (click)="toggleSidebar()">☰</button>
+  </div>
+</div>
+
+<div class="dashboard-container">
+  <!-- Sidebar (Left Side) -->
+  <div class="sidebar" [ngClass]="{'open': sidebarOpen}">
+    <!-- Logo -->
+    <div class="logo">
+      <img src="assets/matain-logo-copy.png" alt="Worker Icon" class="login-icon" />
+      <p class="pol">User Management System</p>
+    </div>
+    <hr class="logo-line" />
+    <!-- Navigation Links -->
+    <ul>
+      <h4 class="menu">Menu</h4>
+      <li class="dash">
+        <a routerLink="/dashboard-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+      </li>
+      <li class="prof">
+        <a routerLink="/profile-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fas fa-user"></i> Profile
+        </a>
+      </li>
+      <li class="rbac">
+        <a routerLink="/role-based-access-control" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fas fa-users-cog"></i> Role-Based Access
+        </a>
+      </li>
+      <li class="UV">
+        <a routerLink="/user-verification" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fas fa-check-circle"></i> Verifications
+        </a>
+      </li>
+      <li class="chat">
+        <a routerLink="/admin-messages" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fas fa-comment"></i> Messages
+        </a>
+      </li>
+    </ul>
+
+    <!-- Logout Button -->
+    <div class="logout">
+      <a (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="table-container" [ngClass]="{'sidebar-closed': !sidebarOpen}">
+    <h2 class="pending-title">Users & Workers Pending Verification</h2>
+
+    <!-- Search Input -->
+    <div class="search-container">
+      <input
+        type="text"
+        placeholder="Search by Full Name"
+        [(ngModel)]="searchTerm"
+        (input)="searchUser()"
+        class="search-input"
+      />
+    </div>
+
+    <table class="verification-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>District/Purok & Street</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <!-- Table Body -->
+      <tbody>
+        <tr *ngFor="let user of filteredUsers">
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>{{ user.purok ? user.purok + ', ' + user.street : user.location }}</td>   
+          <td class="action-buttons">
+            <button class="view-profile-btn" (click)="viewProfile(user)">View Profile</button>
+            <button class="approve-btn" (click)="openApproveForm(user)">Approve</button>
+            <button class="deny-btn" (click)="openDenyForm(user)">Deny</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Profile Modal (Now works for both users and workers) -->
+<div *ngIf="isProfileModalVisible" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <img [src]="currentUser.image" alt="Profile Picture" class="profile-img" />
+      <h2>{{ currentUser.role === 'WORKER' ? 'Worker' : 'User' }} Profile</h2>
+    </div>
+    <div class="profile-details">
+      <div class="personal-info">
+        <h3>Personal Information</h3>
+        <p><strong>Full Name:</strong> {{ currentUser.name }}</p>
+        <p><strong>Email:</strong> {{ currentUser.email }}</p>
+        <p><strong>Contact Number:</strong> {{ currentUser.contactNumber || currentUser.phone }}</p>
+        <!-- <p><strong>District/Purok:</strong> {{ currentUser.purok || 'Not specified' }}</p>
+        <p><strong>Street:</strong> {{ currentUser.street || 'Not specified' }}</p> -->
+        <p><strong>Purok & Street:</strong> {{ currentUser.purok ? currentUser.purok + ', ' + currentUser.street : currentUser.location }}</p>
+      </div>
+      <hr class="divider">
+      <!-- Work information for workers only -->
+      <div class="work-info" *ngIf="currentUser.role === 'WORKER'">
+        <h3>Work Information</h3>
+        <p><strong>Skills:</strong> {{ currentUser.skills }}</p>
+        <p><strong>Years of Experience:</strong> {{ currentUser.experience }}</p>
+        <p><strong>Valid ID:</strong></p>
+        <img [src]="currentUser.valid_id" alt="Valid ID" class="valid-img" />
+      </div>
+
+      <div *ngIf="currentUser.work_examples && currentUser.work_examples.length > 0">
+        <h3>Work Examples</h3>
+        <div *ngFor="let work of currentUser.work_examples; let i = index">
+          <h4>Example {{i+1}}: {{work.title}}</h4>
+          <p>{{work.description}}</p>
+          <img *ngIf="work.image" [src]="work.image" alt="Work Example" class="work-example-img" />
+        </div>
+      </div>
+    </div>
+
+    
+    <button class="close-btn" (click)="closeProfileModal()">Close</button>
+  </div>
+</div>
+
+<!-- Approve Form Modal -->
+<div *ngIf="isApproveFormVisible" class="modal">
+  <div class="modal-content">
+    <p>Are you sure you want to approve {{ currentUser.name }}?</p>
+    <button class="cfm" (click)="approveUser(currentUser)">Confirm Approval</button>
+    <button class="can" (click)="closeForms()">Cancel</button>
+  </div>
+</div>
+
+<!-- Deny Form Modal -->
+<div *ngIf="isDenyFormVisible" class="modal">
+  <div class="modal-content">
+    <p>Are you sure you want to deny {{ currentUser.name }}?</p>
+    <button class="cnc" (click)="denyUser(currentUser)">Confirm Denial</button>
+    <button class="can" (click)="closeForms()">Cancel</button>
+  </div>
+</div>
+
+<!-- Comment Form Modal -->
+<div *ngIf="isCommentFormVisible" class="modal">
+  <div class="modal-content">
+    <h3>Your Comment will be sent to their Email account</h3>
+    <div class="comment-form">
+      <textarea class="comment-input" [(ngModel)]="commentText" placeholder="Enter your comment..."></textarea>
+    </div>
+    <button class="con" (click)="submitComment(currentUser)">Submit Comment</button>
+    <button class="can" (click)="closeForms()">Cancel</button>
+  </div>
+</div>

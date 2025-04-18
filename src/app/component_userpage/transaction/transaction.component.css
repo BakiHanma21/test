@@ -1,0 +1,179 @@
+/* Transaction Container */
+.transaction-container {
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  }
+  
+  /* Title Styling */
+  .transaction-container h2 {
+    text-align: center;
+    color: #3498db;
+    margin-bottom: 20px;
+    font-size: 2rem;
+  }
+
+  /* Review Section */
+.reviews-section{
+  margin-top: 30px;
+}
+
+.review-section textarea {
+  width: 95%;
+  height: 120px;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  padding: 15px;
+  font-size: 16px;
+  background: #fafafa;
+  color: #555;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.review-section textarea:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+}
+
+.rating-section {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rating-section label {
+  font-size: 16px;
+  color: #666;
+  margin-right: 10px;
+}
+
+.star-rating {
+  display: flex;
+  gap: 10px;
+  font-size: 28px;
+  color: #ddd; /* Default unselected color */
+  cursor: pointer;
+}
+
+.star {
+  transition: transform 0.3s, color 0.3s ease;
+}
+
+.star.filled {
+  color: #00bcd4; /* Neon blue for filled stars */
+  text-shadow: 0 0 5px rgba(0, 188, 212, 0.6);
+}
+
+.star:hover {
+  transform: scale(1.2);
+  color: #008cba;
+  text-shadow: 0 0 8px rgba(0, 140, 186, 0.8);
+}
+  
+  /* Transaction Card */
+  .transaction-card {
+    background-color: #fafafa;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    padding: 15px 25px;
+    margin-bottom: 20px;
+  }
+
+  .no-transactions {
+    text-align: center;
+    font-size: 18px;
+    color: #999;
+    padding: 30px;
+    border: 1px dashed #ddd;
+    border-radius: 12px;
+    background: #f8f9fa;
+  }
+  
+  
+  .transaction-card h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+  
+  .transaction-card p {
+    color: #555;
+  }
+  
+  .transaction-card button {
+    background-color: #009688;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 10px 0;
+    transition: background-color 0.3s ease;
+  }
+  
+  .transaction-card button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Paid Message Styling */
+  .paid-message {
+    background-color: #27ae60;
+    color: #fafafa;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .paid-message .check-icon {
+    background-color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .paid-message .check-icon i {
+    color: #27ae60;
+    font-size: 14px;
+  }
+  
+  /* Footer Section */
+.transaction-footer {
+  margin-top: 30px;
+  padding: 15px;
+  text-align: center;
+  background-color: #f1f1f1;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  color: #555;
+  border: 1px solid #545454;
+}
+
+.transaction-footer p {
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.qr-code-section, .receipt-section {
+  margin: 15px 0;
+}
+
+.qr-code-image {
+  max-width: 200px;
+  height: auto;
+}
+
+.receipt-upload {
+  margin: 15px 0;
+}

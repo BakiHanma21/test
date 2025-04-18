@@ -1,0 +1,340 @@
+/* Full-page container */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Review Section */
+.review-section {
+  margin-top: 200px;
+}
+.reviews-section{
+  margin-top: 30px;
+}
+
+.review-section textarea {
+  width: 100%;
+  height: 120px;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  padding: 15px;
+  font-size: 16px;
+  background: #fafafa;
+  color: #555;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.review-section textarea:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+}
+
+.rating-section {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rating-section label {
+  font-size: 16px;
+  color: #666;
+  margin-right: 10px;
+}
+
+.star-rating {
+  display: flex;
+  gap: 10px;
+  font-size: 28px;
+  color: #ddd; /* Default unselected color */
+  cursor: pointer;
+}
+
+.star {
+  transition: transform 0.3s, color 0.3s ease;
+}
+
+.star.filled {
+  color: #00bcd4; /* Neon blue for filled stars */
+  text-shadow: 0 0 5px rgba(0, 188, 212, 0.6);
+}
+
+.star:hover {
+  transform: scale(1.2);
+  color: #008cba;
+  text-shadow: 0 0 8px rgba(0, 140, 186, 0.8);
+}
+
+.page-container {
+  display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Worker Container */
+.worker-container {
+  width: 100%;
+}
+
+/* Card Styling */
+.worker-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 700px;
+  margin: 15px auto;
+}
+
+/* Header Section */
+.worker-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #007bff;
+}
+
+.worker-details {
+  flex: 1;
+}
+
+.worker-name {
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.worker-location {
+  font-size: 16px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.worker-location mat-icon {
+  color: #007bff;
+}
+
+.maps-link a {
+  font-size: 14px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.maps-link a:hover {
+  text-decoration: underline;
+}
+
+/* Info Section */
+.worker-info {
+  border-top: 1px solid #b5b5b5;
+  padding-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.info-item mat-icon {
+  color: #007bff;
+}
+
+/* Actions Section */
+.worker-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+
+.modal-actions .btn {
+  flex: 1;
+  margin: 0 10px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.modal-actions .btn:first-child {
+  margin-left: 0;
+}
+
+.modal-actions .btn:last-child {
+  margin-right: 0;
+}
+
+
+/* No Worker Section */
+.no-worker {
+  text-align: center;
+  font-size: 18px;
+  color: #999;
+  padding: 30px;
+  border: 1px dashed #ddd;
+  border-radius: 12px;
+  background: #f8f9fa;
+  margin-top: 15px;
+}
+
+.btn {
+  padding: 15px 40px;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  background: blue;
+  box-shadow: 0 8px 15px rgba(0, 168, 255, 0.4);
+  transition: all 0.4s ease;
+  width: 70%;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(0, 168, 255, 0.6);
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: -1;
+}
+.form-group select {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none;
+}
+
+.form-group select option {
+  padding: 8px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+
+.btn:hover::after {
+  opacity: 1;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: #eeeeee;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  color: #2d2d2d;
+}
+
+.modal-content {
+  padding: 20px;
+  padding-right: 40px;
+}
+
+.modal-content h3 {
+  margin: 0 0 20px 0;
+  font-size: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Buttons in Modal */
+.modal-content button {
+  margin-right: 10px;
+}
+
+button {
+  cursor: pointer;
+  background-color:#70eeff;
+  border: 1px solid #b6b6b6;
+  border-radius: 2px;
+}
+
+/* Overlay for Modal */
+.modal::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.btn-edit {
+  display: block;
+  margin: 0 auto;
+  width: 40%;
+}

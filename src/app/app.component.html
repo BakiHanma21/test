@@ -1,0 +1,139 @@
+<ng-container *ngIf="showSidenav || showSkilledWorkerSidenav">
+  <mat-sidenav-container class="sidenav-container">
+    <!-- Sidenav for Default Users -->
+    <mat-sidenav
+      *ngIf="showSidenav && !showSkilledWorkerSidenav"
+      #sidenav
+      mode="side"
+      [(opened)]="isSidenavOpen"
+      class="sidenav custom-sidenav"
+      disableClose="false"
+    >
+      <!-- Logo at the top of sidenav -->
+      <div class="logo-container">
+        <img src="assets/system-logo-copy.png" alt="Logo" class="sidenav-logo">
+      </div>
+      <div class="menu-title">MENU</div>
+      <mat-nav-list>
+        <a mat-list-item routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <div class="item-content">
+            <span><mat-icon class="right-icon">home</mat-icon>
+            Home</span>
+          </div>
+        </a>
+        <a mat-list-item routerLink="/favorites" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <div class="item-content">
+            <span><mat-icon class="right-icon">favorite</mat-icon>
+            Favorites</span>
+          </div>
+        </a>
+        <a mat-list-item routerLink="/transaction" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <div class="item-content">
+            <span><mat-icon class="right-icon">currency_exchange</mat-icon>
+            Transactions</span>
+          </div>
+        </a>
+        <a mat-list-item routerLink="/user-messages" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <div class="item-content">
+            <span><mat-icon class="right-icon">chat</mat-icon>Messages</span>
+          </div>
+        </a>
+        <a mat-list-item routerLink="/about_us" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <div class="item-content">
+            <span><mat-icon class="right-icon">info</mat-icon>
+            About Us</span>
+          </div>
+        </a>
+        <a mat-list-item (click)="logout()">
+          <div class="item-content">
+            <span><mat-icon class="right-icon">exit_to_app</mat-icon>
+            Logout</span>
+          </div>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <!-- Sidenav for Skilled Workers -->
+    <mat-sidenav
+      *ngIf="showSkilledWorkerSidenav && !showSidenav"
+      #sidenav
+      mode="side"
+      [(opened)]="isSidenavOpen"
+      class="sidenav"
+      disableClose="false"
+    >
+      <!-- Logo at the top of sidenav -->
+      <div class="logo-container">
+        <img src="assets/system-logo-copy.png" alt="Logo" class="sidenav-logo">
+      </div>
+      <div class="menu-title">MENU</div>
+      <mat-nav-list>
+        <a mat-list-item routerLink="/profile" routerLinkActive="active">
+          <div class="item-content">
+            <span><mat-icon class="right-icon">account_circle</mat-icon>
+            Work Profile</span>
+          </div>
+        </a>
+        <a mat-list-item routerLink="/bookings" routerLinkActive="active">
+          <div class="item-content">
+            <span><mat-icon class="right-icon">book</mat-icon>
+            Bookings</span>
+          </div>
+        </a>
+        <a mat-list-item routerLink="/user_request" routerLinkActive="active">
+          <div class="item-content">
+            <span><mat-icon class="right-icon">request_page</mat-icon>
+            Requests</span>
+          </div>
+        </a>
+        <a mat-list-item routerLink="/worker-transaction" routerLinkActive="active">
+          <div class="item-content">
+            <span><mat-icon class="right-icon">receipt</mat-icon>
+            Transaction</span>
+          </div>
+        </a>
+        <a mat-list-item routerLink="/worker-messages" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <div class="item-content">
+            <span><mat-icon class="right-icon">chat</mat-icon>Messages</span>
+          </div>
+        </a>
+        <a mat-list-item (click)="logout()">
+          <div class="item-content">
+            <span><mat-icon class="right-icon">exit_to_app</mat-icon>
+            Logout</span>
+          </div>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <!-- Main Content -->
+    <mat-sidenav-content>
+      <mat-toolbar color="primary" class="responsive-toolbar">
+        <button mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span class="toolbar-title">BARANGAY MATAIN HANAP-SERBISYO</span>
+        <span class="spacer"></span>
+
+        <!-- Show profile container only for regular users -->
+        <div class="toolbar-profile-container" *ngIf="showSidenav && !showSkilledWorkerSidenav">
+          <div class="profile-image-container" (click)="openEditProfileDialog()">
+            <img src="assets/user-login.jpg" alt="Profile" class="profile-image">
+            <div class="edit-overlay">
+              <mat-icon>edit</mat-icon>
+            </div>
+          </div>
+        </div>
+        
+      </mat-toolbar>
+
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+</ng-container>
+
+<!-- Fallback for Non-Sidenav Routes -->
+<router-outlet *ngIf="!showSidenav && !showSkilledWorkerSidenav"></router-outlet>

@@ -1,0 +1,47 @@
+<div class="reporting-container">
+  <h2>Report Message</h2>
+  <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-field">
+      <label for="reportedPerson">Person Being Reported:</label>
+      <input id="reportedPerson" formControlName="reportedPerson" type="text" placeholder="Enter the name of the person" />
+      <div *ngIf="reportForm.get('reportedPerson')?.invalid && reportForm.get('reportedPerson')?.touched" class="error-message">
+        This field is required.
+      </div>
+    </div>
+  
+    <div class="form-field">
+      <label for="reason">Reason for Reporting:</label>
+      <input id="reason" formControlName="reason" type="text" placeholder="Enter the reason for reporting" />
+      <div *ngIf="reportForm.get('reason')?.invalid && reportForm.get('reason')?.touched" class="error-message">
+        This field is required.
+      </div>
+    </div>
+  
+    <div class="form-field">
+      <label for="date">Date:</label>
+      <input id="date" formControlName="date" type="date" />
+      <div *ngIf="reportForm.get('date')?.invalid && reportForm.get('date')?.touched" class="error-message">
+        This field is required.
+      </div>
+    </div>
+  
+    <div class="form-field">
+      <label for="description">Description:</label>
+      <textarea id="description" formControlName="description" placeholder="Provide a detailed description"></textarea>
+      <div *ngIf="reportForm.get('description')?.invalid && reportForm.get('description')?.touched" class="error-message">
+        This field is required.
+      </div>
+    </div>
+  
+    <button type="submit" [disabled]="reportForm.invalid">Submit Report</button>
+  </form>
+
+  <!-- Responded Section -->
+  <div *ngIf="responseMessage">
+    <h3>Response Message</h3>
+    <p><strong>Message:</strong> {{ responseMessage.message }}</p>
+    <p><strong>Status:</strong> {{ responseMessage.status }}</p>
+    <p><strong>Response Date:</strong> {{ responseDate | date: 'short' }}</p>
+  </div>
+  

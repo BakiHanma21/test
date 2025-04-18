@@ -1,0 +1,245 @@
+/* Main container */
+.transaction-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 25px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.no-transactions {
+  text-align: center;
+  font-size: 18px;
+  color: #999;
+  padding: 30px;
+  border: 1px dashed #ddd;
+  border-radius: 12px;
+  background: #f8f9fa;
+}
+
+/* Header section */
+.transaction-header {
+  padding: 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #4caf50, #2c8b33);
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease;
+}
+
+.transaction-header:hover {
+  background: linear-gradient(135deg, #2c8b33, #4caf50);
+}
+
+
+/* Review Section */
+.reviews-section{
+  margin-top: 30px;
+}
+
+.review-section textarea {
+  width: 100%;
+  height: 120px;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  padding: 15px;
+  font-size: 16px;
+  background: #fafafa;
+  color: #555;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.review-section textarea:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+}
+
+.rating-section {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rating-section label {
+  font-size: 16px;
+  color: #666;
+  margin-right: 10px;
+}
+
+.star-rating {
+  display: flex;
+  gap: 10px;
+  font-size: 28px;
+  color: #ddd; /* Default unselected color */
+  cursor: pointer;
+}
+
+.star {
+  transition: transform 0.3s, color 0.3s ease;
+}
+
+.star.filled {
+  color: #00bcd4; /* Neon blue for filled stars */
+  text-shadow: 0 0 5px rgba(0, 188, 212, 0.6);
+}
+
+.star:hover {
+  transform: scale(1.2);
+  color: #008cba;
+  text-shadow: 0 0 8px rgba(0, 140, 186, 0.8);
+}
+.center{
+  display: flex;
+  justify-content: center; /* Centering the button horizontally */
+  margin-top: 20px;
+}
+
+.transaction-header h2 {
+  font-size: 2.2rem;
+  color: white;
+  margin: 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Grouped transaction details */
+.transaction-details-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.transaction-details-group:hover {
+  transform: translateY(-5px);
+  background-color: #e8e8e8;
+}
+
+/* Each detail inside the group */
+.transaction-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 18px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.transaction-detail span {
+  font-size: 1.15rem;
+  color: #333;
+}
+
+.transaction-detail strong {
+  font-weight: 700;
+  color: #333;
+}
+
+/* Actions section */
+.transaction-actions {
+  margin-top: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+button {
+  padding: 12px 25px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Status update section */
+.transaction-status-update {
+  margin-top: 20px;
+  padding: 15px;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.transaction-status-update:hover {
+  background-color: #f1f1f1;
+  transform: translateY(-5px);
+}
+
+.transaction-status-update p {
+  font-size: 1.25rem;
+  color: #4caf50;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+/* Footer Section */
+.transaction-footer {
+  margin-top: 30px;
+  padding: 15px;
+  text-align: center;
+  background-color: #f1f1f1;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  color: #555;
+}
+
+.transaction-footer p {
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.qr-code-section, .receipt-section {
+  margin: 15px 0;
+}
+
+.qr-code-image {
+  max-width: 200px;
+  height: auto;
+}
+
+.receipt-upload {
+  margin: 15px 0;
+}
+
+/* Animation for the container */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

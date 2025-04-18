@@ -1,0 +1,113 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+mat-form-field {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+/* Modal styling */
+mat-dialog-container {
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  max-width: 600px;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Dialog title styling */
+h2[mat-dialog-title] {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+/* Form fields styling */
+mat-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+mat-form-field input,
+mat-form-field textarea {
+  font-size: 14px;
+}
+
+/* Section headings */
+h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+/* Image preview styling */
+.image-preview {
+  display: block;
+  margin-top: 10px;
+  max-width: 100%;
+  max-height: 150px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Buttons styling */
+mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+mat-dialog-actions button {
+  min-width: 100px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+button[mat-button][color="primary"] {
+  background-color: #3f51b5;
+  color: #fff;
+}
+
+button[mat-button][color="primary"]:hover {
+  background-color: #303f9f;
+}
+
+button[mat-button]:not([color="primary"]) {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+button[mat-button]:not([color="primary"]):hover {
+  background-color: #e0e0e0;
+}
+
+/* Responsive styling */
+@media (max-width: 600px) {
+  mat-dialog-container {
+    padding: 16px;
+  }
+
+  h2[mat-dialog-title] {
+    font-size: 20px;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  mat-dialog-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  mat-dialog-actions button {
+    width: 100%;
+  }
+}

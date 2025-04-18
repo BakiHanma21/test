@@ -1,0 +1,54 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="icon-container">
+      <img src="assets/pict-Photoroom.png" alt="Worker Icon" class="login-icon" />
+    </div>
+
+    <!-- Login Title -->
+    <h2 class="login-title">Login to your account</h2>
+
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+    
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="username"
+          name="email"
+          class="form-control"
+          placeholder="Enter your email"
+          required
+        />
+      </div>
+    
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          class="form-control"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
+    
+      <div *ngIf="formError" class="error-message">{{ formError }}</div>
+    
+      <button type="submit" [disabled]="loading" class="btn-submit">
+        {{ loading ? 'Logging in...' : 'Login' }}
+      </button>
+    </form>
+    <div class="signup-button">
+      <p>Don't have an account? </p>
+      <div class="redirect-button">
+        <div class="inline-links">
+          <p (click)="navigateToChoices()" class="clickable-text">Sign Up</p>
+          <p (click)="navigateToForgotPassword()" class="clickable-text">Forgot password?</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

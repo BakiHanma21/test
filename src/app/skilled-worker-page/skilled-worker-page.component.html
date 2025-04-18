@@ -1,0 +1,155 @@
+<ng-container *ngIf="showSidenav">
+    <mat-sidenav-container class="sidenav-container">
+      <!-- Sidenav for Default Menu -->
+      <mat-sidenav #sidenav mode="side" [(opened)]="isSidenavOpen" class="sidenav" disableClose="false">
+        <mat-toolbar color="primary">Menu</mat-toolbar>
+        <mat-nav-list>
+          <a mat-list-item routerLink="/home" routerLinkActive="active">
+            <div class="item-content">
+              <span>Home</span>
+              <mat-icon class="right-icon1">home</mat-icon>
+            </div>
+          </a>
+          <a mat-list-item routerLink="/favorites" routerLinkActive="active">
+            <div class="item-content">
+              <span>Favorites</span>
+              <mat-icon class="right-icon2">favorite</mat-icon>
+            </div>
+          </a>
+          <a mat-list-item routerLink="/transaction" routerLinkActive="active">
+            <div class="item-content">
+              <span>Transactions</span>
+              <mat-icon class="right-icon3">credit_card</mat-icon>
+            </div>
+          </a>
+          <a mat-list-item routerLink="/about_us" routerLinkActive="active">
+            <div class="item-content">
+              <span>About Us</span>
+              <mat-icon class="right-icon4">info</mat-icon>
+            </div>
+          </a>
+          <a mat-list-item (click)="logout()">
+            <div class="item-content">
+              <span>Logout</span>
+              <mat-icon class="right-icon8">exit_to_app</mat-icon>
+            </div>
+          </a>
+        </mat-nav-list>
+      </mat-sidenav>
+      
+      <!-- Main Content -->
+      <mat-sidenav-content>
+        <!-- Header -->
+        <mat-toolbar color="primary">
+          <button mat-icon-button (click)="sidenav.toggle()">
+            <mat-icon>menu</mat-icon>
+          </button>
+          <span>SERVICE EXPRESS Barangay Mabayuan</span>
+          <span class="spacer"></span>
+          <mat-icon mat-badge [matBadge]="notificationCount" matBadgeColor="accent" class="notification-icon">notifications</mat-icon>
+        </mat-toolbar>
+  
+        <!-- Routed Content -->
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </ng-container>
+  
+  <ng-container *ngIf="showSkilledWorkerSidenav">
+    <mat-sidenav-container class="sidenav-container">
+      <!-- Sidenav for Skilled Worker Menu -->
+      <mat-sidenav #drawer mode="side" opened class="sidenav">
+        <mat-toolbar>Menu</mat-toolbar>
+        <mat-nav-list>
+          <a mat-list-item routerLink="/add" routerLinkActive="active">
+            <div class="item-content">
+              <span>Profile</span>
+              <mat-icon class="right-icon1">person</mat-icon>
+            </div>
+          </a>
+          <a mat-list-item routerLink="/profile" routerLinkActive="active">
+            <div class="item-content">
+              <span>My Profile</span>
+              <mat-icon class="right-icon2">account_circle</mat-icon>
+            </div>
+          </a>
+          <a mat-list-item routerLink="/bookings" routerLinkActive="active">
+            <div class="item-content">
+              <span>Bookings</span>
+              <mat-icon class="right-icon3">book</mat-icon>
+            </div>
+          </a>
+          <a mat-list-item routerLink="/request" routerLinkActive="active">
+            <div class="item-content">
+              <span>Requests</span>
+              <mat-icon class="right-icon4">request_page</mat-icon>
+            </div>
+          </a>
+          <a mat-list-item routerLink="/transaction" routerLinkActive="active">
+            <div class="item-content">
+              <span>Transaction</span>
+              <mat-icon class="right-icon5">receipt</mat-icon>
+            </div>
+          </a>
+          <a mat-list-item routerLink="/report-messages" routerLinkActive="active">
+            <div class="item-content">
+              <span>Report</span>
+              <mat-icon class="right-icon6">report</mat-icon>
+            </div>
+          </a>
+          <a mat-list-item (click)="logout()" class="logout-button">
+            <div class="item-content">
+              <span>Logout</span>
+              <mat-icon class="right-icon6">exit_to_app</mat-icon>
+            </div>
+          </a>
+        </mat-nav-list>
+      </mat-sidenav>
+      
+      <!-- Main Content -->
+      <mat-sidenav-content>
+        <mat-toolbar color="primary">
+          <button mat-icon-button (click)="toggleDrawer()" class="menu-button">
+            <mat-icon>menu</mat-icon>
+          </button>
+          <span class="margin">SERVICE EXPRESS Barangay Mabayuan</span>
+          <span class="spacer"></span>
+          <button
+            mat-icon-button
+            class="custom-badge"
+            [matBadge]="unseenRequestsCount"
+            matBadgeColor="warn"
+            matBadgePosition="above after"
+            [matMenuTriggerFor]="notificationMenu"
+          >
+            <mat-icon>notifications</mat-icon>
+          </button>
+  
+          <mat-menu #notificationMenu="matMenu">
+            <ng-container *ngIf="unseenRequests.length > 0; else noNotifications">
+              <button
+                mat-menu-item
+                *ngFor="let request of unseenRequests"
+                (click)="viewRequest(request)"
+              >
+                <div>
+                  <strong>{{ request.user }}</strong> - {{ request.task }}
+                </div>
+                <small>{{ request.date }}</small>
+              </button>
+            </ng-container>
+            <ng-template #noNotifications>
+              <button mat-menu-item disabled>No new notifications</button>
+            </ng-template>
+          </mat-menu>
+        </mat-toolbar>
+  
+        <div class="content">
+          <router-outlet></router-outlet>
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </ng-container>
+  
+  <router-outlet *ngIf="!showSidenav && !showSkilledWorkerSidenav"></router-outlet>
+  

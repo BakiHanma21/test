@@ -1,0 +1,58 @@
+<h2 mat-dialog-title>Edit Profile</h2>
+
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <!-- Profile Image -->
+    <div class="profile-image-container">
+      <img [src]="imagePreview || data.profileImage || 'assets/user-login.jpg'" alt="Profile" class="profile-preview">
+      <button type="button" mat-raised-button (click)="fileInput.click()">
+        <mat-icon>photo_camera</mat-icon>
+        Change Photo
+      </button>
+      <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none" accept="image/*">
+    </div>
+
+    <!-- Name -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required>
+      <mat-error *ngIf="profileForm.get('name')?.hasError('required')">
+        Name is required
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" required type="email">
+      <mat-error *ngIf="profileForm.get('email')?.hasError('required')">
+        Email is required
+      </mat-error>
+      <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
+        Please enter a valid email address
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Password -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>New Password (leave blank to keep current)</mat-label>
+      <input matInput formControlName="password" type="password">
+    </mat-form-field>
+
+    <!-- Location -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Location</mat-label>
+      <input matInput formControlName="location" required>
+      <mat-error *ngIf="profileForm.get('location')?.hasError('required')">
+        Location is required
+      </mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!profileForm.valid">
+      Save Changes
+    </button>
+  </mat-dialog-actions>
+</form> 

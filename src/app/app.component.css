@@ -1,0 +1,348 @@
+/* General Styling */
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f7fa; /* Light background color */
+  color: #333; /* Darker text color for contrast */
+}
+
+/* Sidenav Container */
+.sidenav-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: white; /* Very light gray for the container */
+}
+
+/* Logo Container */
+.logo-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0 10px 0;
+}
+
+.sidenav-logo {
+  width: 120px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Sidenav */
+.sidenav {
+  width: 250px;
+  background: linear-gradient(to bottom, #ffde59, #ffc475); /* Light gradient */
+  height: 100%;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.mat-nav-list {
+  padding-left: 0;
+}
+
+/* Style for active router links */
+.mat-nav-list a.active {
+  background-color: #fafafa;
+  color: #545454;
+  border-left: 4px solid #7e7e7e;
+  border-right: 4px solid #7e7e7e;
+  padding-left: 16px;
+  box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mat-nav-list a.active .mat-icon {
+  color: #545454;
+}
+
+/* Adding border to .mdc-list-item__content */
+::ng-deep .mdc-list-item__content {
+  font-size: 16px;
+  font-weight: 100;
+  color: #4e4e4e;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid #545454;
+}
+
+::ng-deep .mdc-list-item__content:hover,
+::ng-deep .active .mdc-list-item__content {
+  background-color: #fafafa;
+  width: 100%;
+  color: #545454;
+  border-left: 6px solid #7e7e7e;
+  border-right: 4px solid #7e7e7e;
+  padding-left: 16px;
+  box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.right-icon1 {
+  position: relative;
+  top: 4px;
+  left: 118px;
+  width: 300px;
+}
+.right-icon2 {
+  position: relative;
+  top: 4px;
+  left: 93px;
+  width: 300px;
+}
+.right-icon3 {
+  position: relative;
+  top: 4px;
+  left: 65px;
+  width: 300px;
+}
+.right-icon4 {
+  position: relative;
+  top: 4px;
+  left: 92px;
+  width: 300px;
+}
+.right-icon8 {
+  position: relative;
+  top: 4px;
+  left: 108px;
+  width: 300px;
+}
+.right-icon5 {
+  position: relative;
+  top: 4px;
+  left: 77px;
+  width: 300px;
+}
+.right-icon7 {
+  position: relative;
+  top: 4px;
+  left: 105px;
+  width: 300px;
+}
+.right-icon6 {
+  position: relative;
+  top: 4px;
+  left: 81px;
+  width: 300px;
+}
+
+/* Toolbar Styles */
+.mat-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the toolbar */
+  z-index: 1000;
+}
+
+/* Toolbar profile styles */
+.toolbar-profile {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.toolbar-profile .profile-image-container {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+}
+
+/* Header Styles */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  height: 64px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff; /* White toolbar */
+  padding: 0 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Button and Icon Styles */
+.mat-icon-button {
+  background-color: #f4f7fa;
+  border-radius: 50%;
+  padding: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.mat-icon-button:hover {
+  background-color: #333; /* Hover effect for button */
+}
+
+.mat-icon {
+  color: #333;
+  font-size: 24px;
+  transition: color 0.3s ease;
+}
+
+.mat-icon-button:hover .mat-icon {
+  color: #ffffff; /* Icon changes to white when hovered */
+}
+
+/* Spacer */
+.spacer {
+  flex-grow: 1;
+  display: inline-block;
+}
+
+/* Content Styles */
+.main-content {
+  margin-top: 64px;
+  padding: 16px;
+  overflow: auto;
+  flex-grow: 1;
+  background-color: #ffffff;
+  border-radius: 10px; /* Rounded corners for content */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .sidenav {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-shadow: none; /* Remove shadow on mobile */
+  }
+
+  .main-content {
+    margin-top: 64px;
+  }
+
+  .mat-sidenav-container {
+    display: block;
+  }
+
+  mat-sidenav {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  .sidenav-logo {
+    width: 100px;
+  }
+
+  .profile-image-container {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-image-container {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.custom-sidenav {
+  background: linear-gradient(to bottom, #ffde59, #ffc475);
+  color: #000;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.profile-container {
+  text-align: center;
+  padding: 20px 0;  /* Increased padding for better spacing */
+}
+
+.profile-image-container {
+  position: relative;
+  cursor: pointer;
+  width: 50px;  /* Size to match toolbar height */
+  height: 50px;  /* Size to match toolbar height */
+  margin: 5px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-profile-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;  /* Smooth transition for hover effect */
+}
+
+.profile-image-container:hover .profile-image {
+  transform: scale(1.1);  /* Slight zoom effect on hover */
+}
+
+.edit-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.profile-image-container:hover .edit-overlay {
+  opacity: 1;
+}
+
+.edit-overlay mat-icon {
+  color: white;
+  font-size: 24px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #545454;
+  margin: 8px 0;
+}
+
+.menu-title {
+  font-weight: bold;
+  padding: 8px 16px;
+  text-align: left;
+}
+
+.mat-nav-list .mat-list-item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mat-list-item .mat-icon {
+  color: #000;
+}
+
+.mat-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #333; /* Text color on hover for both users and skilled workers */
+}
+
+.item-content {
+  display: flex;
+  align-items: center;
+}
+
+.item-content span {
+  margin-left: 8px;
+}

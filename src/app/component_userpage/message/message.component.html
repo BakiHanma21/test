@@ -1,0 +1,60 @@
+<div class="message" [ngClass]="type">
+    <p>{{ message }}</p>
+  
+    <div *ngIf="proposedCost !== null">
+      <p><strong>Proposed Cost: </strong>${{ proposedCost }}</p>
+  
+      <div class="form-group">
+        <label for="fileUpload">Upload Image (Optional)</label>
+        <input type="file" id="fileUpload" (change)="onFileChange($event)" accept="image/*" />
+      </div>
+  
+      <div class="form-group">
+        <label for="additionalDetails">Additional Details (Optional)</label>
+        <textarea
+          id="additionalDetails"
+          [(ngModel)]="additionalDetails"
+          name="additionalDetails"
+          placeholder="Provide additional details..."
+        ></textarea>
+      </div>
+  
+      <div class="form-group">
+        <label for="message">Message (Optional)</label>
+        <textarea
+          id="message"
+          [(ngModel)]="typedMessage"
+          name="typedMessage"
+          placeholder="Type your message here..."
+        ></textarea>
+      </div>
+  
+      <div class="form-group">
+        <label for="agree">
+          <input type="checkbox" [(ngModel)]="isAgreed" id="agree" />
+          I agree to the proposed cost.
+        </label>
+      </div>
+  
+      <!-- Action buttons for Agree/Disagree -->
+      <div class="form-group">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="submitForm()"
+          [disabled]="!isAgreed"
+        >
+          Confirm and Submit
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="disagree()"
+          [disabled]="isAgreed"
+        >
+          Disagree
+        </button>
+      </div>
+    </div>
+  </div>
+  

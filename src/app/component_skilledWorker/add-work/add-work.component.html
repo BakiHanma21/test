@@ -1,0 +1,79 @@
+<div class="cont">
+  <div class="futuristic-container">
+    <mat-card class="futuristic-card">
+      <header class="futuristic-header">
+        <h1 class="futuristic-title">Your Worker Profile</h1>
+ 
+        <p *ngIf="!isProfileCompleted" class="futuristic-subtitle">
+          {{ worker ? 'Your profile is complete!' : 'Complete the form to add your profile.' }}
+        </p>
+      </header>
+
+      <form (ngSubmit)="submitProfile()" class="futuristic-form">
+        <div *ngIf="!isProfileCompleted" class="form-section">
+          <mat-form-field appearance="outline" class="futuristic-field">
+            <mat-label>Name</mat-label>
+            <input matInput [(ngModel)]="worker.name" name="name" required />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="futuristic-field">
+            <mat-label>Location</mat-label>
+            <input matInput [(ngModel)]="worker.location" name="location" required />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="futuristic-field">
+            <mat-label>Availability</mat-label>
+            <input matInput [(ngModel)]="worker.availability" name="availability" />
+          </mat-form-field>
+        </div>
+
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="futuristic-field">
+            <mat-label>Phone</mat-label>
+            <input matInput [(ngModel)]="worker.phone" name="phone" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="futuristic-field">
+            <mat-label>Email</mat-label>
+            <input matInput [(ngModel)]="worker.email" name="email" type="email" />
+          </mat-form-field>
+
+        </div>
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="futuristic-field">
+            <mat-label>Skills</mat-label>
+            <textarea matInput [(ngModel)]="worker.skills" name="skills" rows="3" placeholder="Enter your skills" required></textarea>
+          </mat-form-field>
+        
+          <mat-form-field appearance="outline" class="futuristic-field">
+            <mat-label>Experience</mat-label>
+            <textarea matInput [(ngModel)]="worker.experience" name="experience" rows="3" placeholder="Input years of experience" required></textarea>
+          </mat-form-field>
+        </div>
+        
+
+        <!-- Work Done Section -->
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="futuristic-field">
+            <mat-label>Work Done</mat-label>
+            <textarea matInput [(ngModel)]="worker.workDone" name="workDone" rows="4" placeholder="Describe the work done..." required></textarea>
+          </mat-form-field>
+         
+          <div class="form-section image-upload">
+            <label for="workImage" class="upload-label">Work Done Image</label>
+            <input id="workImage" type="file" (change)="onImageSelected($event, 'workImage')" />
+          </div>
+          
+          <div class="form-section image-upload">
+            <label for="profileImage" class="upload-label">Profile Image</label>
+            <input id="profileImage" type="file" (change)="onImageSelected($event, 'profileImage')" />
+          </div>
+          
+        <div class="form-actions">
+          <button mat-raised-button color="primary" class="futuristic-button" type="submit">Submit</button>
+        </div>
+      </div>
+      </form>
+    </mat-card>
+  </div>
+</div>

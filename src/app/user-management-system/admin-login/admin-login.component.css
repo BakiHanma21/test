@@ -1,0 +1,195 @@
+/* Page background */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #FED480;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* Center container */
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 0 10px; /* Ensure no overflow on smaller screens */
+  }
+  
+  /* Login card */
+  .login-card {
+    background: linear-gradient(to right, #868f96 0%, #596164 100%);
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px; /* Maximum width for the card */
+    padding: 40px;
+    margin-top: 40px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  
+  /* Icon styling */
+  .icon-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .login-icon {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #fff5e0;
+    padding: 15px;
+  }
+  
+  /* Input fields */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(54, 54, 54);
+    text-align: left;
+    margin-left: 8px;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    color: black; /* Set text color to black */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+  
+  .form-control::placeholder {
+    color: #888; /* Set placeholder text color */
+  }
+  
+  /* Login button */
+  .btn-login {
+    width: 60%; /* Button width 100% of parent */
+    padding: 12px;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #626262;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-login:hover {
+    background-color: #1F305E;
+  }
+  
+  /* Links */
+  .links {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+  }
+  
+  .link {
+    color: #faf6e9;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 16px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif ;
+  }
+  
+  .link:hover {
+    color: #ffc0d0;
+    text-decoration: underline;
+  }
+  
+  /* Error Messages */
+  .error-message {
+    color: #ffffff;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: left;
+    margin-left: 10px;
+    margin-top: 5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Title styling */
+  .login-title {
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 30px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    color: #faf6e9;
+  }
+
+  .password-wrapper {
+    position: relative;
+  }
+  
+  .eye-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #888;
+  }
+  
+  .eye-icon:hover {
+    color: #333;
+  }
+  
+  .form-control {
+    padding-right: 40px; /* Extra space on the right for the eye icon */
+  }
+  
+  /* For the eye icon alignment */
+  .eye-icon i {
+    font-size: 18px;
+    color: #888;
+  }
+  
+  .eye-icon:hover i {
+    color: #333;
+  }
+  
+  
+  
+  /* Media query for smaller screens */
+  @media (max-width: 600px) {
+    .login-card {
+      padding: 20px;
+    }
+  
+    .login-title {
+      font-size: 24px;
+    }
+  
+    .form-group label {
+      font-size: 16px;
+    }
+  
+    .btn-login {
+      font-size: 14px;
+      padding: 10px;
+    }
+  }
+  

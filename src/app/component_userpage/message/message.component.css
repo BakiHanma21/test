@@ -1,0 +1,54 @@
+.message {
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-size: 1rem;
+  }
+  
+  .info {
+    background-color: #d9f7be;
+    border: 1px solid #b7eb8f;
+    color: #389e0d;
+  }
+  
+  .success {
+    background-color: #f6ffed;
+    border: 1px solid #b7eb8f;
+    color: #52c41a;
+  }
+  
+  .error {
+    background-color: #fff1f0;
+    border: 1px solid #ffccc7;
+    color: #f5222d;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background-color: #bfbfbf;
+    cursor: not-allowed;
+  }
+  
+  input[type="file"] {
+    margin-top: 5px;
+  }
+  

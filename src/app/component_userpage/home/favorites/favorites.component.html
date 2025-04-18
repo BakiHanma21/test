@@ -1,0 +1,67 @@
+<div class="contact-us-container">
+  <!-- No favorites message -->
+  <div *ngIf="favorites.length === 0">
+    <p class="text-center">No favorites yet!</p>
+  </div>
+
+  <!-- List of favorite workers -->
+  <div *ngFor="let worker of favorites">
+    <div class="worker-card">
+      <!-- Worker Details -->
+      <div class="row">
+        <div class="col-6">
+
+          <img class="worker-image" [src]="worker.image" alt="{{ worker.name }}" />
+          <h3>{{ worker.name }}</h3>
+
+          <div class="worker-header">
+            <div>
+              <!-- Combined Worker Details -->
+              <div class="worker-info" style="color: blue;">
+                <p>Job: <span style="color: #555;">{{ worker.job }}</span></p>
+                <p>Location: <span style="color: #555;">{{ worker.location }}</span></p>
+                <p>Experience: <span style="color: #555;">{{ worker.experience }}</span></p>
+                <p>Availability: <span style="color: #555;">{{ worker.availability }}</span></p>
+                <!-- <p>Rating: <span style="color: #555;">{{ worker.rating }}</span></p> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews Section -->
+      <div class="worker-reviews">
+        <h4>Reviews & Ratings:</h4>
+        <ul>
+          <li *ngFor="let review of worker.reviews">
+            <p><strong>{{ review.name }}</strong>: {{ review.text }}
+              <span class="star-rating">
+                (
+                <i *ngFor="let star of [].constructor(review.rating)" class="fas fa-star" style="color: #FFD700;"></i>
+                <i *ngFor="let star of [].constructor(5 - review.rating)" class="far fa-star" style="color: #FFD700;"></i>
+                {{ review.rating }}/5
+                )
+              </span>
+            </p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Works Section -->
+      <div class="worker-works">
+        <h4>Work Examples:</h4>
+        <ul>
+          <li *ngFor="let work of worker.works">
+            <p><strong>{{ work.title }}</strong>: {{ work.description }}</p>
+            <img [src]="work.image" alt="{{ work.title }}" width="250px"/>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Remove from Favorites Button -->
+      <div class="modal-actions">
+        <button class="btn btn-danger" (click)="unsaveAsFavorite(worker)">Remove from Favorites</button>
+      </div>
+    </div>
+  </div>
+</div>

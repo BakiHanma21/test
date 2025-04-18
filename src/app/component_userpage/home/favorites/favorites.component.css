@@ -1,0 +1,231 @@
+/* General container */
+.contact-us-container {
+  padding: 20px;
+  background: #f1f1f1; /* Soft gray background for a minimalist feel */
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  max-width: 1000px;
+  margin: 40px auto;
+  border-radius: 40px;
+}
+
+/* Worker card style */
+.worker-card {
+  background-color: #fff; /* Clean white background */
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  margin-bottom: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.worker-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading styles */
+.worker-card h3 {
+  font-size: 1.6rem;
+  color: #2c3e50;
+  margin-bottom: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  text-align: center;
+}
+
+.worker-job {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.worker-location {
+  font-size: 0.95rem;
+  color: #95a5a6; /* Light gray text */
+  margin-bottom: 10px;
+}
+
+.worker-experience,
+.worker-availability,
+.worker-rating {
+  font-size: 1rem;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+/* Worker image */
+.worker-image {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  border: 3px solid #ecf0f1; /* Subtle border to separate image from content */
+  margin: 0 auto;
+  display: block;
+}
+
+/* Layout structure */
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.col-6 {
+  flex: 1;
+  padding: 0 10px;
+}
+
+/* Reviews and works styling */
+.worker-reviews ul,
+.worker-works ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 15px;
+}
+
+.worker-reviews li,
+.worker-works li {
+  margin-bottom: 12px;
+  padding: 15px;
+  background-color: #f4f4f4; /* Lighter background for items */
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.worker-reviews li p,
+.worker-works li p {
+  color: #7f8c8d;
+  margin: 0;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* No favorites message */
+.contact-us-container p {
+  font-size: 1.2rem;
+  text-align: left;
+  color: #ff4747;  /* Red text for "No favorites yet" message */
+  margin-top: 30px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.btn {
+  padding: 15px 40px;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  background: linear-gradient(90deg, #00a8ff, #007ac1);
+  box-shadow: 0 8px 15px rgba(0, 168, 255, 0.4);
+  transition: all 0.4s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(0, 168, 255, 0.6);
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: -1;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+
+.btn:hover::after {
+  opacity: 1;
+}
+
+.btn-danger {
+  background: red;
+  border: 1px solid #333;
+}
+
+.btn-danger:hover{
+  transform: translateY(-3px);
+  color: #ff6b6b;
+}
+
+.mt-2 {
+  margin-top: 50px;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+/* Reviews and works section heading */
+.worker-reviews h4,
+.worker-works h4 {
+  font-size: 1.6rem;
+  color: #3498db;  /* Soft blue for section headings */
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+  .worker-card {
+    padding: 15px;
+  }
+  
+  .worker-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .worker-image {
+    margin-bottom: 10px;
+  }
+
+  .row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .col-6 {
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .worker-reviews li,
+  .worker-works li {
+    padding: 10px;
+  }
+}
+
+.worker-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.worker-works img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
