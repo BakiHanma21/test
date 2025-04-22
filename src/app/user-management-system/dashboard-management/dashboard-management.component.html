@@ -1,45 +1,54 @@
-<div class="dashboard-header" [ngClass]="{'header-shifted': !sidebarOpen}">
-  <div class="sidebar-toggle-container">
-    <span class="welcome-message" (click)="toggleSidebar()">Welcome Admin!</span>
-    <button class="sidebar-toggle-inside" (click)="toggleSidebar()">☰</button>
-  </div>
-</div>
-
 <div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header" [ngClass]="{'header-shifted': !sidebarOpen}">
+    <div class="sidebar-toggle-container">
+      <button class="sidebar-toggle-inside" (click)="toggleSidebar()">☰</button>
+      <span class="welcome-message">Welcome Admin!</span>
+    </div>
+  </div>
+
+  <!-- Sidebar Navigation -->
   <div class="sidebar" [class.open]="sidebarOpen">
-    <div class="logo">
-      <img src="assets/matain-logo-copy.png" alt="Worker Icon" class="login-icon" />
-      <p class="pol">User Management System</p>
+    <div class="sidebar-header">
+      <div class="logo">
+        <img src="assets/matain-logo-copy.png" alt="Company Logo" />
+        <p class="pol">User Management System</p>
+      </div>
+      <button class="close-sidebar" (click)="toggleSidebar()">×</button>
     </div>
     <hr class="logo-line" />
-    <ul>
-      <h4 class="menu">Menu</h4>
-      <li class="dash">
-        <a routerLink="/dashboard-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <i class="fas fa-tachometer-alt"></i> Dashboard
-        </a>
-      </li>
-      <li class="prof">
-        <a routerLink="/profile-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <i class="fas fa-user"></i> Profile
-        </a>
-      </li>
-      <li class="rbac">
-        <a routerLink="/role-based-access-control" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <i class="fas fa-users-cog"></i> Role-Based Access
-        </a>
-      </li>
-      <li class="UV">
-        <a routerLink="/user-verification" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <i class="fas fa-check-circle"></i> Verifications
-        </a>
-      </li>
-      <li class="chat">
-        <a routerLink="/admin-messages" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <i class="fas fa-comment"></i> Messages
-        </a>
-      </li>
-    </ul>
+    
+    <nav class="sidebar-nav">
+      <h4 class="menu-title">Menu</h4>
+      <ul class="nav-links">
+        <li>
+          <a routerLink="/dashboard-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/profile-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-user"></i> <span>Profile</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/role-based-access-control" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-users-cog"></i> <span>Role-Based Access</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/user-verification" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-check-circle"></i> <span>Verifications</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin-messages" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-comment"></i> <span>Messages</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    
     <div class="logout">
       <a (click)="logout()">
         <i class="fas fa-sign-out-alt"></i> Logout
@@ -47,30 +56,165 @@
     </div>
   </div>
 
-  <div class="main-content" [ngStyle]="{ 'margin-left': sidebarOpen ? '230px' : '0' }">
-    <h2 class="dashboard-title">DASHBOARD</h2>
+  <!-- Main Content Area -->
+  <div class="main-content" [ngStyle]="{ 'margin-left': sidebarOpen ? '250px' : '0' }">
+    <!-- Header Section -->
+    <div class="header-container">
+      <div class="header-content">
+        <h1>Dashboard Overview<span class="material-icons">dashboard</span></h1>
+        <div class="divider"></div>
+        <div class="header-text">
+          <p class="subtitle">Monitor and manage your system statistics</p>
+        </div>
+      </div>
+      <div class="header-background">DASHBOARD</div>
+    </div>
+
+    <!-- Statistics Cards -->
     <div class="cards-container">
       <div class="dashboard-card orange-card">
-        <h3 class="card-value">{{ totalUsers + totalSkilledWorkers }}</h3>
-        <p class="card-title">Total Account Registered</p>
+        <div class="card-header">
+          <div class="texture-layer"></div>
+          <div class="card-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="card-stats">
+            <h3 class="card-value">{{ totalUsers + totalSkilledWorkers }}</h3>
+            <p class="card-title">Total Account Registered</p>
+          </div>
+        </div>
       </div>
+
       <div class="dashboard-card green-card">
-        <h3 class="card-value">{{ totalUsers }}</h3>
-        <p class="card-title">Total Users</p>
+        <div class="card-header">
+          <div class="texture-layer"></div>
+          <div class="card-icon">
+            <i class="fas fa-user-friends"></i>
+          </div>
+          <div class="card-stats">
+            <h3 class="card-value">{{ totalUsers }}</h3>
+            <p class="card-title">Total Users</p>
+          </div>
+        </div>
       </div>
+
       <div class="dashboard-card red-card">
-        <h3 class="card-value">{{ totalSkilledWorkers }}</h3>
-        <p class="card-title">Total Skilled Workers</p>
+        <div class="card-header">
+          <div class="texture-layer"></div>
+          <div class="card-icon">
+            <i class="fas fa-hard-hat"></i>
+          </div>
+          <div class="card-stats">
+            <h3 class="card-value">{{ totalSkilledWorkers }}</h3>
+            <p class="card-title">Total Skilled Workers</p>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="chart-container">
-      <div class="chart-box">
-        <canvas baseChart 
-                [data]="barChartData" 
-                [options]="barChartOptions" 
-                [type]="'bar'">
-        </canvas>
+
+    <!-- Chart Section -->
+    <div class="chart-section">
+      <!-- Chart Settings Card -->
+      <div class="settings-card">
+        <div class="card-header">
+          <h2>
+            <span class="material-icons">tune</span>
+            Chart Settings
+          </h2>
+        </div>
+        
+        <div class="settings-content">
+          <div class="settings-section">
+            <h3>Chart Type</h3>
+            <div class="chart-type-buttons">
+              <button 
+                *ngFor="let option of chartTypeOptions" 
+                (click)="setChartType(option.value)"
+                [class.active]="chartType === option.value"
+                class="chart-type-btn"
+                [title]="option.label"
+              >
+                <span class="material-icons">{{ option.icon }}</span>
+                <span class="btn-label">{{ option.label }}</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="divider"></div>
+          
+          <div class="settings-section">
+            <h3>Appearance</h3>
+            <div class="appearance-options">
+              <div class="theme-selector">
+                <label for="themeSelect">Color Theme</label>
+                <select id="themeSelect" [(ngModel)]="colorTheme" (change)="updateChartTheme()" class="theme-select">
+                  <option *ngFor="let theme of colorThemeOptions" [value]="theme.value">
+                    {{ theme.label }}
+                  </option>
+                </select>
+              </div>
+              
+              <div class="options-grid">
+                <div class="toggle-option">
+                  <label>
+                    <input type="checkbox" [(ngModel)]="chartSettings.showLegend" (change)="updateChart()">
+                    <span>Show Legend</span>
+                  </label>
+                </div>
+                
+                <div class="toggle-option">
+                  <label>
+                    <input type="checkbox" [(ngModel)]="chartSettings.showGridLines" (change)="updateChart()">
+                    <span>Grid Lines</span>
+                  </label>
+                </div>
+                
+                <div class="toggle-option">
+                  <label>
+                    <input type="checkbox" [(ngModel)]="chartSettings.enableAnimations" (change)="updateChart()">
+                    <span>Animations</span>
+                  </label>
+                </div>
+                
+                <div class="toggle-option">
+                  <label>
+                    <input type="checkbox" [(ngModel)]="chartSettings.rounded" (change)="updateChart()">
+                    <span>Rounded Bars</span>
+                  </label>
+                </div>
+
+                <div class="toggle-option">
+                  <label>
+                    <input type="checkbox" [(ngModel)]="showTrendLine" (change)="updateChart()">
+                    <span>Show Trend Line</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-header">
+          <h2>User Registration Analytics</h2>
+          <div class="chart-actions">
+            <button class="chart-btn" (click)="exportChartData()">
+              <i class="fas fa-download"></i> Export Data
+            </button>
+          </div>
+        </div>
+        <div class="chart-box">
+          <canvas baseChart 
+                  [data]="barChartData" 
+                  [options]="barChartOptions" 
+                  [type]="chartType">
+          </canvas>
+        </div>
       </div>
     </div>
   </div>
+  
+  <!-- Backdrop/Overlay for Mobile -->
+  <div class="sidebar-backdrop" *ngIf="sidebarOpen" (click)="toggleSidebar()"></div>
 </div>
