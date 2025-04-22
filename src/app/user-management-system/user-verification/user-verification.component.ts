@@ -22,7 +22,6 @@ interface User {
   image?: string;
   valid_id?: string;
   created_at?: string;
-  status: string;
 }
 
 @Component({
@@ -38,12 +37,6 @@ export class UserVerificationComponent {
   sidebarOpen = true;
   isProfileModalVisible: boolean = false;
   currentUser: any = {};
-  selectedFilter: string = 'all';
-  searchTerm = '';
-  isApproveFormVisible = false;
-  isDenyFormVisible = false;
-  isCommentFormVisible = false;
-  commentText: string = '';
 
   constructor(
     private router: Router,
@@ -84,15 +77,11 @@ export class UserVerificationComponent {
     }
   }
 
-  filterUsers() {
-    if (this.selectedFilter === 'all') {
-      this.filteredUsers = this.users;
-    } else if (this.selectedFilter === 'regular') {
-      this.filteredUsers = this.users.filter(user => user.role.toLowerCase() === 'user');
-    } else if (this.selectedFilter === 'skilled') {
-      this.filteredUsers = this.users.filter(user => user.role.toLowerCase() === 'worker');
-    }
-  }
+  searchTerm = '';
+  isApproveFormVisible = false;
+  isDenyFormVisible = false;
+  isCommentFormVisible = false;
+  commentText: string = '';
 
   viewProfile(user: User) {
     this.currentUser = {

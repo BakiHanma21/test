@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,51 +7,25 @@ import { NgClass } from '@angular/common';
 import { Router } from '@angular/router';
 import { ChatService } from '../../services/chat.service';
 
-interface ProfileData {
-  username: string;
-  password: string;
-  email: string;
-  role: string;
-  image: string;
-  lastLogin?: string;
-  accountCreated?: string;
-  twoFactorEnabled: boolean;
-}
-
 @Component({
   selector: 'app-profile-management',
-  standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, NgClass],
   templateUrl: './profile-management.component.html',
   styleUrls: ['./profile-management.component.css']
 })
-export class ProfileManagementComponent implements OnInit {
+export class ProfileManagementComponent {
   sidebarOpen: boolean = true;
-  passwordVisible = false;
+  passwordVisible = false; 
   isEditFormVisible = false;
   isSaved = false;
-  isLoading = false;
-  showSuccessToast = false;
-  defaultProfileImage: string = 'assets/default-profile.png';
-  showPassword: boolean = false;
-  
-  profile: ProfileData = {
+  defaultProfileImage: string = 'images/image.png';
+
+  profile = {
     username: '',
     password: '',
     email: '',
     role: '',
-    image: '',
-    lastLogin: '',
-    accountCreated: '',
-    twoFactorEnabled: false
-  };
-
-  editForm = {
-    email: '',
-    password: '',
-    role: '',
-    currentPassword: '',
-    twoFactorEnabled: false
+    image: ''
   };
 
   constructor(
@@ -65,69 +39,34 @@ export class ProfileManagementComponent implements OnInit {
     this.initializeChat();
   }
 
-  togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
-  }
-
   loadProfile(): void {
-    this.isLoading = true;
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
       this.http.get('http://localhost:8000/api/admin-profile', { headers })
-        .subscribe({
-          next: (response: any) => {
+        .subscribe(
+          (response: any) => {
             console.log('Profile Response:', response);
-            this.profile = {
-              ...response.data,
-              lastLogin: response.data.last_login || 'Never',
-              accountCreated: response.data.created_at || 'Unknown',
-              twoFactorEnabled: Boolean(response.data.two_factor_enabled)
-            };
-            this.editForm = {
-              email: this.profile.email,
-              password: '',
-              role: this.profile.role,
-              currentPassword: '',
-              twoFactorEnabled: this.profile.twoFactorEnabled
-            };
-            this.isLoading = false;
+            this.profile = response.data || [];
           },
-          error: (error) => {
-            this.isLoading = false;
+          (error) => {
             if (error.status === 401) {
               alert('Unauthorized! Please log in again.');
               this.router.navigate(['/login']);
             }
             console.error('Error loading profile:', error);
           }
-        });
+        );
     } else {
-      this.isLoading = false;
       this.router.navigate(['/login']);
     }
   }
 
   toggleEditForm() {
     this.isEditFormVisible = !this.isEditFormVisible;
-    if (this.isEditFormVisible) {
-      this.editForm = {
-        email: this.profile.email,
-        password: '',
-        role: this.profile.role,
-        currentPassword: '',
-        twoFactorEnabled: this.profile.twoFactorEnabled
-      };
-    }
   }
 
   saveChanges() {
-    if (!this.editForm.currentPassword) {
-      alert('Please enter your current password to make changes.');
-      return;
-    }
-
-    this.isLoading = true;
     const authToken = localStorage.getItem('authToken');
     if (!authToken) {
       this.router.navigate(['/login']);
@@ -137,33 +76,22 @@ export class ProfileManagementComponent implements OnInit {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
     
     const formData = {
-      email: this.editForm.email,
-      password: this.editForm.password,
-      role: this.editForm.role,
-      currentPassword: this.editForm.currentPassword,
-      twoFactorEnabled: this.editForm.twoFactorEnabled
+      email: this.profile.email,
+      password: this.profile.password,
+      role: this.profile.role
     };
 
     this.http.put('http://localhost:8000/api/update-admin-profile', formData, { headers })
-      .subscribe({
-        next: (response) => {
+      .subscribe(
+        (response) => {
           console.log('Profile updated:', response);
-          this.isLoading = false;
-          this.showSuccessToast = true;
+          this.isSaved = true;
           this.toggleEditForm();
-          this.loadProfile();
-          
-          // Hide success toast after 3 seconds
-          setTimeout(() => {
-            this.showSuccessToast = false;
-          }, 3000);
         },
-        error: (error) => {
-          this.isLoading = false;
+        (error) => {
           console.error('Error updating profile:', error);
-          alert(error.error.message || 'Error updating profile. Please try again.');
         }
-      });
+      );
   }
 
   togglePassword(): void {
@@ -176,50 +104,30 @@ export class ProfileManagementComponent implements OnInit {
 
   onFileChange(event: any) {
     const file = event.target.files[0];
+    console.log(file);
     if (file) {
-      // Validate file type and size
-      if (!file.type.match(/image\/(png|jpeg|jpg)/)) {
-        alert('Please upload only PNG, JPEG, or JPG images.');
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        alert('File size should not exceed 5MB.');
-        return;
-      }
-
-      this.isLoading = true;
       const formData = new FormData();
+      
+      const userId = localStorage.getItem('user_id'); // Changed from 'userId' to 'user_id'
       formData.append('profile_picture', file);
 
       const authToken = localStorage.getItem('authToken');
       if (authToken) {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-        this.http.post('http://localhost:8000/api/update-admin-picture', formData, { headers })
-          .subscribe({
-            next: (response: any) => {
-              console.log('Upload successful:', response);
-              this.isLoading = false;
-              this.showSuccessToast = true;
+        this.http.post('http://localhost:8000/api/update-admin-picture', formData, { headers }).subscribe(
+          (response: any) => {
+            console.log('Upload successful:', response);
+            this.loadProfile();
+          },
+          (error) => {
+            if (error.status === 201) {
+              console.log('Upload successful:', error);
               this.loadProfile();
-              
-              setTimeout(() => {
-                this.showSuccessToast = false;
-              }, 3000);
-            },
-            error: (error) => {
-              this.isLoading = false;
-              if (error.status === 201) {
-                this.showSuccessToast = true;
-                this.loadProfile();
-                setTimeout(() => {
-                  this.showSuccessToast = false;
-                }, 3000);
-              } else {
-                console.error('Error uploading profile picture:', error);
-                alert(error.error.message || 'Error uploading profile picture. Please try again.');
-              }
+            } else {
+              console.error('Error uploading profile picture:', error);
             }
-          });
+          }
+        );
       }
     }
   }
@@ -240,7 +148,7 @@ export class ProfileManagementComponent implements OnInit {
   }
 
   private initializeChat(): void {
-    const userId = localStorage.getItem('user_id');
+    const userId = localStorage.getItem('user_id'); // Changed from 'userId' to 'user_id'
     const authToken = localStorage.getItem('authToken');
     if (userId && authToken) {
       this.chatService.initializeWebSocket();
