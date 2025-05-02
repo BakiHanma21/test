@@ -1,75 +1,226 @@
 <div class="booking-container">
-  <div class="worker-details">
-    <h2 class="worker-name">Booking for {{ worker.name }}</h2>
-    <p class="worker-job">Job: {{ worker.job }}</p>
+  <!-- Header Section -->
+  <div class="booking-header">
+    <div class="worker-info">
+      <div class="worker-avatar">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="worker-details">
+        <h2 class="worker-name">{{ worker.name }}</h2>
+        <p class="worker-job">{{ worker.job }}</p>
+      </div>
+    </div>
+
+    <!-- Worker Schedule Section -->
+    <div class="worker-schedule" *ngIf="workerSchedule">
+      <!-- <h3>Worker's Schedule</h3>
+      <div class="schedule-info">
+        <div class="schedule-item" *ngIf="workerSchedule.worker_info">
+          <i class="fas fa-user"></i>
+          <span>{{ workerSchedule.worker_info.name }}</span>
+        </div>
+        <div class="schedule-item" *ngIf="workerSchedule.available_slots?.length">
+          <i class="fas fa-calendar-check"></i>
+          <span>Available for {{ workerSchedule.available_slots.length }} days</span>
+        </div>
+      </div> -->
+
+      <!-- Display Conflicts if any -->
+      <div class="conflicts-section" *ngIf="workerSchedule.conflicts?.length">
+        <h4>Upcoming Commitments</h4>
+        <div class="conflicts-list">
+          <div class="conflict-item" *ngFor="let conflict of workerSchedule.conflicts">
+            <div class="conflict-type" [ngClass]="conflict.type">
+              <i class="fas" [ngClass]="{'fa-calendar-alt': conflict.type === 'booking', 'fa-money-bill-wave': conflict.type === 'transaction'}"></i>
+              {{ conflict.type | uppercase }}
+            </div>
+            <div class="conflict-details">
+              <div class="conflict-title">{{ conflict.title }}</div>
+              <div class="conflict-date">
+                <i class="fas fa-clock"></i>
+                {{ conflict.date | date:'mediumDate' }}
+                <span *ngIf="conflict.time">at {{ conflict.time }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" *ngIf="isCheckingAvailability">
+      <div class="spinner"></div>
+      <span>Checking availability...</span>
+    </div>
   </div>
 
-  <div class="calendar-container">
-    <full-calendar 
-      [options]="calendarOptions" 
-      (dateClick)="handleDateClick($event)">
-    </full-calendar>
+  <!-- Booking Progress -->
+  <div class="booking-progress">
+    <div class="progress-step" [class.active]="!selectedDate" [class.completed]="selectedDate">
+      <div class="step-number">1</div>
+      <div class="step-label">Select Start Date</div>
+    </div>
+    <div class="progress-step" [class.active]="selectedDate && !endDate" [class.completed]="endDate">
+      <div class="step-number">2</div>
+      <div class="step-label">Select End Date</div>
+    </div>
+    <div class="progress-step" [class.active]="selectedDate && endDate">
+      <div class="step-number">3</div>
+      <div class="step-label">Job Details</div>
+    </div>
   </div>
 
-  <div class="booking-form" *ngIf="selectedDate">
-    <h3>Book a job from {{ selectedDate | date: 'mediumDate' }} to {{ endDate | date: 'mediumDate' }}</h3>
-    <form (submit)="submitBooking()">
-      <label for="title">Job Title:</label>
-      <input
-        type="text"
-        id="title"
-        [(ngModel)]="booking.title"
-        name="title"
-        required
-        [disabled]="!endDate"
-      />
+  <!-- Calendar Section -->
+  <div class="calendar-section" *ngIf="!showBookingForm">
+    <div class="calendar-header">
+      <h3>Select Service Date</h3>
+      <p class="calendar-instruction" *ngIf="!selectedDate">
+        <i class="fas fa-info-circle"></i>
+        Click to select your start date
+      </p>
+      <p class="calendar-instruction" *ngIf="selectedDate && !endDate">
+        <i class="fas fa-info-circle"></i>
+        Now select your end date
+      </p>
+    </div>
+    <div class="calendar-container">
+      <full-calendar [options]="calendarOptions"></full-calendar>
+    </div>
 
-      <label for="description">Job Description:</label>
-      <textarea
-        id="description"
-        [(ngModel)]="booking.description"
-        name="description"
-        required
-        [disabled]="!endDate">
-      </textarea>
+    <!-- Navigation Buttons -->
+    <div class="calendar-actions" *ngIf="selectedDate && endDate">
+      <button class="btn btn-secondary" (click)="resetBooking()">
+        <i class="fas fa-undo"></i>
+        Reset Dates
+      </button>
+      <button class="btn btn-primary" (click)="proceedToBookingForm()">
+        <i class="fas fa-arrow-right"></i>
+        Continue to Details
+      </button>
+    </div>
+  </div>
 
-      <label for="cost">Proposed Cost:</label>
-      <input
-        type="number"
-        id="cost"
-        [(ngModel)]="booking.cost"
-        name="cost"
-        required
-        [disabled]="!endDate"
-      />
+  <!-- Booking Form on New Page -->
+  <div class="booking-form-page" *ngIf="showBookingForm">
+    <div class="form-header">
+      <button class="btn btn-link back-button" (click)="showBookingForm = false">
+        <i class="fas fa-arrow-left"></i>
+        Back to Calendar
+      </button>
+      <h3>Service Details</h3>
+      <p class="date-range">{{ selectedDate | date: 'MMM d, y' }} - {{ endDate | date: 'MMM d, y' }}</p>
+    </div>
 
-      <label for="time">Booking Time:</label>
-      <input
-        type="time"
-        id="time"
-        [(ngModel)]="booking.time"
-        name="time"
-        required
-        [disabled]="!endDate"
-      />
-
-      <label for="image">Upload Image:</label>
-      <div class="file-upload-container">
-        <input type="file" id="image" (change)="onImageSelected($event)" class="file-input" accept="image/*">
-        <label for="image" class="custom-file-upload">
-          <i class="fas fa-cloud-upload-alt"></i>
-          <span>Choose a file</span>
-          <small>or drag it here</small>
+    <form (submit)="submitBooking()" class="modern-form">
+      <div class="form-group">
+        <label for="title">
+          <i class="fas fa-briefcase"></i>
+          Job Title
         </label>
-        <div class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</div>
+        <input
+          type="text"
+          id="title"
+          [(ngModel)]="booking.title"
+          name="title"
+          required
+          placeholder="Enter job title"
+          class="modern-input"
+        />
       </div>
 
-      <button
-        type="submit"
-        [disabled]="!worker.id || !booking.title || !booking.cost || !booking.time || !selectedDate || !endDate || !booking.description"
-        class="btn btn-primary">
-        Confirm Booking
-      </button>
+      <div class="form-group">
+        <label for="description">
+          <i class="fas fa-align-left"></i>
+          Job Description
+        </label>
+        <textarea
+          id="description"
+          [(ngModel)]="booking.description"
+          name="description"
+          required
+          placeholder="Describe the job requirements"
+          class="modern-textarea"
+        ></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cost">
+            <i class="fas fa-money-bill"></i>
+            Proposed Cost
+          </label>
+          <div class="cost-input-group">
+            <span class="currency-symbol">₱</span>
+            <input
+              type="number"
+              id="cost"
+              [(ngModel)]="booking.cost"
+              name="cost"
+              required
+              placeholder="0.00"
+              class="modern-input"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="time">
+            <i class="fas fa-clock"></i>
+            Preferred Time
+          </label>
+          <input
+            type="time"
+            id="time"
+            [(ngModel)]="booking.time"
+            name="time"
+            required
+            class="modern-input"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i class="fas fa-image"></i>
+          Reference Image
+        </label>
+        <div class="file-upload-container" (dragover)="$event.preventDefault()" (drop)="handleFileDrop($event)">
+          <input 
+            type="file" 
+            id="image" 
+            (change)="onImageSelected($event)" 
+            class="file-input" 
+            accept="image/*"
+            title="Choose a reference image for your booking"
+            aria-label="Choose a reference image for your booking"
+          >
+          <div class="upload-area" [class.has-file]="selectedFileName">
+            <div class="upload-content">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span *ngIf="!selectedFileName">Drag and drop an image or click to browse</span>
+              <span *ngIf="selectedFileName" class="file-name">
+                <i class="fas fa-file-image"></i>
+                {{ selectedFileName }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="showBookingForm = false">
+          <i class="fas fa-arrow-left"></i>
+          Back
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!isFormValid()"
+        >
+          <i class="fas fa-check"></i>
+          Confirm Booking
+        </button>
+      </div>
     </form>
   </div>
 </div>

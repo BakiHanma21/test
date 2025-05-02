@@ -41,6 +41,7 @@
         {{ loading ? 'Logging in...' : 'Login' }}
       </button>
     </form>
+
     <div class="signup-button">
       <p>Don't have an account? </p>
       <div class="redirect-button">
@@ -50,5 +51,14 @@
         </div>
       </div>
     </div>
+
+    <!-- Divider -->
+    <div class="divider"></div>
+
+    <!-- Back Button -->
+    <button class="back-button" (click)="navigateToHomepage()">
+      <i class="fas fa-arrow-left"></i>
+      Back to Homepage
+    </button>
   </div>
 </div>

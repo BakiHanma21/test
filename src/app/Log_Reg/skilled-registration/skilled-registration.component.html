@@ -1,320 +1,416 @@
 <div class="skilled-registration-container">
+  <!-- Animated Background with Floating Icons -->
+  <div class="animated-background">
+    <!-- First row of icons -->
+    <i class="material-icons floating-icon" style="top: 15%; left: 10%; font-size: 50px; --duration: 4s;">build</i>
+    <i class="material-icons floating-icon" style="top: 25%; right: 15%; font-size: 65px; --duration: 5s;">hardware</i>
+    <i class="material-icons floating-icon" style="bottom: 20%; left: 20%; font-size: 55px; --duration: 3.5s;">format_paint</i>
+    <i class="material-icons floating-icon" style="top: 45%; right: 25%; font-size: 45px; --duration: 4.2s;">handyman</i>
+    
+    <!-- Second row of icons -->
+    <i class="material-icons floating-icon" style="bottom: 30%; right: 10%; font-size: 60px; --duration: 6s;">plumbing</i>
+    <i class="material-icons floating-icon" style="top: 60%; left: 15%; font-size: 50px; --duration: 5.5s;">electrical_services</i>
+    <i class="material-icons floating-icon" style="bottom: 40%; left: 30%; font-size: 70px; --duration: 7s;">construction</i>
+    <i class="material-icons floating-icon" style="top: 30%; left: 40%; font-size: 65px; --duration: 5.8s;">home_repair_service</i>
+    
+    <!-- Additional icons with faster animations -->
+    <i class="material-icons floating-icon" style="top: 10%; left: 30%; font-size: 40px; --duration: 3s;">engineering</i>
+    <i class="material-icons floating-icon" style="top: 50%; left: 60%; font-size: 45px; --duration: 3.2s;">carpenter</i>
+    <i class="material-icons floating-icon" style="top: 70%; right: 20%; font-size: 50px; --duration: 4.5s;">architecture</i>
+    <i class="material-icons floating-icon" style="bottom: 10%; right: 30%; font-size: 55px; --duration: 3.8s;">brush</i>
+    <i class="material-icons floating-icon" style="top: 40%; right: 45%; font-size: 42px; --duration: 3.3s;">plumbing</i>
+    <i class="material-icons floating-icon" style="bottom: 15%; left: 50%; font-size: 48px; --duration: 4.7s;">home_repair_service</i>
+    <i class="material-icons floating-icon" style="top: 20%; right: 40%; font-size: 52px; --duration: 3.9s;">electric_bolt</i>
+    <i class="material-icons floating-icon" style="bottom: 50%; left: 5%; font-size: 58px; --duration: 4.1s;">construction</i>
+  </div>
+
   <div class="registration-form-card">
     <div class="icon-container">
-      <img src="assets/skilled.jpg" alt="Skilled Worker Icon" class="worker-icon" />
+      <img src="assets/pict-Photoroom.png" alt="Skilled Worker Icon" class="worker-icon" />
     </div>
 
     <h2>Skilled Worker Registration</h2>
 
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="progress" [style.width]="(currentStep / totalSteps) * 100 + '%'"></div>
+      <div class="steps">
+        <div class="step" [class.active]="currentStep >= 1" (click)="goToStep(1)">1</div>
+        <div class="step" [class.active]="currentStep >= 2" (click)="goToStep(2)">2</div>
+        <div class="step" [class.active]="currentStep >= 3" (click)="goToStep(3)">3</div>
+        <div class="step" [class.active]="currentStep >= 4" (click)="goToStep(4)">4</div>
+      </div>
+    </div>
+
+    <!-- Step Labels -->
+    <div class="step-label">{{ getStepLabel() }}</div>
+
     <form (ngSubmit)="onSubmit(skilledRegistrationForm)" #skilledRegistrationForm="ngForm" enctype="multipart/form-data">
       <!-- General Form Error Message -->
       <div class="error-message text-center" *ngIf="formSubmitted && !skilledRegistrationForm.valid">
-        Please fill in all the required fields correctly before registering!!.
+        Please fill in all the required fields correctly before registering.
       </div>
 
-      <h3>Login Information:</h3>
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          class="form-control"
-          placeholder="Enter your full name"
-          [(ngModel)]="user.name"
-          #name="ngModel"
-          required
-        />
-        <div class="error-message text-center" *ngIf="name.invalid && name.touched">
-          Please enter your full name.
+      <!-- Step 1: Personal Information -->
+      <div class="form-step" *ngIf="currentStep === 1">
+        <h3>Personal Information</h3>
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="form-control"
+            placeholder="Enter your full name"
+            [(ngModel)]="user.name"
+            #name="ngModel"
+            required
+          />
+          <div class="error-message text-center" *ngIf="name.invalid && name.touched">
+            Please enter your full name.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number:</label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            class="form-control"
+            placeholder="Enter your phone number"
+            [(ngModel)]="user.phoneNumber"
+            #phoneNumber="ngModel"
+            required
+            pattern="^[0-9]{11}$"
+          />
+          <div class="error-message" *ngIf="phoneNumber.invalid && phoneNumber.touched">
+            Please enter a valid phone number (11 digits).
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="Enter your email"
+            [(ngModel)]="user.email"
+            #email="ngModel"
+            required
+            email
+          />
+          <div class="error-message" *ngIf="email.invalid && email.touched">
+            Please enter a valid email address.
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="phoneNumber">Phone Number:</label>
-        <input
-          type="tel"
-          id="phoneNumber"
-          name="phoneNumber"
-          class="form-control"
-          placeholder="Enter your phone number"
-          [(ngModel)]="user.phoneNumber"
-          #phoneNumber="ngModel"
-          required
-          pattern="^[0-9]{11}$"
-        />
-        <div class="error-message" *ngIf="phoneNumber.invalid && phoneNumber.touched">
-          Please enter a valid phone number (11 digits).
+      <!-- Step 2: Security -->
+      <div class="form-step" *ngIf="currentStep === 2">
+        <h3>Security Information</h3>
+        <div class="form-group">
+          <label for="password">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">lock</i>
+            Password:
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            placeholder="Enter your password"
+            [(ngModel)]="user.password"
+            #password="ngModel"
+            required
+            minlength="8"
+          />
+          <div class="error-message" *ngIf="password.invalid && password.touched">
+            Password must be at least 8 characters long.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">lock_outline</i>
+            Confirm Password:
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            class="form-control"
+            placeholder="Confirm your password"
+            [(ngModel)]="user.confirmPassword"
+            #confirmPassword="ngModel"
+            required
+          />
+          <div class="error-message" *ngIf="user.password !== user.confirmPassword && confirmPassword.touched">
+            Passwords do not match.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="profilePicture">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">image</i>
+            Profile Picture:
+          </label>
+          <input
+            type="file"
+            id="profilePicture"
+            name="profilePicture"
+            class="form-control"
+            (change)="onProfilePictureChange($event)"
+            accept="image/*"
+          />
+          <div class="error-message" *ngIf="profilePictureError">
+            {{ profilePictureError }}
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          class="form-control"
-          placeholder="Enter your email (e.g., example&#64;gmail.com)"
-          [(ngModel)]="user.email"
-          #email="ngModel"
-          required
-        />
-        <div class="error-message text-center" *ngIf="email.invalid && email.touched">
-          Please enter a valid email address.(e.g., example&#64;gmail.com)
+      <!-- Step 3: Professional Information -->
+      <div class="form-step" *ngIf="currentStep === 3">
+        <h3>Professional Information</h3>
+        <div class="form-group">
+          <label for="location">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">location_on</i>
+            Location:
+          </label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            class="form-control"
+            placeholder="Enter your location"
+            [(ngModel)]="user.location"
+            #location="ngModel"
+            required
+          />
+          <div class="error-message text-center" *ngIf="location.invalid && location.touched">
+            Please enter your location.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="skills">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">build</i>
+            Skills:
+          </label>
+          <input
+            type="text"
+            id="skills"
+            name="skills"
+            class="form-control"
+            placeholder="Enter your skills"
+            [(ngModel)]="user.skills"
+            #skills="ngModel"
+            required
+          />
+          <div class="error-message text-center" *ngIf="skills.invalid && skills.touched">
+            Please enter your skills.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="years_of_experience">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">history</i>
+            Years of Experience:
+          </label>
+          <input
+            type="number"
+            id="years_of_experience"
+            name="years_of_experience"
+            class="form-control"
+            placeholder="Enter years of experience"
+            [(ngModel)]="user.years_of_experience"
+            #years_of_experience="ngModel"
+            required
+          />
+          <div class="error-message text-center" *ngIf="years_of_experience.invalid && years_of_experience.touched">
+            Please enter your years of experience.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="valid_id">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">badge</i>
+            Upload Valid ID:
+          </label>
+          <input
+            type="file"
+            id="valid_id"
+            name="valid_id"
+            class="form-control"
+            (change)="onValidIdChange($event)"
+            accept="image/*"
+            required
+          />
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          class="form-control"
-          placeholder="Enter your password"
-          [(ngModel)]="user.password"
-          #password="ngModel"
-          required
-        />
-        <div class="error-message text-center" *ngIf="password.invalid && password.touched">
-          Password must be at least 6 characters long.
+      <!-- Step 4: Work Examples -->
+      <div class="form-step" *ngIf="currentStep === 4">
+        <h3>Work Examples</h3>
+        <div class="form-group">
+          <label for="work_example_1_title">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">work</i>
+            Work Example 1 Title:
+          </label>
+          <input
+            type="text"
+            id="work_example_1_title"
+            name="work_example_1_title"
+            class="form-control"
+            placeholder="Enter work title"
+            [(ngModel)]="user.work_examples[0].title"
+            #work_example_1_title="ngModel"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="work_example_1_description">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">description</i>
+            Work Example 1 Description:
+          </label>
+          <textarea
+            id="work_example_1_description"
+            name="work_example_1_description"
+            class="form-control"
+            placeholder="Enter work description"
+            [(ngModel)]="user.work_examples[0].description"
+            #work_example_1_description="ngModel"
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="work_example_1_image">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">insert_photo</i>
+            Work Example 1 Image:
+          </label>
+          <input
+            type="file"
+            id="work_example_1_image"
+            name="work_example_1_image"
+            class="form-control"
+            (change)="onWorkExampleImageChange($event, 0)"
+            accept="image/*"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="work_example_2_title">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">work</i>
+            Work Example 2 Title:
+          </label>
+          <input
+            type="text"
+            id="work_example_2_title"
+            name="work_example_2_title"
+            class="form-control"
+            placeholder="Enter work title"
+            [(ngModel)]="user.work_examples[1].title"
+            #work_example_2_title="ngModel"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="work_example_2_description">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">description</i>
+            Work Example 2 Description:
+          </label>
+          <textarea
+            id="work_example_2_description"
+            name="work_example_2_description"
+            class="form-control"
+            placeholder="Enter work description"
+            [(ngModel)]="user.work_examples[1].description"
+            #work_example_2_description="ngModel"
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="work_example_2_image">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">insert_photo</i>
+            Work Example 2 Image:
+          </label>
+          <input
+            type="file"
+            id="work_example_2_image"
+            name="work_example_2_image"
+            class="form-control"
+            (change)="onWorkExampleImageChange($event, 1)"
+            accept="image/*"
+          />
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="terms-checkbox">
+          <div class="checkbox-container">
+            <input 
+              type="checkbox" 
+              id="termsAgreement" 
+              name="termsAgreement" 
+              [(ngModel)]="user.termsAgreement" 
+              required>
+            <label for="termsAgreement">
+              I agree to the <a (click)="openTermsModal($event)">Terms and Conditions</a> of Matain Hanap-Serbisyo
+            </label>
+          </div>
+          <div *ngIf="formSubmitted && !user.termsAgreement" class="error-message">
+            <strong>You must agree to the Terms and Conditions to continue.</strong>
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="confirmPassword">Confirm Password:</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          class="form-control"
-          placeholder="Confirm your password"
-          [(ngModel)]="user.confirmPassword"
-          #confirmPassword="ngModel"
-          required
-        />
-        <div class="error-message text-center" *ngIf="confirmPassword.touched && user.password !== user.confirmPassword">
-          Passwords do not match.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="profilePicture">Profile Picture:</label>
-        <input
-          type="file"
-          id="profilePicture"
-          name="profilePicture"
-          class="form-control"
-          (change)="onProfilePictureChange($event)"
-          accept="image/*"
-        />
-        <div class="error-message" *ngIf="profilePictureError">
-          {{ profilePictureError }}
-        </div>
-      </div>
-
-      <h3>Additional Information:</h3>
-      <div class="form-group">
-        <label for="location">Location:</label>
-        <input
-          type="text"
-          id="location"
-          name="location"
-          class="form-control"
-          placeholder="Enter your location"
-          [(ngModel)]="user.location"
-          #location="ngModel"
-          required
-        />
-        <div class="error-message text-center" *ngIf="location.invalid && location.touched">
-          Please enter your location.
-        </div>
-      </div>
-
-      <!-- New Skills Field -->
-      <div class="form-group">
-        <label for="skills">Skills:</label>
-        <input
-          type="text"
-          id="skills"
-          name="skills"
-          class="form-control"
-          placeholder="Enter your skills"
-          [(ngModel)]="user.skills"
-          #skills="ngModel"
-          required
-        />
-        <div class="error-message text-center" *ngIf="skills.invalid && skills.touched">
-          Please enter your skills.
-        </div>
-      </div>
-
-      <!-- New Valid ID Field -->
-      <div class="form-group">
-        <label for="valid_id">Upload Valid ID:</label>
-        <input
-          type="file"
-          id="valid_id"
-          name="valid_id"
-          class="form-control"
-          (change)="onValidIdChange($event)"
-          accept="image/*"
-          required
-        />
-      </div>
-
-      <!-- New Years of Experience Field -->
-      <div class="form-group">
-        <label for="years_of_experience">Years of Experience:</label>
-        <input
-          type="number"
-          id="years_of_experience"
-          name="years_of_experience"
-          class="form-control"
-          placeholder="Enter years of experience"
-          [(ngModel)]="user.years_of_experience"
-          #years_of_experience="ngModel"
-          required
-        />
-        <div class="error-message text-center" *ngIf="years_of_experience.invalid && years_of_experience.touched">
-          Please enter your years of experience.
-        </div>
-      </div>
-
-      <!-- New Work Examples Section -->
-      <div class="form-group">
-        <label for="work_example_1_title">Work Example 1 Title:</label>
-        <input
-          type="text"
-          id="work_example_1_title"
-          name="work_example_1_title"
-          class="form-control"
-          placeholder="Enter work title"
-          [(ngModel)]="user.work_examples[0].title"
-          #work_example_1_title="ngModel"
-          required
-        />
-        <div class="error-message text-center" *ngIf="work_example_1_title.invalid && work_example_1_title.touched">
-          Please enter a title for work example 1.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="work_example_1_description">Work Example 1 Description:</label>
-        <textarea
-          id="work_example_1_description"
-          name="work_example_1_description"
-          class="form-control"
-          placeholder="Enter work description"
-          [(ngModel)]="user.work_examples[0].description"
-          #work_example_1_description="ngModel"
-          required
-        ></textarea>
-        <div class="error-message text-center" *ngIf="work_example_1_description.invalid && work_example_1_description.touched">
-          Please enter a description for work example 1.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="work_example_1_image">Work Example 1 Image:</label>
-        <input
-          type="file"
-          id="work_example_1_image"
-          name="work_example_1_image"
-          class="form-control"
-          (change)="onWorkExampleImageChange($event, 0)"
-          accept="image/*"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="work_example_2_title">Work Example 2 Title:</label>
-        <input
-          type="text"
-          id="work_example_2_title"
-          name="work_example_2_title"
-          class="form-control"
-          placeholder="Enter work title"
-          [(ngModel)]="user.work_examples[1].title"
-          #work_example_2_title="ngModel"
-          required
-        />
-        <div class="error-message text-center" *ngIf="work_example_2_title.invalid && work_example_2_title.touched">
-          Please enter a title for work example 2.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="work_example_2_description">Work Example 2 Description:</label>
-        <textarea
-          id="work_example_2_description"
-          name="work_example_2_description"
-          class="form-control"
-          placeholder="Enter work description"
-          [(ngModel)]="user.work_examples[1].description"
-          #work_example_2_description="ngModel"
-          required
-        ></textarea>
-        <div class="error-message text-center" *ngIf="work_example_2_description.invalid && work_example_2_description.touched">
-          Please enter a description for work example 2.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="work_example_2_image">Work Example 2 Image</label>
-        <input
-          type="file"
-          id="work_example_2_image"
-          name="work_example_2_image"
-          class="form-control"
-          (change)="onWorkExampleImageChange($event, 1)"
-          accept="image/*"
-        />
-      </div>
-
-      <!-- Add this before the submit button in your form -->
-      <div class="terms-checkbox">
-        <div class="checkbox-container">
-          <input 
-               type="checkbox" 
-               id="termsAgreement" 
-               name="termsAgreement" 
-               [(ngModel)]="user.termsAgreement" 
-               required>
-               <label for="termsAgreement">
-                I agree to the <a (click)="openTermsModal($event)">Terms and Conditions</a> of Matain Hanap-Serbisyo
-              </label>
-        </div>
-      <div *ngIf="formSubmitted && !user.termsAgreement" class="error-message">
-          <strong>You must agree to the Terms and Conditions to continue!!.</strong>
-      </div>
-  </div>
-
-<!-- Terms and Conditions Modal -->
-<div class="terms-modal" *ngIf="showTermsModal">
-  <div class="terms-modal-content">
-    <span class="close-button" (click)="closeTermsModal()">&times;</span>
-    <h2>Terms and Conditions</h2>
-    
-    <div class="terms-modal-body">
-      <app-terms-and-conditions></app-terms-and-conditions>
-    </div>
-    
-    <div class="terms-modal-footer">
-      <button class="btn-accept" (click)="acceptTerms()">I Agree</button>
-      <button class="btn-decline" (click)="closeTermsModal()">I Disagree</button>
-    </div>
-  </div>
-</div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn-submit" (click)="formSubmitted = true">Register</button>
+      <!-- Navigation Buttons -->
+      <div class="form-navigation">
+        <button type="button" class="btn-prev" *ngIf="currentStep > 1" (click)="prevStep()">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">arrow_back</i>
+          Previous
+        </button>
+        <button type="button" class="btn-next" *ngIf="currentStep < totalSteps" (click)="nextStep()">
+          Next
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-left: 5px;">arrow_forward</i>
+        </button>
+        <button type="submit" class="btn-submit" *ngIf="currentStep === totalSteps" (click)="formSubmitted = true">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">how_to_reg</i>
+          Register
+        </button>
       </div>
     </form>
 
     <div class="links text-center">
       <p>Already have an account? <a (click)="gotoLogin()" class="link">Login</a></p>
+    </div>
+  </div>
+
+  <!-- Terms and Conditions Modal -->
+  <div class="terms-modal" *ngIf="showTermsModal">
+    <div class="terms-modal-content">
+      <span class="close-button" (click)="closeTermsModal()">&times;</span>
+      <h2>Terms and Conditions</h2>
+      
+      <div class="terms-modal-body">
+        <app-terms-and-conditions></app-terms-and-conditions>
+      </div>
+      
+      <div class="terms-modal-footer">
+        <button class="btn-accept" (click)="acceptTerms()">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">check_circle</i>
+          I Agree
+        </button>
+        <button class="btn-decline" (click)="closeTermsModal()">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">cancel</i>
+          I Disagree
+        </button>
+      </div>
     </div>
   </div>
 </div>

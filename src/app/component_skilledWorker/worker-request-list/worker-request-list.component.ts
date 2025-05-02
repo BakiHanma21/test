@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RequestCalendarService } from '../../services/requestcalendar.service';
-
+import { API_URL } from '../../services/auth.service';
 @Component({
   standalone: true,
   imports: [CommonModule, FormsModule],
@@ -31,7 +31,7 @@ export class WorkerRequestListComponent1 implements OnInit {
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-      this.http.get(`http://localhost:8000/api/workers/${this.userId}/requests`, { headers })
+      this.http.get(`${API_URL}/workers/${this.userId}/requests`, { headers })
         .subscribe(
           (response: any) => {
             console.log(response);

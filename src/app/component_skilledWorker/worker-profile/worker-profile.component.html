@@ -1,121 +1,293 @@
-<div class="page-container">
-  <div *ngIf="worker; else noWorker" class="worker-container">
-    <div class="worker-card">
-      <div class="worker-header">
-        <img [src]="worker.image" alt="Profile Image" class="profile-image" />
-        <button class="edit-btn" (click)="openFileDialog()">
-          <i class="fas fa-camera"></i>
-        </button>
-        <input type="file" id="fileInput" style="display:none" (change)="onFileChange($event)" />
-        <div class="worker-details">
-          <h1 class="worker-name">{{ worker.name }}</h1>
-          <p class="worker-location">
-            <mat-icon>place</mat-icon> {{ worker.location }}
-          </p>
-        </div>
+<!-- Main Container -->
+<div class="profile-container">
+  <div *ngIf="worker; else noWorker" class="profile-content">
+    <!-- Header Section -->
+    <div class="header-container">
+      <div class="header-content">
+        <h1>Work Profile <span class="material-icons">account_circle</span></h1>
+        <div class="divider"></div>
+        <p class="subtitle">Manage your professional profile and portfolio</p>
       </div>
-      <div class="worker-info">
-        <div class="info-item">
-          <mat-icon>schedule</mat-icon>
-          <p>Availability: {{ worker.availability }}</p>
-        </div>
-        <div class="info-item">
-          <mat-icon>phone</mat-icon>
-          <p>Contact: {{ worker.phone }}</p>
-        </div>
-        <div class="info-item">
-          <mat-icon>email</mat-icon>
-          <p>Email: {{ worker.email }}</p>
-        </div>
-      </div>
-      <div class="info-item">
-        <mat-icon>star</mat-icon>
-        <p>Years of Experience: {{ worker.experience }}</p>
-      </div>
-      <div class="info-item" *ngIf="worker.skills?.length">
-        <mat-icon>work</mat-icon>
-        <p>Skills:</p>
-      </div>
-      <div *ngIf="worker.workDone" class="worker-work-done">
-        <h3>Work Done</h3>
-        <p>{{ worker.workDone }}</p>
-      </div>
-      <h3>Work Examples</h3>
-      <div class="worker-work-image" *ngFor="let work of worker?.works">
-        <h4>{{ work.title }}</h4>
-        <img [src]="work.image" alt="Work Image" class="work-image" width="200px" />
-      </div>
+      <div class="header-background">PROFILE</div>
+    </div>
 
-      <div class="reviews-section">
-        <h3>Reviews and Ratings</h3>
-        <div class="review" *ngFor="let review of worker?.reviews">
-          <div class="review-header">
-            <h4 style="margin-top: 20px;">{{ review.name }}</h4>
-            <div class="star-rating">
-              <i
-                *ngFor="let star of [].constructor(5); let i = index"
-                class="star"
-                [ngClass]="{ filled: i < review.rating }"
-              >
-                ★
-              </i>
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <div class="profile-image-wrapper">
+          <img [src]="worker.image || 'assets/images/default-avatar.png'" alt="Profile Image" class="profile-image" />
+          <button class="edit-image-btn" (click)="openFileDialog()" aria-label="Change profile picture">
+            <span class="material-icons">photo_camera</span>
+          </button>
+          <input type="file" id="fileInput" style="display:none" (change)="onFileChange($event)" accept="image/*" />
+        </div>
+        <div class="profile-header-info">
+          <h2 class="profile-name">{{ worker.name }}</h2>
+          <div class="profile-meta">
+            <div class="profile-location" *ngIf="worker.location">
+              <span class="material-icons">place</span>
+              {{ worker.location }}
+            </div>
+            <div class="profile-status" [class.available]="worker.availability === 1">
+              <span class="material-icons">{{ worker.availability === 1 ? 'check_circle' : 'cancel' }}</span>
+              {{ worker.availability === 1 ? 'Available' : 'Unavailable' }}
             </div>
           </div>
-          <p class="review-text">{{ review.text }}</p>
         </div>
       </div>
 
-      <!-- Button to open the edit modal -->
-      <button mat-raised-button color="primary" class="btn btn-edit" (click)="openEditModal()">Edit Profile</button>
+      <!-- Profile Details -->
+      <div class="profile-details">
+        <div class="details-grid">
+          <div class="detail-item" *ngIf="worker.phone">
+            <span class="material-icons">phone</span>
+            <div class="detail-content">
+              <label>Contact Number</label>
+              <p>{{ worker.phone }}</p>
+            </div>
+          </div>
+          <div class="detail-item" *ngIf="worker.email">
+            <span class="material-icons">email</span>
+            <div class="detail-content">
+              <label>Email Address</label>
+              <p>{{ worker.email }}</p>
+            </div>
+          </div>
+          <div class="detail-item" *ngIf="worker.experience">
+            <span class="material-icons">work_history</span>
+            <div class="detail-content">
+              <label>Years of Experience</label>
+              <p>{{ worker.experience }} Years</p>
+            </div>
+          </div>
+          <div class="detail-item" *ngIf="worker.job">
+            <span class="material-icons">handyman</span>
+            <div class="detail-content">
+              <label>Profession</label>
+              <p>{{ worker.job }}</p>
+            </div>
+          </div>
+          <div class="detail-item" *ngIf="worker.skills?.length">
+            <span class="material-icons">construction</span>
+            <div class="detail-content">
+              <label>Skills</label>
+              <div class="skills-list">
+                <span class="skill-tag" *ngFor="let skill of worker.skills">{{ skill }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Work Experience -->
+      <div class="work-section" *ngIf="worker.workDone">
+        <h3><span class="material-icons">business_center</span> Work Experience</h3>
+        <div class="work-content">
+          <p>{{ worker.workDone }}</p>
+        </div>
+      </div>
+
+      <!-- Portfolio Section -->
+      <div class="portfolio-section">
+        <h3><span class="material-icons">collections</span> Portfolio</h3>
+        <div class="portfolio-grid">
+          <div class="portfolio-item" *ngFor="let work of worker?.works">
+            <div class="portfolio-image">
+              <img [src]="work.image" alt="{{ work.title }}" />
+              <div class="portfolio-overlay">
+                <h4>{{ work.title }}</h4>
+                <button class="view-btn" (click)="openWorkEditModal(work)">
+                  <span class="material-icons">edit</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="empty-state" *ngIf="!worker.works || worker.works.length === 0">
+            <span class="material-icons">image</span>
+            <p>No portfolio items yet. Add your work to showcase your skills.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews Section -->
+      <div class="reviews-section">
+        <h3><span class="material-icons">star_rate</span> Reviews</h3>
+        <div class="reviews-grid">
+          <div class="review-card" *ngFor="let review of worker?.reviews">
+            <div class="review-header">
+              <div class="reviewer-info">
+                <span class="material-icons">account_circle</span>
+                <h4>{{ review.name }}</h4>
+              </div>
+              <div class="star-rating">
+                <span class="material-icons" *ngFor="let star of [].constructor(5); let i = index"
+                      [class.filled]="i < review.rating">
+                  star
+                </span>
+              </div>
+            </div>
+            <p class="review-text">{{ review.text }}</p>
+          </div>
+          <div class="empty-state" *ngIf="!worker.reviews || worker.reviews.length === 0">
+            <span class="material-icons">star</span>
+            <p>No reviews yet. Your customer reviews will appear here.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Post to User Page Button -->
+      <div class="action-buttons">
+      <button class="edit-profile-btn" (click)="openEditModal()">
+        <span class="material-icons">edit</span>
+        Edit Profile
+      </button>
+        <button class="edit-profile-btn" (click)="postToUserPage(worker)" [disabled]="isPosted">
+          <span class="material-icons">publish</span>
+          {{ isPosted ? 'Posted' : 'Post to User Page' }}
+        </button>
+      </div>
+      <p class="post-message" *ngIf="isPosted">{{ postMessage }}</p>
     </div>
   </div>
 
   <!-- Edit Modal -->
-  <div *ngIf="isEditModalOpen" class="modal">
+  <div class="modal" *ngIf="isEditModalOpen">
     <div class="modal-content">
-      <h3>Edit Profile</h3>
-      <form (ngSubmit)="saveChanges()">
-        <div class="form-group">
-          <label>Name:</label>
-          <input type="text" [(ngModel)]="editWorker.name" name="name" />
-        </div>
-        <div class="form-group">
-          <label>Skill:</label>
-          <input type="text" [(ngModel)]="editWorker.job" name="job" />
-        </div>
-        <div class="form-group">
-          <label>Location:</label>
-          <input type="text" [(ngModel)]="editWorker.location" name="location" />
-        </div><div class="form-group">
-          <label>Availability:</label>
-          <select [(ngModel)]="editWorker.availability" name="availability" class="form-control">
-            <option [value]="1">Available</option>
-            <option [value]="0">Unavailable</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label>Phone:</label>
-          <input type="text" [(ngModel)]="editWorker.phone" name="phone" />
-        </div>
-        <div class="form-group">
-          <label>Email:</label>
-          <input type="email" [(ngModel)]="editWorker.email" name="email" />
-        </div>
-        <div class="form-group">
-          <label>Experience:</label>
-          <input type="number" [(ngModel)]="editWorker.experience" name="experience" />
+      <div class="modal-header">
+        <h3><span class="material-icons">edit</span> Edit Profile</h3>
+        <button class="close-modal" (click)="closeEditModal()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form (ngSubmit)="saveChanges()" class="edit-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>
+              <span class="material-icons">person</span>
+              Full Name
+            </label>
+            <input type="text" [(ngModel)]="editWorker.name" name="name" placeholder="Enter your full name" required />
+          </div>
+          <div class="form-group">
+            <label>
+              <span class="material-icons">work</span>
+              Skill/Profession
+            </label>
+            <input type="text" [(ngModel)]="editWorker.job" name="job" placeholder="Enter your profession" required />
+          </div>
+          <div class="form-group">
+            <label>
+              <span class="material-icons">place</span>
+              Location
+            </label>
+            <input type="text" [(ngModel)]="editWorker.location" name="location" placeholder="Enter your location" required />
+          </div>
+          <div class="form-group">
+            <label>
+              <span class="material-icons">event_available</span>
+              Availability
+            </label>
+            <select [(ngModel)]="editWorker.availability" name="availability" aria-label="Select availability status" required>
+              <option [value]="1">Available</option>
+              <option [value]="0">Unavailable</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>
+              <span class="material-icons">phone</span>
+              Contact Number
+            </label>
+            <input type="tel" [(ngModel)]="editWorker.phone" name="phone" placeholder="Enter your contact number" required />
+          </div>
+          <div class="form-group">
+            <label>
+              <span class="material-icons">email</span>
+              Email Address
+            </label>
+            <input type="email" [(ngModel)]="editWorker.email" name="email" placeholder="Enter your email address" required />
+          </div>
+          <div class="form-group">
+            <label>
+              <span class="material-icons">timeline</span>
+              Years of Experience
+            </label>
+            <input type="number" [(ngModel)]="editWorker.experience" name="experience" placeholder="Enter years of experience" min="0" required />
+          </div>
         </div>
         <div class="modal-actions">
-          
-        <button type="submit" mat-raised-button color="primary" class="btn">Save</button>
-        <button type="button" mat-raised-button color="warn" class="btn" (click)="closeEditModal()">Cancel</button>
+          <button type="button" class="cancel-btn" (click)="closeEditModal()">
+            <span class="material-icons">close</span>
+            Cancel
+          </button>
+          <button type="submit" class="save-btn">
+            <span class="material-icons">save</span>
+            Save Changes
+          </button>
         </div>
       </form>
     </div>
   </div>
 
+  <!-- Edit Work Modal -->
+  <div class="modal" *ngIf="isEditWorkModalOpen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><span class="material-icons">edit</span> Edit Portfolio Work</h3>
+        <button class="close-modal" (click)="closeWorkEditModal()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form (ngSubmit)="updateWork()" class="edit-form">
+        <div class="form-grid">
+          <div class="form-group" style="grid-column: span 2;">
+            <label>
+              <span class="material-icons">title</span>
+              Work Title
+            </label>
+            <input type="text" [(ngModel)]="currentEditWork.title" name="title" placeholder="Enter work title" required />
+          </div>
+          <div class="form-group" style="grid-column: span 2;">
+            <label>
+              <span class="material-icons">description</span>
+              Description
+            </label>
+            <textarea [(ngModel)]="currentEditWork.description" name="description" rows="4" placeholder="Enter work description" required></textarea>
+          </div>
+          <div class="form-group" style="grid-column: span 2;">
+            <label>
+              <span class="material-icons">image</span>
+              Work Image
+            </label>
+            <div class="image-preview-container">
+              <img [src]="currentEditWork?.imagePreview || currentEditWork?.image" alt="Work Preview" class="image-preview" />
+              <button type="button" class="change-image-btn" (click)="openWorkImageFileDialog()">
+                <span class="material-icons">photo_camera</span>
+                Change Image
+              </button>
+              <input type="file" id="workImageInput" style="display:none" (change)="onWorkImageChange($event)" accept="image/*" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeWorkEditModal()">
+            <span class="material-icons">close</span>
+            Cancel
+          </button>
+          <button type="submit" class="save-btn">
+            <span class="material-icons">save</span>
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Loading Template -->
   <ng-template #noWorker>
-    <div class="no-worker">Please Wait...</div>
+    <div class="loading-state">
+      <span class="material-icons">hourglass_empty</span>
+      <p>Loading profile...</p>
+    </div>
   </ng-template>
 </div>

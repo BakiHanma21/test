@@ -136,6 +136,9 @@ export class WorkerMessagesComponent implements OnInit, OnDestroy {
       this.receiverId = +params['receiverId'] || null;
       if (this.receiverId) {
         this.selectConversation(this.receiverId);
+        if (this.isMobileView) {
+          this.showChat = true;
+        }
       }
     });
   }
@@ -195,6 +198,9 @@ export class WorkerMessagesComponent implements OnInit, OnDestroy {
     this.selectedConversation = this.conversations.find(conv => conv.id === receiverId) || null;
     this.errorMessage = '';
     this.loadMessages();
+    if (this.isMobileView) {
+      this.showChat = true;
+    }
     this.router.navigate(['/worker-messages', receiverId]);
   }
 
@@ -308,6 +314,9 @@ export class WorkerMessagesComponent implements OnInit, OnDestroy {
 
   toggleView() {
     this.showChat = !this.showChat;
+    if (!this.showChat) {
+      this.router.navigate(['/worker-messages']);
+    }
   }
 
   onSearch() {
@@ -333,6 +342,12 @@ export class WorkerMessagesComponent implements OnInit, OnDestroy {
   viewProfile() {
     // Simple alert for now - you can implement your own profile view logic
     alert('View profile functionality will be implemented here');
+  }
+
+  openImagePreview(imageUrl: string) {
+    // Open image in a new tab for now
+    // You can implement a modal dialog for a more sophisticated preview
+    window.open(imageUrl, '_blank');
   }
 }
 

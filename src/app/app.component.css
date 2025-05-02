@@ -11,7 +11,63 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: white; /* Very light gray for the container */
+  background-color: white;
+}
+
+/* Main Content Adjustments */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  padding-left: 30px; /* Extra padding for left side */
+  margin-bottom: 0;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* Content positioning based on sidenav state */
+.mat-drawer-side {
+  border-right: none;
+}
+
+/* Sidenav transition for smooth opening/closing */
+.mat-drawer {
+  transition: width 0.3s ease, transform 0.3s ease;
+}
+
+/* When sidenav is open, adjust the content area */
+.mat-sidenav-content {
+  transition: margin-left 0.3s ease;
+}
+
+/* Apply specific margin when sidenav is condensed */
+:host ::ng-deep .condensed + .mat-sidenav-content {
+  margin-left: 80px !important; /* Width of condensed sidenav */
+  padding-left: 20px; /* Add padding between sidenav and content */
+}
+
+/* Default margin when sidenav is fully open */
+:host ::ng-deep .mat-drawer-opened .mat-sidenav-content {
+  margin-left: 200px !important; /* Width of open sidenav */
+  padding-left: 20px; /* Add padding between sidenav and content */
+}
+
+/* No margin when sidenav is closed, but keep consistent padding */
+:host ::ng-deep .mat-drawer-closed + .mat-sidenav-content {
+  margin-left: 0 !important;
+  padding-left: 20px; /* Maintain consistent padding */
+}
+
+/* Adjust content for mobile view */
+@media (max-width: 991px) {
+  :host ::ng-deep .mat-sidenav-content {
+    margin-left: 0 !important;
+    padding-left: 10px; /* Less padding on mobile */
+  }
+  
+  .content {
+    padding: 20px;
+    padding-left: 15px; /* Adjusted for mobile */
+  }
 }
 
 /* Logo Container */
@@ -25,20 +81,69 @@ body {
   width: 120px;
   height: auto;
   object-fit: contain;
+  transition: width 0.3s ease;
 }
 
 /* Sidenav */
 .sidenav {
-  width: 250px;
+  width: 200px;
   background: linear-gradient(to bottom, #ffde59, #ffc475); /* Light gradient */
   height: 100%;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+/* Condensed sidenav */
+.sidenav.condensed {
+  width: 80px;
+}
+
+.sidenav.condensed .sidenav-logo {
+  width: 50px;
+}
+
+.menu-title {
+  padding: 10px 15px;
+  font-weight: bold;
+  font-size: 14px;
+  transition: padding 0.3s ease, font-size 0.3s ease;
+}
+
+.condensed-title {
+  padding: 10px 0;
+  font-size: 12px;
+  text-align: center;
+}
+
+.nav-label {
+  transition: opacity 0.3s ease;
+}
+
+.nav-label.hidden {
+  display: none;
+}
+
+/* Make icons centered when condensed */
+.condensed .item-content {
+  justify-content: center;
+  padding: 16px 0;
+}
+
+.condensed ::ng-deep .mdc-list-item__content {
+  justify-content: center;
+}
+
+/* Center the menu label in condensed mode */
+.condensed .menu-title {
+  text-align: center;
+  padding: 10px 0;
 }
 
 .mat-nav-list {
-  padding-left: 0;
+  padding: 0;
 }
 
 /* Style for active router links */
@@ -49,6 +154,13 @@ body {
   border-right: 4px solid #7e7e7e;
   padding-left: 16px;
   box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Adjust active styles for condensed mode */
+.condensed .mat-nav-list a.active {
+  border-left: 3px solid #7e7e7e;
+  border-right: 3px solid #7e7e7e;
+  padding-left: 10px;
 }
 
 .mat-nav-list a.active .mat-icon {
@@ -79,53 +191,12 @@ body {
   box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.right-icon1 {
-  position: relative;
-  top: 4px;
-  left: 118px;
-  width: 300px;
-}
-.right-icon2 {
-  position: relative;
-  top: 4px;
-  left: 93px;
-  width: 300px;
-}
-.right-icon3 {
-  position: relative;
-  top: 4px;
-  left: 65px;
-  width: 300px;
-}
-.right-icon4 {
-  position: relative;
-  top: 4px;
-  left: 92px;
-  width: 300px;
-}
-.right-icon8 {
-  position: relative;
-  top: 4px;
-  left: 108px;
-  width: 300px;
-}
-.right-icon5 {
-  position: relative;
-  top: 4px;
-  left: 77px;
-  width: 300px;
-}
-.right-icon7 {
-  position: relative;
-  top: 4px;
-  left: 105px;
-  width: 300px;
-}
-.right-icon6 {
-  position: relative;
-  top: 4px;
-  left: 81px;
-  width: 300px;
+/* Adjust hover styles for condensed mode */
+.condensed ::ng-deep .mdc-list-item__content:hover,
+.condensed ::ng-deep .active .mdc-list-item__content {
+  border-left: 4px solid #7e7e7e;
+  border-right: 4px solid #7e7e7e;
+  padding-left: 10px;
 }
 
 /* Toolbar Styles */
@@ -137,6 +208,13 @@ body {
   padding: 0 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the toolbar */
   z-index: 1000;
+}
+
+/* Toolbar Left Section for buttons */
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* Toolbar profile styles */
@@ -195,17 +273,6 @@ body {
 .spacer {
   flex-grow: 1;
   display: inline-block;
-}
-
-/* Content Styles */
-.main-content {
-  margin-top: 64px;
-  padding: 16px;
-  overflow: auto;
-  flex-grow: 1;
-  background-color: #ffffff;
-  border-radius: 10px; /* Rounded corners for content */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 /* Responsive Layout */
@@ -345,4 +412,527 @@ body {
 
 .item-content span {
   margin-left: 8px;
+}
+
+/* Item Content Styles */
+.item-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  transition: all 0.3s ease;
+}
+
+.item-content .mat-icon {
+  margin-right: 8px;
+  color: #4e4e4e;
+}
+
+.nav-label {
+  font-size: 16px;
+  color: #4e4e4e;
+}
+
+/* Toolbar Styles */
+.responsive-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  height: 64px;
+}
+
+.toolbar-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Tooltip for condensed menu items */
+.condensed .mat-list-item {
+  position: relative;
+}
+
+.condensed .mat-list-item:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 95px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+}
+
+/* Mobile Navigation Enhancement */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1050; /* Higher z-index to stay on top */
+  background: linear-gradient(to right, #ffde59, #ffc475);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mobile-nav a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  color: #333;
+  text-decoration: none;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.mobile-nav a.active {
+  color: #000;
+  font-weight: 600;
+}
+
+.mobile-nav a.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: #333;
+  border-radius: 50%;
+}
+
+.mobile-nav mat-icon {
+  font-size: 24px;
+  height: 24px;
+  width: 24px;
+  margin-bottom: 4px;
+  transition: transform 0.2s ease;
+}
+
+.mobile-nav a.active mat-icon {
+  transform: translateY(-2px);
+}
+
+.mobile-nav span {
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Mobile Menu Dialog Enhancement */
+.mobile-menu-dialog {
+  padding: 20px;
+  border-radius: 12px;
+  background: linear-gradient(to bottom, #ffde59, #ffc475);
+}
+
+.mobile-menu-dialog h2 {
+  margin: 0 0 20px;
+  font-size: 20px;
+  color: #333;
+  font-weight: 600;
+}
+
+.mobile-menu-dialog .mat-nav-list a {
+  border-radius: 8px;
+  margin: 4px 0;
+  transition: background-color 0.2s ease;
+}
+
+.mobile-menu-dialog .mat-nav-list a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.mobile-menu-dialog mat-icon {
+  margin-right: 12px;
+  color: #333;
+}
+
+@media screen and (max-width: 991px) {
+  .desktop-sidenav {
+    display: none;
+  }
+
+  .mobile-nav {
+    display: flex;
+    justify-content: space-around;
+    background: linear-gradient(to right, #ffde59, #ffc475);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .toolbar-title {
+    font-size: 0.9rem;
+  }
+
+  .profile-image-container {
+    width: 36px;
+    height: 36px;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+  .mobile-nav {
+    padding: 4px 0;
+    height: 60px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .toolbar-title {
+    font-size: 0.8rem;
+  }
+
+  .content {
+    padding: 12px;
+  }
+}
+
+/* Animation for mobile navigation */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.mobile-nav {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Hide scrollbar for mobile */
+@media screen and (max-width: 991px) {
+  .content::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .content {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Top Navigation Mode Styles */
+.topnav-mode .sidenav-container {
+  height: calc(100vh - 80px);
+}
+
+.topnav-mode .mat-sidenav-content {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+.topnav-mode .responsive-toolbar {
+  height: 80px;
+  background: linear-gradient(45deg, #ffde59, #ffc475);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 0 24px;
+  position: relative;
+  z-index: 100;
+}
+
+.topnav-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 16px;
+  padding: 6px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.topnav-menu a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2c3e50;
+  text-decoration: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.topnav-menu a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: -1;
+}
+
+.topnav-menu a:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.topnav-menu a:hover::before {
+  transform: translateX(0);
+}
+
+.topnav-menu a.active {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+}
+
+.topnav-menu a.active::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 3px;
+  background: #2c3e50;
+  border-radius: 3px;
+}
+
+.topnav-menu mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  transition: transform 0.3s ease;
+}
+
+.topnav-menu a:hover mat-icon {
+  transform: translateY(-2px);
+}
+
+.topnav-menu a.active mat-icon {
+  color: #2c3e50;
+}
+
+.topnav-menu span {
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  color: #2c3e50;
+}
+
+/* Adjust toolbar for topnav mode */
+.topnav-mode .toolbar-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #2c3e50;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+/* Profile container in topnav mode */
+.topnav-mode .toolbar-profile-container {
+  margin-left: 16px;
+}
+
+.topnav-mode .profile-image-container {
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.topnav-mode .profile-image-container:hover {
+  transform: scale(1.05);
+  border-color: white;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Content area in topnav mode */
+.topnav-mode .content {
+  padding: 30px;
+  background: #f8f9fa;
+  border-radius: 20px 20px 0 0;
+  margin-top: -15px;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 99;
+}
+
+/* Top toolbar buttons in topnav mode */
+.topnav-mode .toolbar-left button {
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 8px;
+  border-radius: 12px;
+  padding: 8px;
+  transition: all 0.3s ease;
+}
+
+.topnav-mode .toolbar-left button:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.topnav-mode .toolbar-left mat-icon {
+  color: #2c3e50;
+}
+
+/* Responsive adjustments for topnav */
+@media screen and (max-width: 1200px) {
+  .topnav-menu a {
+    padding: 10px 12px;
+  }
+  
+  .topnav-menu span {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .topnav-menu a span {
+    display: none;
+  }
+  
+  .topnav-menu a {
+    padding: 10px;
+  }
+  
+  .topnav-menu a.active::after {
+    bottom: 4px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .topnav-mode .topnav-menu {
+    display: none;
+  }
+  
+  .topnav-mode .toolbar-title {
+    font-size: 1.2rem;
+  }
+  
+  .topnav-mode .content {
+    padding: 20px;
+    margin-top: -10px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .topnav-mode .responsive-toolbar {
+    padding: 0 16px;
+    height: 70px;
+  }
+  
+  .topnav-mode .toolbar-title {
+    font-size: 1rem;
+  }
+  
+  .topnav-mode .content {
+    padding: 15px;
+    border-radius: 15px 15px 0 0;
+  }
+}
+
+/* Sidenav Content Layout */
+.sidenav-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidenav-top {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sidenav-bottom {
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.logout-button {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  margin-top: 8px;
+  transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.logout-button .item-content {
+  color: #ff4444;
+}
+
+.logout-button:hover .item-content {
+  color: #ff6666;
+}
+
+.logout-button mat-icon {
+  color: #ff4444;
+}
+
+/* Hide scrollbar but keep functionality */
+.sidenav-top::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidenav-top::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidenav-top::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.sidenav-top::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Navigation Divider */
+.nav-divider {
+  height: 2px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.05));
+  margin: 10px 15px;
+  border-radius: 1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Condensed mode divider */
+.condensed .nav-divider {
+  margin: 10px 5px;
+}
+
+.sidenav.collapsed {
+  width: 80px !important;
+  min-width: 80px !important;
+  max-width: 80px !important;
+  transition: width 0.2s;
+}
+
+/* Icon size in condensed mode */
+.condensed .mat-icon {
+  font-size: 26px;
+  width: 26px;
+  height: 26px;
+  margin: 0 auto;
 }

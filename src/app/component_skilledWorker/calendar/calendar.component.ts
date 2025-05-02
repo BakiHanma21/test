@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -12,7 +11,7 @@ import { RequestCalendarService } from '../../services/requestcalendar.service';
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [FullCalendarModule, MatCardModule, CommonModule],
+  imports: [FullCalendarModule, CommonModule],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
@@ -34,6 +33,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         ...event,
         start: new Date(event.start).toISOString(),
         end: new Date(event.end).toISOString(),
+        backgroundColor: 'linear-gradient(135deg, #ffde59 0%, #ffc475 100%)',
+        borderColor: 'rgba(255, 196, 117, 0.2)',
+        textColor: '#2c3e50'
       }));
   
       this.calendarOptions = {
@@ -43,8 +45,17 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         editable: false,
         selectable: true,
         eventClick: (eventInfo) => this.onEventClick(eventInfo),
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,dayGridWeek'
+        },
+        buttonText: {
+          today: 'Today',
+          month: 'Month',
+          week: 'Week'
+        }
       };
-      
   
       console.log('Formatted Events', formattedEvents);
     });
@@ -80,8 +91,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
           end: info.dateStr,
           status: 'Available',
           extendedProps: {
-            status: 'Available'
-          }
+            status: 'Available',
+            description: 'User-created event'
+          },
+          backgroundColor: 'linear-gradient(135deg, #ffde59 0%, #ffc475 100%)',
+          borderColor: 'rgba(255, 196, 117, 0.2)',
+          textColor: '#2c3e50'
         };
   
         if (this.calendar) {
@@ -98,7 +113,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   
     this.selectedEvent = {
       title: clickedEvent._def.title,
-      description: clickedEvent._def.extendedProps.description,
+      description: clickedEvent._def.extendedProps.description || 'No description available',
       start: clickedEvent._instance.range.start,
       end: clickedEvent._instance.range.end,
       extendedProps: clickedEvent._def.extendedProps,
@@ -107,8 +122,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     console.log('Clicked event details:', this.selectedEvent);
   }
   
-  
-  
+  closeEventDetails() {
+    this.selectedEvent = null;
+  }
 
   onEventDrop(info: any) {
     info.event.setExtendedProp('status', 'Moved');

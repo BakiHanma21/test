@@ -1,0 +1,99 @@
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header" [ngClass]="{'header-shifted': sidebarCollapsed}">
+      <div class="sidebar-toggle-container">
+        <button class="sidebar-toggle-inside" (click)="toggleSidebar()" aria-label="Toggle sidebar menu">
+          <i class="fas" [ngClass]="{'fa-bars': !sidebarOpen, 'fa-times': sidebarOpen}"></i>
+        </button>
+        <span class="welcome-message">Welcome Admin!</span>
+      </div>
+    </div>
+  
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" [ngClass]="{'open': sidebarOpen, 'collapsed': sidebarCollapsed}">
+      <div class="sidebar-header">
+        <div class="logo">
+          <img src="assets/matain-logo-copy.png" alt="Company Logo" />
+          <p class="pol">User Management System</p>
+        </div>
+        <button class="sidebar-toggle-inside" (click)="toggleCollapse()" aria-label="Toggle sidebar collapse">
+          <i class="fas" [ngClass]="{'fa-chevron-left': !sidebarCollapsed, 'fa-chevron-right': sidebarCollapsed}"></i>
+        </button>
+      </div>
+      <hr class="logo-line" />
+      
+      <nav class="sidebar-nav">
+        <h4 class="menu-title">Menu</h4>
+        <ul class="nav-links">
+          <li>
+            <a routerLink="/dashboard-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/profile-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <i class="fas fa-user"></i> <span>Profile</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/role-based-access-control" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <i class="fas fa-users-cog"></i> <span>Role-Based Access</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/user-verification" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <i class="fas fa-check-circle"></i> <span>Verifications</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/admin-messages" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <i class="fas fa-comment"></i> <span>Messages</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="logout">
+        <a (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+      <ul class="mobile-nav-links">
+        <li>
+          <a routerLink="/dashboard-management" routerLinkActive="active">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/profile-management" routerLinkActive="active">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/user-verification" routerLinkActive="active">
+            <i class="fas fa-check-circle"></i>
+            <span>Verify</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin-messages" routerLinkActive="active">
+            <i class="fas fa-comment"></i>
+            <span>Messages</span>
+          </a>
+        </li>
+        <li>
+          <a (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+</div>

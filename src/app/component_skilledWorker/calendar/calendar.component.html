@@ -1,6 +1,18 @@
 <!-- calendar.component.html -->
-<mat-card class="calendar-card">
-  <mat-card-title class="calendar-card-title">Your Bookings</mat-card-title>
+<div class="header-container">
+  <div class="header-content">
+    <h1>Calendar Overview <span class="material-icons">calendar_month</span></h1>
+    <div class="divider"></div>
+      <p class="subtitle">Manage your bookings and schedule</p>
+  </div>
+  <div class="header-background">CALENDAR</div>
+</div>
+
+<div class="calendar-card">
+  <div class="calendar-card-title">
+    <span class="material-icons">event</span>
+    Your Bookings
+  </div>
   
   <!-- Full Calendar -->
   <full-calendar
@@ -9,17 +21,51 @@
   (datesRender)="onDatesRender($event)">
 </full-calendar>
 
-
   <div class="booking-info" *ngIf="selectedEvent">
-    <h3>Booking Details:</h3>
-    <p><strong>Title:</strong> {{ selectedEvent.title }}</p>
-    <p><strong>Description:</strong> {{ selectedEvent.description }}</p>
-    <p><strong>Start:</strong> {{ selectedEvent.start | date: 'short' }}</p>
-    <p><strong>End:</strong> {{ selectedEvent.end | date: 'short' }}</p>
-    <p><strong>Booking Status:</strong>
-      <span [ngClass]="{ 'status-active': selectedEvent.extendedProps.status === 'active', 'status-inactive': selectedEvent.extendedProps.status === 'inactive' }">
+    <div class="booking-info-header">
+      <h3><span class="material-icons">info</span> Booking Details</h3>
+      <button class="close-button" (click)="closeEventDetails()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+    <div class="booking-details-grid">
+      <div class="detail-item">
+        <span class="material-icons">title</span>
+        <div class="detail-content">
+          <label>Title</label>
+          <p>{{ selectedEvent.title }}</p>
+        </div>
+      </div>
+      <div class="detail-item" *ngIf="selectedEvent.description">
+        <span class="material-icons">description</span>
+        <div class="detail-content">
+          <label>Description</label>
+          <p>{{ selectedEvent.description }}</p>
+        </div>
+      </div>
+      <div class="detail-item">
+        <span class="material-icons">event_available</span>
+        <div class="detail-content">
+          <label>Start</label>
+          <p>{{ selectedEvent.start | date: 'short' }}</p>
+        </div>
+      </div>
+      <div class="detail-item">
+        <span class="material-icons">event_busy</span>
+        <div class="detail-content">
+          <label>End</label>
+          <p>{{ selectedEvent.end | date: 'short' }}</p>
+        </div>
+      </div>
+      <div class="detail-item">
+        <span class="material-icons">pending_actions</span>
+        <div class="detail-content">
+          <label>Status</label>
+          <p [ngClass]="{ 'status-active': selectedEvent.extendedProps.status === 'active', 'status-inactive': selectedEvent.extendedProps.status === 'inactive' }">
         {{ selectedEvent.extendedProps.status }}
-      </span>
     </p>
+        </div>
+      </div>
+    </div>
   </div>
-</mat-card>
+</div>

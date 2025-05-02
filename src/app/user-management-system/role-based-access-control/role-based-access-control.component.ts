@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl, Validators, NgForm } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';  
 import { CommonModule } from '@angular/common';
@@ -6,6 +7,9 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ChatService } from '../../services/chat.service';
+import { API_URL } from '../../services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NgStyle, NgIf } from '@angular/common';
 
 interface User {
   id: number;
@@ -27,16 +31,51 @@ interface Worker {
   created_at: string;
 }
 
+export interface VerificationConfig {
+  smsVerificationRequired: boolean;
+  emailVerificationRequired: boolean;
+  googleAuthenticatorRequired: boolean;
+  deviceVerificationRequired: boolean;
+}
+
+export interface Role {
+  id: string;
+  name: string;
+  permissions: string[];
+  verificationConfig: VerificationConfig;
+}
+
 @Component({
   selector: 'app-role-based-access-control',
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './role-based-access-control.component.html',
-  styleUrl: './role-based-access-control.component.css'
+  styleUrl: './role-based-access-control.component.css',
+  standalone: true
 })
-export class RoleBasedAccessControlComponent {
+export class RoleBasedAccessControlComponent implements OnInit {
+  addRoleForm!: FormGroup;
+  editRoleForm!: FormGroup;
+  roles: Role[] = [];
+  permissions: string[] = [
+    'read_user_data',
+    'write_user_data',
+    'read_admin_data',
+    'write_admin_data',
+    'approve_verifications',
+    'manage_users',
+    'manage_roles',
+    'view_analytics',
+    'manage_system_settings'
+  ];
+  showAddRoleForm = false;
+  showEditRoleForm = false;
+  editingRole: Role | null = null;
+  isLoading = false;
+  sidebarOpen = true;
+  isIconOnly = false;
+  isMobileView = false;
   users: User[] = [];
   workers: Worker[] = [];
-  sidebarOpen = true;
   filteredUsers = this.users;
   filteredWorkers = this.workers;
   userSearchTerm = '';
@@ -55,19 +94,60 @@ export class RoleBasedAccessControlComponent {
     private authService: AuthService,
     private router: Router,
     private http: HttpClient,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
+    this.initForms();
+    this.loadRoles();
+    this.checkScreenSize();
     this.loadusers();
     this.initializeChat();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isMobileView = window.innerWidth < 768;
+    if (this.isMobileView) {
+      this.sidebarOpen = false;
+      this.isIconOnly = false;
+    }
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+    if (this.sidebarOpen && this.isMobileView) {
+      // If opening sidebar on mobile, make sure it's not in icon-only mode
+      this.isIconOnly = false;
+    }
+  }
+
+  toggleSidebarView() {
+    if (this.sidebarOpen) {
+      this.isIconOnly = !this.isIconOnly;
+      // Add event listener for transition end to properly handle animations
+      const sidebar = document.querySelector('.sidebar');
+      if (sidebar) {
+        const transitionEndHandler = () => {
+          window.dispatchEvent(new Event('resize'));
+          sidebar.removeEventListener('transitionend', transitionEndHandler);
+        };
+        sidebar.addEventListener('transitionend', transitionEndHandler);
+      }
+    }
   }
 
   loadusers(): void {
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-      this.http.get('http://localhost:8000/api/show-users', { headers })
+      this.http.get(`${API_URL}/show-users`, { headers })
         .subscribe(
           (response: any) => {
             console.log('Profile Response:', response);
@@ -135,7 +215,7 @@ export class RoleBasedAccessControlComponent {
         const body = {
           reason: this.disableUserReason
         };
-        this.http.delete(`http://localhost:8000/api/delete-user/${this.selectedUser.id}`, { headers, body })
+        this.http.delete(`${API_URL}/delete-user/${this.selectedUser.id}`, { headers, body })
           .subscribe(
             (response: any) => {
               console.log('User Deleted Response:', response);
@@ -169,7 +249,7 @@ export class RoleBasedAccessControlComponent {
         const body = {
           reason: this.disableWorkerReason
         };
-        this.http.delete(`http://localhost:8000/api/delete-user/${this.selectedWorker.id}`, { headers, body })
+        this.http.delete(`${API_URL}/delete-user/${this.selectedWorker.id}`, { headers, body })
           .subscribe(
             (response: any) => {
               console.log('Worker Deleted Response:', response);
@@ -245,14 +325,6 @@ export class RoleBasedAccessControlComponent {
     this.isDeleteWorkerModalOpen = true;
   }
 
-  toggleSidebar(): void {
-    this.sidebarOpen = !this.sidebarOpen;
-  }
-
-  toggleSidebarInside() {
-    this.sidebarOpen = !this.sidebarOpen;
-  }
-
   logout() {
     this.chatService.disconnectWebSocket();
     localStorage.clear();
@@ -268,6 +340,53 @@ export class RoleBasedAccessControlComponent {
       this.chatService.onNewMessage((chat) => {
         console.log('New message received:', chat);
       });
+    }
+  }
+
+  initForms() {
+    this.addRoleForm = this.fb.group({
+      name: ['', Validators.required],
+      permissions: [[], Validators.required],
+      smsVerificationRequired: [false],
+      emailVerificationRequired: [false],
+      googleAuthenticatorRequired: [false],
+      deviceVerificationRequired: [false]
+    });
+
+    this.editRoleForm = this.fb.group({
+      name: ['', Validators.required],
+      permissions: [[], Validators.required],
+      smsVerificationRequired: [false],
+      emailVerificationRequired: [false],
+      googleAuthenticatorRequired: [false],
+      deviceVerificationRequired: [false]
+    });
+  }
+
+  loadRoles() {
+    this.isLoading = true;
+    const authToken = localStorage.getItem('authToken');
+    
+    if (authToken) {
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
+      this.http.get<Role[]>(`${API_URL}/roles`, { headers })
+        .subscribe(
+          (data) => {
+            this.roles = data;
+            this.isLoading = false;
+          },
+          (error) => {
+            console.error('Error loading roles:', error);
+            this.snackBar.open('Failed to load roles', 'Close', { duration: 3000 });
+            this.isLoading = false;
+            if (error.status === 401) {
+              this.router.navigate(['/login']);
+            }
+          }
+        );
+    } else {
+      this.isLoading = false;
+      this.router.navigate(['/login']);
     }
   }
 }

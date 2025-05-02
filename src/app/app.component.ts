@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, TemplateRef, HostBinding } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -35,20 +35,30 @@ import { ChatService } from './services/chat.service';
 })
 export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('sidenav') sidenav!: MatSidenav;
+  @ViewChild('mobileMenuDialog') mobileMenuDialog!: TemplateRef<any>;
+  
   title = 'skilled-worker-app';
   unseenRequests: Request[] = [];
   unseenRequestsCount = 0;
   isSidenavOpen = true;
+  isSidenavCondensed = false;
   notificationCount = 5;
   showSidenav = false;
   showSkilledWorkerSidenav = false;
+  isMobileView = false;
+  isTopnavMode = false;
 
   constructor(
     private requestService: RequestService,
     private router: Router,
     private dialog: MatDialog,
     private chatService: ChatService
-  ) {}
+  ) {
+    // Initialize mobile view check
+    this.checkMobileView();
+    // Listen for window resize events
+    window.addEventListener('resize', () => this.checkMobileView());
+  }
 
   ngOnInit(): void {
     this.checkUserType();
@@ -57,7 +67,45 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.initializeChat();
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    // Set initial content margin based on sidenav state
+    setTimeout(() => {
+      this.updateContentMargin();
+    }, 0);
+  }
+
+  // Method to update content margins based on sidenav state
+  private updateContentMargin(): void {
+    const content = document.querySelector('.mat-sidenav-content') as HTMLElement;
+    if (!content) return;
+    
+    if (this.isSidenavOpen) {
+      if (this.isSidenavCondensed) {
+        content.style.marginLeft = '60px';
+      } else {
+        content.style.marginLeft = '200px';
+      }
+    } else {
+      content.style.marginLeft = '0px';
+    }
+  }
+
+  private checkMobileView(): void {
+    this.isMobileView = window.innerWidth <= 991;
+    if (this.isMobileView && this.isSidenavOpen) {
+      this.isSidenavOpen = false;
+    }
+    this.updateContentMargin();
+  }
+
+  openMobileMenu(): void {
+    this.dialog.open(this.mobileMenuDialog, {
+      width: '100%',
+      maxWidth: '300px',
+      position: { bottom: '0' },
+      panelClass: 'mobile-menu-dialog'
+    });
+  }
 
   checkUserType(): void {
     const userRole = this.getUserRole();
@@ -110,7 +158,22 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   toggleDrawer(): void {
-    if (this.sidenav) this.sidenav.toggle();
+    if (this.sidenav) {
+      this.sidenav.toggle();
+      setTimeout(() => {
+        this.isSidenavOpen = this.sidenav.opened;
+        this.updateContentMargin();
+      }, 0);
+    }
+  }
+
+  // Toggle between expanded and condensed sidenav
+  toggleSidenavMode(): void {
+    this.isSidenavCondensed = !this.isSidenavCondensed;
+    this.isSidenavOpen = true;
+    setTimeout(() => {
+      this.updateContentMargin();
+    }, 0);
   }
 
   loadUnseenRequests(): void {
@@ -166,5 +229,18 @@ export class AppComponent implements OnInit, AfterViewInit {
         console.log('New message received in app.component:', chat);
       });
     }
+  }
+
+  toggleNavigationMode(): void {
+    this.isTopnavMode = !this.isTopnavMode;
+    if (this.isTopnavMode) {
+      this.isSidenavOpen = false;
+    } else {
+      this.isSidenavOpen = true;
+      this.isSidenavCondensed = false;
+    }
+    setTimeout(() => {
+      this.updateContentMargin();
+    }, 0);
   }
 }

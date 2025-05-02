@@ -111,25 +111,25 @@ export class ChatService {
     formData.append('message', message);
     if (file) formData.append('file', file);
     
-    return this.http.post(`${this.apiUrl}api/send-message`, formData, {
+    return this.http.post(`${this.apiUrl}/api/send-message`, formData, {
       headers: this.getHeaders()
     });
   }
 
   getMessages(receiverId: number) {
-    return this.http.get<any[]>(`${this.apiUrl}api/get-messages/${receiverId}`, {
+    return this.http.get<any[]>(`${this.apiUrl}/api/get-messages/${receiverId}`, {
       headers: this.getHeaders()
     });
   }
 
   getConversations() {
-    return this.http.get<any[]>(`${this.apiUrl}api/conversations`, {
+    return this.http.get<any[]>(`${this.apiUrl}/api/conversations`, {
       headers: this.getHeaders()
     });
   }
 
   markAsRead(receiverId: number) {
-    return this.http.post(`${this.apiUrl}api/mark-as-read/${receiverId}`, {}, {
+    return this.http.post(`${this.apiUrl}/api/mark-as-read/${receiverId}`, {}, {
       headers: this.getHeaders()
     });
   }

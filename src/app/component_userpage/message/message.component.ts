@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.css']
 })
-export class MessageComponent {
+export class MessageComponent implements OnInit {
   // Default message, type, and proposed cost
   message: string = 'Please provide your message for the skilled worker.'; // Default message
   type: string = 'info'; // Default type (can be 'info', 'error', or 'success')
@@ -19,6 +19,14 @@ export class MessageComponent {
   additionalDetails: string = '';
   typedMessage: string = '';  // Holds the typed message from the user
   isAgreed: boolean = false;
+  isMobileView: boolean = false;
+
+  ngOnInit() {
+    // Check screen size on component init
+    this.checkScreenSize();
+    // Add listener for screen resize
+    window.addEventListener('resize', this.checkScreenSize.bind(this));
+  }
 
   // Handle file upload
   onFileChange(event: any) {
@@ -38,16 +46,45 @@ export class MessageComponent {
       formData.append('agreed', String(this.isAgreed)); // Always include the agreement
 
       // Simulate form submission (e.g., send to a server)
-      alert('Message sent successfully!');
+      this.showSuccess('Message sent successfully!');
       console.log('Form Data:', formData);
     } else {
-      alert('Please agree to the proposed cost before submitting.');
+      this.showError('Please agree to the proposed cost before submitting.');
     }
   }
 
   // Handle Disagree action
   disagree() {
     this.isAgreed = false;  // Uncheck the agreement
-    alert('You have disagreed with the proposed cost.');
+    this.showInfo('You have disagreed with the proposed cost.');
+  }
+
+  // Show success message
+  showSuccess(message: string) {
+    this.message = message;
+    this.type = 'success';
+    this.proposedCost = null; // Hide the form after successful submission
+  }
+
+  // Show error message
+  showError(message: string) {
+    this.message = message;
+    this.type = 'error';
+  }
+
+  // Show info message
+  showInfo(message: string) {
+    this.message = message;
+    this.type = 'info';
+  }
+
+  // Check screen size for responsive layout
+  private checkScreenSize() {
+    this.isMobileView = window.innerWidth <= 768;
+  }
+
+  ngOnDestroy() {
+    // Clean up event listener
+    window.removeEventListener('resize', this.checkScreenSize.bind(this));
   }
 }

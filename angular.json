@@ -31,7 +31,11 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "allowedCommonJsDependencies": ["pusher-js"]
+            "allowedCommonJsDependencies": [
+              "pusher-js"
+            ],
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {

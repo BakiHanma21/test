@@ -21,8 +21,8 @@ export class UserRegistrationComponent {
     password: '',
     phoneNumber: '',
     confirmPassword: '',
-    purok: '',  // Added district/purok field
-    street: '', // Added street field
+    purok: '',
+    street: '',
     profilePicture: '',
     termsAgreement: false
   };
@@ -30,14 +30,25 @@ export class UserRegistrationComponent {
   profilePictureError: string | null = null;
   formSubmitted = false;
   showTermsModal = false;
+  floatingIcons: { icon: string, top: string, left: string, right?: string, bottom?: string, size: string, duration: string }[] = [];
 
   constructor(private registrationService: RegistrationService, private router: Router, private http: HttpClient) {}
+
+  ngOnInit(): void {
+    // Initialize floating icons if needed
+    this.initFloatingIcons();
+  }
+
+  initFloatingIcons(): void {
+    // This function can be expanded to create floating icons dynamically if needed
+    console.log('Floating icons initialized');
+  }
 
   onRegister() {
     this.formSubmitted = true;
 
     if (!this.formData.termsAgreement) {
-      alert('Kailangan mong sumang-ayon sa mga Tuntunin at Kundisyon upang magpatuloy.');
+      alert('You must agree to the Terms and Conditions to continue.');
       return;
     }
 
@@ -51,17 +62,16 @@ export class UserRegistrationComponent {
     formData.append('email', this.formData.email);
     formData.append('password', this.formData.password);
     formData.append('profile_picture', this.formData.profilePicture);
-    formData.append('purok', this.formData.purok);       // Add purok/district
-    formData.append('street', this.formData.street);     // Add street
+    formData.append('purok', this.formData.purok);
+    formData.append('street', this.formData.street);
     formData.append('phone_number', this.formData.phoneNumber);
     formData.append('terms_accepted', 'true');
-    
 
     this.http.post('http://localhost:8000/api/user-signup', formData, { observe: 'response' })
       .subscribe(
         (response: any) => {
-            alert('Registration successful! Please wait while we verify your account.');
-            this.router.navigate(['/login']);
+          alert('Registration successful! Please wait while we verify your account.');
+          this.router.navigate(['/login']);
         },
         (error) => {
           if (error.status === 201) {
@@ -77,7 +87,7 @@ export class UserRegistrationComponent {
 
   onProfilePictureChange(event: any): void {
     const file = event.target.files[0];
-    if (file && file.size <= 2048 * 1024) {
+    if (file && file.size <= 2048 * 1024) { // 2MB max size
       this.formData.profilePicture = file;
       this.profilePictureError = null;
     } else {

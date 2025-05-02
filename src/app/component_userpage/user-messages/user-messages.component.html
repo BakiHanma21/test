@@ -4,10 +4,6 @@
   <div class="chat-container">
     <!-- Sidebar with Conversations -->
     <div class="chat-sidebar" [class.mobile-hidden]="isMobileView && showChat">
-      <div class="sidebar-header">
-        <h3>Messages</h3>
-      </div>
-
       <!-- Connection Status -->
       <div class="connection-status" [class.connected]="isConnected" [class.disconnected]="!isConnected">
         <span class="status-dot"></span>
@@ -16,6 +12,7 @@
 
       <!-- Search Bar -->
       <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
         <input 
           type="text" 
           class="search-input" 
@@ -60,7 +57,7 @@
       <ng-container *ngIf="receiverId; else noConversation">
         <!-- Chat Header -->
         <div class="chat-header">
-          <button *ngIf="isMobileView" class="back-btn" (click)="toggleView()">
+          <button *ngIf="isMobileView" class="back-btn" (click)="toggleView()" aria-label="Go back to conversations list">
             <i class="fas fa-arrow-left"></i>
           </button>
           <div class="chat-header-info">
@@ -68,10 +65,9 @@
             <span class="status">{{ selectedConversation?.role }}</span>
           </div>
           <!-- Profile Picture -->
-          <div class="chat-header-profile" (click)="showProfileDetails()" *ngIf="selectedConversation">
+          <div class="chat-header-profile" (click)="showProfileDetails()" *ngIf="selectedConversation" role="button" aria-label="View profile details">
             <div class="profile-avatar">
               {{ selectedConversation.name.charAt(0).toUpperCase() }}
-              <!-- <img [src]="selectedConversation.profileImageUrl" *ngIf="selectedConversation.profileImageUrl" alt="Profile"> -->
             </div>
           </div>
         </div>
@@ -123,7 +119,7 @@
         <div class="message-input-container">
           <form (ngSubmit)="sendMessage()" class="message-form">
             <div class="attachment-btn">
-              <label for="file-input">
+              <label for="file-input" title="Attach a file">
                 <i class="fas fa-paperclip"></i>
               </label>
               <input 
@@ -131,7 +127,8 @@
                 id="file-input"
                 #fileInput 
                 (change)="onFileSelected($event)"
-                [disabled]="isSending || !!errorMessage">
+                [disabled]="isSending || !!errorMessage"
+                aria-label="Select a file to attach">
             </div>
             
             <div class="input-wrapper">
@@ -147,7 +144,8 @@
             <button 
               type="submit" 
               class="send-btn"
-              [disabled]="isSending || (!newMessage.trim() && !selectedFile) || !isConnected || !!errorMessage">
+              [disabled]="isSending || (!newMessage.trim() && !selectedFile) || !isConnected || !!errorMessage"
+              title="Send message">
               <i class="fas" [class.fa-paper-plane]="!isSending" [class.fa-spinner]="isSending"></i>
             </button>
           </form>
@@ -160,7 +158,7 @@
           <div class="empty-state">
             <i class="fas fa-comments"></i>
             <h3>Welcome to Messages</h3>
-            <p>Select a conversation or start a new one to begin chatting</p>
+            <p>Select a conversation to begin chatting</p>
           </div>
         </div>
       </ng-template>
@@ -168,7 +166,7 @@
 
     <!-- Image Preview Modal -->
     <div class="image-preview-modal" *ngIf="previewImage" (click)="closeImagePreview()">
-      <button class="image-preview-close">
+      <button class="image-preview-close" aria-label="Close image preview">
         <i class="fas fa-times"></i>
       </button>
       <img [src]="previewImage" alt="Preview">

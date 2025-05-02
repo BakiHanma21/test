@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { API_URL } from '../../services/auth.service';
 @Component({
   selector: 'app-reporting-message',
   standalone: true,
@@ -35,7 +35,7 @@ export class ReportingMessageComponent implements OnInit {
       const authToken = localStorage.getItem('authToken');
       if (authToken) {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-        this.http.post(`http://localhost:8000/api/add-reports`, reportData, { headers }).subscribe({
+        this.http.post(`${API_URL}/add-reports`, reportData, { headers }).subscribe({
           next: (response: any) => {
             console.log('Report Submitted:', response);
             this.simulateResponse();

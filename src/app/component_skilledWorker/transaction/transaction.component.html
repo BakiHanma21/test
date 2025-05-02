@@ -1,81 +1,180 @@
 <div class="transaction-container">
-  <div class="transaction-header shadow">
-    <h2>Transaction Status</h2>
+  <!-- Header Section -->
+  <div class="header-container">
+    <div class="header-content">
+      <h1>Transaction History <span class="material-icons">receipt_long</span></h1>
+      <div class="divider"></div>
+        <p class="subtitle">Manage your transactions and payment status</p>
+    </div>
+    <div class="header-background">TRANSACTIONS</div>
   </div>
 
-  <div *ngIf="transactions && transactions.length > 0; else noTransactions">
-    <div class="transaction-details-group shadow" *ngFor="let transaction of transactions">
-      <span><strong>Request ID:</strong> {{ transaction?.transaction_id }}</span>
-      <span><strong>Customer Name:</strong> {{ transaction?.name }}</span>
-      <span><strong>Payment Status:</strong> {{ getPaymentStatus(transaction?.payment_status) }}</span>
-      <span><strong>Payment Date:</strong> {{ transaction?.payment_date }}</span>
-
-      <!-- QR Code Upload and Display -->
-      <div class="qr-code-section">
-        <div *ngIf="!transaction.qr_code_url && transaction.payment_status === 'PENDING'">
-          <p>Upload your GCash/PayMaya QR Code:</p>
-          <input type="file" (change)="onQrCodeSelected($event, transaction.transaction_id)" accept="image/*">
+  <!-- Transactions List -->
+  <div class="transactions-list" *ngIf="transactions && transactions.length > 0; else noTransactions">
+    <div class="transaction-card" *ngFor="let transaction of transactions">
+      <!-- Transaction Header -->
+      <div class="transaction-card-header">
+        <div class="transaction-info">
+          <span class="material-icons">receipt</span>
+          <span class="transaction-id">#{{ transaction?.transaction_id }}</span>
+          <span class="customer-name">{{ transaction?.name }}</span>
         </div>
-        <div *ngIf="transaction.qr_code_url">
-          <p><strong>Your QR Code:</strong></p>
-          <img [src]="transaction.qr_code_url" alt="QR Code" class="qr-code-image" (error)="onImageError($event)">
+        <div class="payment-status" [ngClass]="transaction?.payment_status?.toLowerCase()">
+          {{ getPaymentStatus(transaction?.payment_status) }}
         </div>
       </div>
 
-      <!-- Display Client's Receipt -->
-      <div *ngIf="transaction.receipt_url" class="receipt-section">
-        <p><strong>Client's Payment Receipt:</strong></p>
-        <a [href]="transaction.receipt_url" target="_blank">View Receipt</a>
-      </div>
-
-      <!-- Review Section remains unchanged -->
-      <div *ngIf="transaction.review !== null">
-        <hr>
-        <p><strong>Your Review:</strong> {{ transaction.review }}</p>
-        <p><strong>Your Rate:</strong> {{ transaction.rating }} ★</p>
-      </div>
-      <div *ngIf="transaction.review2 !== null">
-        <hr>
-        <p><strong>User Review:</strong> {{ transaction.review2 }}</p>
-        <p><strong>User Rate:</strong> {{ transaction.rating2 }} ★</p>
-      </div>
-      <div *ngIf="(transaction.payment_status === 'PAID' || transaction.payment_status === 'MANUALLY UPDATED') && !transaction.review">
-        <div class="review-section">
-          <h3>Submit Your Review</h3>
-          <textarea [(ngModel)]="reviewText" placeholder="Write your review here..."></textarea>
-          <div class="rating-section">
-            <label for="rating">Rating:</label>
-            <div class="star-rating">
-              <i *ngFor="let star of stars; let i = index" class="star" [ngClass]="{ filled: i < reviewRating }" (click)="setRating(i + 1)">
-                ★
-              </i>
+      <!-- Transaction Details -->
+      <div class="transaction-card-content">
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="material-icons">event</span>
+            <div class="detail-content">
+              <label>Payment Date</label>
+              <p>{{ transaction?.payment_date || 'Not yet paid' }}</p>
             </div>
           </div>
-          <div class="center">
-            <button class="btn btn-submit" (click)="submitReview(transaction.transaction_id)">Submit Review</button>
+          <div class="detail-item">
+            <span class="material-icons">payments</span>
+            <div class="detail-content">
+              <label>Amount</label>
+              <p>₱{{ transaction?.amount }}</p>
+            </div>
+          </div>
+          <div class="detail-item" *ngIf="transaction?.title">
+            <span class="material-icons">title</span>
+            <div class="detail-content">
+              <label>Service</label>
+              <p>{{ transaction?.title }}</p>
+            </div>
+          </div>
+          <div class="detail-item" *ngIf="transaction?.description">
+            <span class="material-icons">description</span>
+            <div class="detail-content">
+              <label>Description</label>
+              <p>{{ transaction?.description }}</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="transaction-actions shadow">
-        <button *ngIf="transaction.payment_status === 'PENDING' && transaction.receipt_url" (click)="markAsPaidManually(transaction.transaction_id)">
-          Mark as Paid Manually
-        </button>
+        <!-- QR Code Section -->
+        <div class="qr-section" *ngIf="transaction.payment_status === 'PENDING'">
+          <div class="qr-upload" *ngIf="!transaction.qr_code_url">
+            <div class="upload-area" (dragover)="$event.preventDefault()" (drop)="onQrCodeSelected($event, transaction.transaction_id)">
+              <span class="material-icons">qr_code_2</span>
+              <p>Upload GCash/PayMaya QR Code</p>
+              <span class="upload-hint">Drag and drop or click to upload</span>
+              <input type="file" 
+                     (change)="onQrCodeSelected($event, transaction.transaction_id)" 
+                     accept="image/*" 
+                     class="file-input"
+                     title="Upload QR Code"
+                     aria-label="Upload QR Code">
+            </div>
+          </div>
+          <div class="qr-display" *ngIf="transaction.qr_code_url">
+            <div class="qr-preview">
+              <img [src]="transaction.qr_code_url" alt="QR Code" (error)="onImageError($event)">
+            </div>
+          </div>
+        </div>
+
+        <!-- Receipt Section -->
+        <div class="receipt-section" *ngIf="transaction.receipt_url">
+          <div class="receipt-preview">
+            <span class="material-icons">description</span>
+            <span>Payment Receipt</span>
+            <a [href]="transaction.receipt_url" target="_blank" class="view-receipt">View Receipt</a>
+          </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="reviews-section" *ngIf="transaction.review !== null || transaction.review2 !== null">
+          <div class="review worker-review" *ngIf="transaction.review !== null">
+            <div class="review-header">
+              <span class="material-icons">engineering</span>
+              <h4>Your Review</h4>
+            </div>
+            <p class="review-text">{{ transaction.review }}</p>
+            <div class="rating">
+              <div class="stars">
+                <span class="material-icons" *ngFor="let star of [].constructor(5); let i = index"
+                      [class.filled]="i < transaction.rating">star</span>
+              </div>
+              <span class="rating-value">{{ transaction.rating }}/5</span>
+            </div>
+          </div>
+
+          <div class="review user-review" *ngIf="transaction.review2 !== null">
+            <div class="review-header">
+              <span class="material-icons">person</span>
+              <h4>Customer's Review</h4>
+            </div>
+            <p class="review-text">{{ transaction.review2 }}</p>
+            <div class="rating">
+              <div class="stars">
+                <span class="material-icons" *ngFor="let star of [].constructor(5); let i = index"
+                      [class.filled]="i < transaction.rating2">star</span>
+              </div>
+              <span class="rating-value">{{ transaction.rating2 }}/5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review Form -->
+        <div class="review-form" *ngIf="(transaction.payment_status === 'PAID' || transaction.payment_status === 'MANUALLY UPDATED') && !transaction.review">
+          <h3>
+            <span class="material-icons">rate_review</span>
+            Write a Review
+          </h3>
+          <div class="form-content">
+            <textarea [(ngModel)]="reviewText" placeholder="Share your experience..." class="review-textarea"></textarea>
+            <div class="rating-input">
+              <label>Rating:</label>
+              <div class="star-rating">
+                <span class="material-icons" *ngFor="let star of stars; let i = index"
+                      [class.filled]="i < reviewRating"
+                      (click)="setRating(i + 1)">star</span>
+              </div>
+            </div>
+            <button class="submit-review" (click)="submitReview(transaction.transaction_id)">
+              <span class="material-icons">rate_review</span>
+              Submit Review
+            </button>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="transaction-actions" *ngIf="transaction.payment_status === 'PENDING' && transaction.receipt_url">
+          <button class="action-button" (click)="markAsPaidManually(transaction.transaction_id)">
+            <span class="material-icons">check_circle</span>
+            Mark as Paid
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- No Transactions Template -->
   <ng-template #noTransactions>
     <div class="no-transactions">
-      <p>No transactions found</p>
+      <span class="material-icons">receipt_long</span>
+      <h3>No Transactions Found</h3>
+      <p>Your transaction history will appear here</p>
     </div>
   </ng-template>
 
-  <div class="transaction-status-update shadow" *ngIf="manualStatus">
+  <!-- Status Update -->
+  <div class="status-toast" *ngIf="manualStatus">
+    <span class="material-icons">info</span>
     <p>{{ manualStatus }}</p>
   </div>
 
-  <div class="transaction-footer shadow">
-    <p>If you have any <strong>CONCERN</strong> and <strong>PROBLEM</strong>, please visit or proceed directly to the barangay hall for assistance.</p>
+  <!-- Footer -->
+  <div class="support-footer">
+    <div class="support-content">
+      <span class="material-icons">support_agent</span>
+      <p>Need assistance? Visit the barangay hall for support.</p>
+    </div>
   </div>
 </div>

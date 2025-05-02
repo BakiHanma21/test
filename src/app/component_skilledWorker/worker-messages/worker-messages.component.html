@@ -16,12 +16,14 @@
 
       <!-- Search Bar -->
       <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
         <input 
           type="text" 
           class="search-input" 
           placeholder="Search conversations..."
           [(ngModel)]="searchText"
-          (input)="onSearch()">
+          (input)="onSearch()"
+          aria-label="Search conversations">
       </div>
 
       <!-- Conversations List -->
@@ -29,7 +31,9 @@
         <div *ngFor="let conv of conversations" 
              class="conversation-item" 
              [class.active]="conv.id === receiverId"
-             (click)="selectConversation(conv.id)">
+             (click)="selectConversation(conv.id)"
+             role="button"
+             [attr.aria-label]="'Chat with ' + conv.name">
           <div class="conversation-avatar">
             {{ conv.name.charAt(0).toUpperCase() }}
           </div>
@@ -48,19 +52,25 @@
           </div>
         </div>
         <div *ngIf="conversations.length === 0" class="no-conversations">
-          <i class="fas fa-search"></i>
-          <p *ngIf="searchText">No conversations found</p>
-          <p *ngIf="!searchText">No conversations yet</p>
+          <div class="empty-state">
+            <i class="fas fa-comments"></i>
+            <h3>No Conversations</h3>
+            <p *ngIf="searchText">No conversations found</p>
+            <p *ngIf="!searchText">Start a new conversation</p>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Main Chat Area -->
-    <div class="chat-main" [class.mobile-hidden]="isMobileView && !showChat">
+    <div class="chat-main" [class.active]="showChat">
       <ng-container *ngIf="receiverId; else noConversation">
         <!-- Chat Header -->
         <div class="chat-header">
-          <button *ngIf="isMobileView" class="back-btn" (click)="toggleView()">
+          <button *ngIf="isMobileView" 
+                  class="back-btn" 
+                  (click)="toggleView()"
+                  aria-label="Go back to conversations list">
             <i class="fas fa-arrow-left"></i>
           </button>
           <div class="chat-header-info">
@@ -68,7 +78,11 @@
             <span class="status">{{ selectedConversation?.role }}</span>
           </div>
           <!-- Profile Picture -->
-          <div class="chat-header-profile" (click)="viewProfile()" *ngIf="selectedConversation">
+          <div class="chat-header-profile" 
+               (click)="viewProfile()" 
+               *ngIf="selectedConversation"
+               role="button"
+               aria-label="View profile details">
             <div class="profile-avatar">
               {{ selectedConversation.name.charAt(0).toUpperCase() }}
             </div>
@@ -90,7 +104,8 @@
                   <img [src]="msg.file_url" 
                        alt="Shared image" 
                        class="message-image"
-                       (error)="onImageError($event)">
+                       (error)="onImageError($event)"
+                       (click)="openImagePreview(msg.file_url)">
                 </div>
                 
                 <!-- File Attachment -->
@@ -109,6 +124,15 @@
               </div>
             </div>
           </div>
+          
+          <!-- No Messages Yet -->
+          <div *ngIf="messages.length === 0 && !errorMessage" class="no-messages">
+            <div class="empty-state">
+              <i class="fas fa-comment-dots"></i>
+              <h3>Start Chatting</h3>
+              <p>Send your first message to start a conversation</p>
+            </div>
+          </div>
         </div>
 
         <!-- Error Message -->
@@ -121,7 +145,7 @@
         <div class="message-input-container">
           <form (ngSubmit)="sendMessage()" class="message-form">
             <div class="attachment-btn">
-              <label for="file-input">
+              <label for="file-input" title="Attach a file">
                 <i class="fas fa-paperclip"></i>
               </label>
               <input 
@@ -129,7 +153,8 @@
                 id="file-input"
                 #fileInput 
                 (change)="onFileSelected($event)"
-                [disabled]="isSending || !!errorMessage">
+                [disabled]="isSending || !!errorMessage"
+                aria-label="Select a file to attach">
             </div>
             
             <div class="input-wrapper">
@@ -145,10 +170,13 @@
             <button 
               type="submit" 
               class="send-btn"
-              [disabled]="isSending || (!newMessage.trim() && !selectedFile) || !isConnected || !!errorMessage">
+              [disabled]="isSending || (!newMessage.trim() && !selectedFile) || !isConnected || !!errorMessage"
+              title="Send message">
               <i class="fas" [class.fa-paper-plane]="!isSending" [class.fa-spinner]="isSending"></i>
             </button>
           </form>
+          <!-- Mobile spacer to prevent bottom nav overlap -->
+          <div class="mobile-spacer"></div>
         </div>
       </ng-container>
 
@@ -158,7 +186,7 @@
           <div class="empty-state">
             <i class="fas fa-comments"></i>
             <h3>Welcome to Messages</h3>
-            <p>Select a conversation or start a new one to begin chatting</p>
+            <p>Select a conversation to begin chatting</p>
           </div>
         </div>
       </ng-template>

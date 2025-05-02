@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NgClass } from '@angular/common';
+import { NgClass, NgIf, NgStyle } from '@angular/common';
 import { Router } from '@angular/router';
 import { ChatService } from '../../services/chat.service';
+import { API_URL } from '../../services/auth.service';
 
 interface ProfileData {
   username: string;
@@ -16,17 +17,23 @@ interface ProfileData {
   lastLogin?: string;
   accountCreated?: string;
   twoFactorEnabled: boolean;
+  loginNotifications: boolean;
+  apiAccess: boolean;
+  language: string;
 }
 
 @Component({
   selector: 'app-profile-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, NgClass],
+  imports: [CommonModule, FormsModule, RouterModule, NgClass, NgIf, NgStyle],
   templateUrl: './profile-management.component.html',
   styleUrls: ['./profile-management.component.css']
 })
 export class ProfileManagementComponent implements OnInit {
   sidebarOpen: boolean = true;
+  sidebarAnimating = false;
+  isIconOnly = false;
+  isMobileView = false;
   passwordVisible = false;
   isEditFormVisible = false;
   isSaved = false;
@@ -34,6 +41,8 @@ export class ProfileManagementComponent implements OnInit {
   showSuccessToast = false;
   defaultProfileImage: string = 'assets/default-profile.png';
   showPassword: boolean = false;
+  showEditPassword: boolean = false;
+  showEditCurrentPassword: boolean = false;
   
   profile: ProfileData = {
     username: '',
@@ -43,16 +52,35 @@ export class ProfileManagementComponent implements OnInit {
     image: '',
     lastLogin: '',
     accountCreated: '',
-    twoFactorEnabled: false
+    twoFactorEnabled: false,
+    loginNotifications: false,
+    apiAccess: false,
+    language: 'English'
   };
 
   editForm = {
+    username: '',
     email: '',
     password: '',
     role: '',
     currentPassword: '',
-    twoFactorEnabled: false
+    twoFactorEnabled: false,
+    loginNotifications: false,
+    apiAccess: false,
+    language: 'English'
   };
+
+  availableLanguages = [
+    { value: 'English', label: 'English' },
+    { value: 'Spanish', label: 'Spanish' },
+    { value: 'Filipino', label: 'Filipino' }
+  ];
+
+  // Window resize listener
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkScreenSize();
+  }
 
   constructor(
     private router: Router,
@@ -63,10 +91,75 @@ export class ProfileManagementComponent implements OnInit {
   ngOnInit(): void {
     this.loadProfile();
     this.initializeChat();
+    this.checkScreenSize(); // Check screen size on init
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('resize', this.checkScreenSize.bind(this));
+  }
+
+  // Check if screen is mobile size
+  checkScreenSize() {
+    this.isMobileView = window.innerWidth <= 768;
+    
+    // Auto close sidebar on mobile
+    if (this.isMobileView && this.sidebarOpen) {
+      this.sidebarOpen = false;
+    }
+    
+    // If returning to desktop, ensure sidebar is open if not in icon-only mode
+    if (!this.isMobileView && !this.sidebarOpen && !this.isIconOnly) {
+      this.sidebarOpen = true;
+    }
+  }
+
+  toggleSidebar(): void {
+    if (this.sidebarAnimating) return;
+    
+    this.sidebarAnimating = true;
+    this.sidebarOpen = !this.sidebarOpen;
+    
+    // Add transition end listener
+    const sidebar = document.querySelector('.sidebar');
+    const onTransitionEnd = () => {
+      this.sidebarAnimating = false;
+      sidebar?.removeEventListener('transitionend', onTransitionEnd);
+    };
+    
+    sidebar?.addEventListener('transitionend', onTransitionEnd);
+  }
+
+  toggleSidebarView(): void {
+    if (this.sidebarAnimating) return;
+    
+    this.sidebarAnimating = true;
+    this.isIconOnly = !this.isIconOnly;
+    
+    // Ensure sidebar is open when switching to icon-only view
+    if (this.isIconOnly && !this.sidebarOpen) {
+      this.sidebarOpen = true;
+    }
+    
+    // Add transition end listener
+    const sidebar = document.querySelector('.sidebar');
+    const onTransitionEnd = () => {
+      this.sidebarAnimating = false;
+      sidebar?.removeEventListener('transitionend', onTransitionEnd);
+    };
+    
+    sidebar?.addEventListener('transitionend', onTransitionEnd);
   }
 
   togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
+    this.passwordVisible = !this.passwordVisible;
+  }
+
+  toggleEditPasswordVisibility(): void {
+    this.showEditPassword = !this.showEditPassword;
+  }
+
+  toggleEditCurrentPasswordVisibility(): void {
+    this.showEditCurrentPassword = !this.showEditCurrentPassword;
   }
 
   loadProfile(): void {
@@ -74,7 +167,7 @@ export class ProfileManagementComponent implements OnInit {
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-      this.http.get('http://localhost:8000/api/admin-profile', { headers })
+      this.http.get(`${API_URL}/admin-profile`, { headers })
         .subscribe({
           next: (response: any) => {
             console.log('Profile Response:', response);
@@ -82,14 +175,21 @@ export class ProfileManagementComponent implements OnInit {
               ...response.data,
               lastLogin: response.data.last_login || 'Never',
               accountCreated: response.data.created_at || 'Unknown',
-              twoFactorEnabled: Boolean(response.data.two_factor_enabled)
+              twoFactorEnabled: Boolean(response.data.two_factor_enabled) || false,
+              loginNotifications: Boolean(response.data.login_notifications) || false,
+              apiAccess: Boolean(response.data.api_access) || false,
+              language: response.data.language || 'English'
             };
             this.editForm = {
+              username: this.profile.username,
               email: this.profile.email,
               password: '',
               role: this.profile.role,
               currentPassword: '',
-              twoFactorEnabled: this.profile.twoFactorEnabled
+              twoFactorEnabled: this.profile.twoFactorEnabled,
+              loginNotifications: this.profile.loginNotifications,
+              apiAccess: this.profile.apiAccess,
+              language: this.profile.language
             };
             this.isLoading = false;
           },
@@ -112,11 +212,15 @@ export class ProfileManagementComponent implements OnInit {
     this.isEditFormVisible = !this.isEditFormVisible;
     if (this.isEditFormVisible) {
       this.editForm = {
+        username: this.profile.username,
         email: this.profile.email,
         password: '',
         role: this.profile.role,
         currentPassword: '',
-        twoFactorEnabled: this.profile.twoFactorEnabled
+        twoFactorEnabled: this.profile.twoFactorEnabled,
+        loginNotifications: this.profile.loginNotifications,
+        apiAccess: this.profile.apiAccess,
+        language: this.profile.language
       };
     }
   }
@@ -137,14 +241,18 @@ export class ProfileManagementComponent implements OnInit {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
     
     const formData = {
+      username: this.editForm.username,
       email: this.editForm.email,
       password: this.editForm.password,
       role: this.editForm.role,
       currentPassword: this.editForm.currentPassword,
-      twoFactorEnabled: this.editForm.twoFactorEnabled
+      twoFactorEnabled: this.editForm.twoFactorEnabled,
+      loginNotifications: this.editForm.loginNotifications,
+      apiAccess: this.editForm.apiAccess,
+      language: this.editForm.language
     };
 
-    this.http.put('http://localhost:8000/api/update-admin-profile', formData, { headers })
+    this.http.put(`${API_URL}/update-admin-profile`, formData, { headers })
       .subscribe({
         next: (response) => {
           console.log('Profile updated:', response);
@@ -164,6 +272,28 @@ export class ProfileManagementComponent implements OnInit {
           alert(error.error.message || 'Error updating profile. Please try again.');
         }
       });
+  }
+
+  toggleSecuritySetting(setting: string): void {
+    switch(setting) {
+      case 'twoFactor':
+        this.profile.twoFactorEnabled = !this.profile.twoFactorEnabled;
+        break;
+      case 'loginNotifications':
+        this.profile.loginNotifications = !this.profile.loginNotifications;
+        break;
+      case 'apiAccess':
+        this.profile.apiAccess = !this.profile.apiAccess;
+        break;
+    }
+    
+    // For demonstration purposes, we'll show the success toast without saving to backend
+    this.showSuccessToast = true;
+    setTimeout(() => {
+      this.showSuccessToast = false;
+    }, 3000);
+    
+    // In a real application, you would save these settings to the backend here
   }
 
   togglePassword(): void {
@@ -194,7 +324,7 @@ export class ProfileManagementComponent implements OnInit {
       const authToken = localStorage.getItem('authToken');
       if (authToken) {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-        this.http.post('http://localhost:8000/api/update-admin-picture', formData, { headers })
+        this.http.post(`${API_URL}/update-admin-picture`, formData, { headers })
           .subscribe({
             next: (response: any) => {
               console.log('Upload successful:', response);
@@ -224,14 +354,6 @@ export class ProfileManagementComponent implements OnInit {
     }
   }
 
-  toggleSidebar() {
-    this.sidebarOpen = !this.sidebarOpen;
-  }
-
-  toggleSidebarInside() {
-    this.sidebarOpen = !this.sidebarOpen;
-  }
-
   logout() {
     this.chatService.disconnectWebSocket();
     localStorage.clear();
@@ -248,5 +370,11 @@ export class ProfileManagementComponent implements OnInit {
         console.log('New message received:', chat);
       });
     }
+  }
+
+  getFormattedDate(dateString: string | undefined): string {
+    if (!dateString) return 'Never';
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? dateString : date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
   }
 }

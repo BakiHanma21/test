@@ -1,8 +1,11 @@
+<div class="message-container">
 <div class="message" [ngClass]="type">
     <p>{{ message }}</p>
   
     <div *ngIf="proposedCost !== null">
-      <p><strong>Proposed Cost: </strong>${{ proposedCost }}</p>
+      <div class="proposed-cost">
+        <strong>Proposed Cost: </strong><span class="cost-value">${{ proposedCost }}</span>
+      </div>
   
       <div class="form-group">
         <label for="fileUpload">Upload Image (Optional)</label>
@@ -30,14 +33,14 @@
       </div>
   
       <div class="form-group">
-        <label for="agree">
+        <label for="agree" class="checkbox-label">
           <input type="checkbox" [(ngModel)]="isAgreed" id="agree" />
           I agree to the proposed cost.
         </label>
       </div>
   
       <!-- Action buttons for Agree/Disagree -->
-      <div class="form-group">
+      <div class="form-group button-group">
         <button
           type="button"
           class="btn btn-primary"
@@ -54,6 +57,10 @@
         >
           Disagree
         </button>
+      </div>
+      
+      <!-- Mobile spacer for bottom nav -->
+      <div class="mobile-spacer"></div>
       </div>
     </div>
   </div>

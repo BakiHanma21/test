@@ -1,66 +1,151 @@
-<div class="contact-us-container">
-  <!-- No favorites message -->
-  <div *ngIf="favorites.length === 0">
-    <p class="text-center">No favorites yet!</p>
+<div class="favorites-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-content">
+      <h1>My Favorites</h1>
+      <p class="subtitle">Your saved skilled professionals</p>
+    </div>
+    <div class="header-background">FAVORITES</div>
   </div>
 
-  <!-- List of favorite workers -->
-  <div *ngFor="let worker of favorites">
-    <div class="worker-card">
-      <!-- Worker Details -->
-      <div class="row">
-        <div class="col-6">
+  <!-- No favorites message -->
+  <div class="empty-state" *ngIf="favorites.length === 0">
+    <i class="fas fa-heart-broken"></i>
+    <p>No favorites added yet!</p>
+    <p class="subtitle">Start exploring skilled professionals and save your favorites.</p>
+  </div>
 
-          <img class="worker-image" [src]="worker.image" alt="{{ worker.name }}" />
-          <h3>{{ worker.name }}</h3>
+  <!-- Favorites Grid -->
+  <div class="workers-grid" *ngIf="favorites.length > 0">
+    <div class="worker-card" *ngFor="let worker of favorites">
+      <div class="card-header">
+        <img [src]="worker.image || 'assets/images/avatar.jpg'" alt="{{ worker.name }}" class="worker-image" />
+        <div class="availability-badge" [class.available]="worker.availability === 1">
+          {{ worker.availability === 1 ? 'Available' : 'Unavailable' }}
+        </div>
+      </div>
+      
+      <div class="card-content">
+        <h3 class="worker-name">{{ worker.name }}</h3>
+        <div class="rating" *ngIf="worker.average_rating">
+          <span class="rating-value">{{ worker.average_rating }}</span>
+          <i class="fas fa-star"></i>
+        </div>
+        
+        <div class="worker-details">
+          <p class="job"><i class="fas fa-briefcase"></i> {{ worker.job }}</p>
+          <p class="location"><i class="fas fa-map-marker-alt"></i> {{ worker.location }}</p>
+          <p class="experience"><i class="fas fa-clock"></i> {{ worker.experience }} Years Experience</p>
+        </div>
 
-          <div class="worker-header">
-            <div>
-              <!-- Combined Worker Details -->
-              <div class="worker-info" style="color: blue;">
-                <p>Job: <span style="color: #555;">{{ worker.job }}</span></p>
-                <p>Location: <span style="color: #555;">{{ worker.location }}</span></p>
-                <p>Experience: <span style="color: #555;">{{ worker.experience }}</span></p>
-                <p>Availability: <span style="color: #555;">{{ worker.availability }}</span></p>
-                <!-- <p>Rating: <span style="color: #555;">{{ worker.rating }}</span></p> -->
+        <!-- Reviews Preview -->
+        <div class="reviews-preview" *ngIf="worker.reviews && worker.reviews.length > 0">
+          <div class="review-item">
+            <div class="star-rating">
+              <i *ngFor="let star of [].constructor(worker.reviews[0].rating)" class="fas fa-star"></i>
+              <i *ngFor="let star of [].constructor(5 - worker.reviews[0].rating)" class="far fa-star"></i>
+            </div>
+            <p class="review-text">{{ worker.reviews[0].text | slice:0:50 }}{{ worker.reviews[0].text.length > 50 ? '...' : '' }}</p>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card-actions">
+          <button class="view-profile-btn" (click)="openModal(worker)">
+            <i class="fas fa-user"></i> View Profile
+          </button>
+          <button class="remove-favorite-btn" (click)="unsaveAsFavorite(worker)">
+            <i class="fas fa-heart-broken"></i> Remove
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Worker Profile Modal -->
+  <div class="modal" [class.show]="isModalOpen">
+    <div class="modal-content">
+      <button class="close-modal" (click)="closeModal()" aria-label="Close modal">
+        <i class="fas fa-times"></i>
+      </button>
+      
+      <div class="modal-body" *ngIf="selectedWorker">
+        <div class="profile-header">
+          <div class="profile-image-container">
+            <img [src]="selectedWorker.image || 'assets/images/avatar.jpg'" alt="{{ selectedWorker.name }}" class="profile-image" />
+          </div>
+          <div class="profile-info">
+            <h2>{{ selectedWorker.name }}</h2>
+            <div class="rating-container" *ngIf="selectedWorker.average_rating">
+              <span class="rating">{{ selectedWorker.average_rating }}</span>
+              <i class="fas fa-star"></i>
+            </div>
+            <p class="profession">{{ selectedWorker.job }}</p>
+            <div class="availability-badge" [class.available]="selectedWorker.availability === 1">
+              {{ selectedWorker.availability === 1 ? 'Available Now' : 'Currently Unavailable' }}
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-details">
+          <div class="detail-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ selectedWorker.location }}</span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-briefcase"></i>
+            <span>{{ selectedWorker.experience }} Years Experience</span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-phone"></i>
+            <span>{{ selectedWorker.phone || 'Not available' }}</span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-envelope"></i>
+            <span>{{ selectedWorker.email || 'Not available' }}</span>
+          </div>
+        </div>
+
+        <div class="work-examples" *ngIf="selectedWorker.works && selectedWorker.works.length > 0">
+          <h3>Portfolio</h3>
+          <div class="work-grid">
+            <div class="work-item" *ngFor="let work of selectedWorker.works">
+              <img [src]="work.image" alt="{{ work.title }}" />
+              <div class="work-overlay">
+                <h4>{{ work.title }}</h4>
+                <p>{{ work.description }}</p>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Reviews Section -->
-      <div class="worker-reviews">
-        <h4>Reviews & Ratings:</h4>
-        <ul>
-          <li *ngFor="let review of worker.reviews">
-            <p><strong>{{ review.name }}</strong>: {{ review.text }}
-              <span class="star-rating">
-                (
-                <i *ngFor="let star of [].constructor(review.rating)" class="fas fa-star" style="color: #FFD700;"></i>
-                <i *ngFor="let star of [].constructor(5 - review.rating)" class="far fa-star" style="color: #FFD700;"></i>
-                {{ review.rating }}/5
-                )
-              </span>
-            </p>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Works Section -->
-      <div class="worker-works">
-        <h4>Work Examples:</h4>
-        <ul>
-          <li *ngFor="let work of worker.works">
-            <p><strong>{{ work.title }}</strong>: {{ work.description }}</p>
-            <img [src]="work.image" alt="{{ work.title }}" width="250px"/>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Remove from Favorites Button -->
-      <div class="modal-actions">
-        <button class="btn btn-danger" (click)="unsaveAsFavorite(worker)">Remove from Favorites</button>
+        <div class="reviews-section" *ngIf="selectedWorker.reviews && selectedWorker.reviews.length > 0">
+          <h3>Reviews</h3>
+          <div class="reviews-container">
+            <div class="review-card" *ngFor="let review of selectedWorker.reviews">
+              <div class="review-header">
+                <h4>{{ review.name }}</h4>
+                <div class="star-rating">
+                  <i 
+                    class="fas fa-star"
+                    *ngFor="let star of [].constructor(5); let i = index"
+                    [class.filled]="i < review.rating"
+                  ></i>
+                </div>
+              </div>
+              <p class="review-text">{{ review.text }}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-actions" style="margin-top: 30px;">
+          <button class="view-profile-btn" (click)="bookWorker(selectedWorker)">
+            <i class="fas fa-calendar-alt"></i> Book Now
+          </button>
+          <button class="remove-favorite-btn" (click)="unsaveAsFavorite(selectedWorker); closeModal()">
+            <i class="fas fa-heart-broken"></i> Remove from Favorites
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { API_URL } from '../../services/auth.service';
 interface Transaction {
   transaction_id: number;
   name: string;
@@ -44,7 +44,7 @@ export class WorkerTransactionComponent implements OnInit {
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-      this.http.get<{ data: Transaction[] }>('http://localhost:8000/api/transactions', { headers })
+      this.http.get<{ data: Transaction[] }>(`${API_URL}/transactions`, { headers })
         .subscribe(
           (response) => {
             this.transactions = response.data || [];
@@ -75,7 +75,7 @@ export class WorkerTransactionComponent implements OnInit {
       if (authToken) {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
         this.http.post<{ message: string; qr_code_url: string }>(
-          `http://localhost:8000/api/transactions/${transactionId}/upload-qr-code`,
+          `${API_URL}/transactions/${transactionId}/upload-qr-code`,
           formData,
           { headers }
         ).subscribe(
@@ -112,7 +112,7 @@ export class WorkerTransactionComponent implements OnInit {
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
       this.http.post<{ message: string; transaction: Transaction }>(
-        `http://localhost:8000/api/transactions/${transactionId}/mark-as-paid`,
+        `${API_URL}/transactions/${transactionId}/mark-as-paid`,
         {},
         { headers }
       ).subscribe(
@@ -138,7 +138,7 @@ export class WorkerTransactionComponent implements OnInit {
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
       this.http.post<{ message: string }>(
-        `http://localhost:8000/api/transactions/${transactionId}/submit-review`,
+        `${API_URL}/transactions/${transactionId}/submit-review`,
         { review: this.reviewText, rating: this.reviewRating },
         { headers }
       ).subscribe(

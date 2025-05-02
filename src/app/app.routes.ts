@@ -15,6 +15,7 @@ import { MessageComponent } from './component_userpage/message/message.component
 import { ReportingMessageComponent } from './component_userpage/reporting-message/reporting-message.component';
 import { TransactionComponent } from './component_userpage/transaction/transaction.component';
 import { UserMessagesComponent } from './component_userpage/user-messages/user-messages.component';
+import { UserProfileComponent } from './component_userpage/user-profile/user-profile.component';
 
 import { ChoicesComponent } from './Log_Reg/choices/choices.component';
 import { ForgotPasswordComponent } from './Log_Reg/forgot-password/forgot-password.component';
@@ -31,7 +32,7 @@ import { TermsAndConditionsComponent } from './Log_Reg/terms-conditions/terms-co
 import { PaymentHistoryComponent } from './payments/payment-history/payment-history.component';
 import { PaymentComponent } from './payments/payment/payment.component';
 import { PaymenthomeComponent } from './payments/paymenthome/paymenthome.component';
-
+import { SettingsComponent } from './settings/settings.component';
 // import { ChatComponent } from './components/chat/chat.component';
 
 import { RoleBasedAccessControlComponent } from './user-management-system/role-based-access-control/role-based-access-control.component';
@@ -55,7 +56,8 @@ export const routes: Routes = [
   { path: 'skilled-registration', component: SkilledRegistrationComponent },
   { path: 'choices', component: ChoicesComponent },
   { path: 'user-messages', component: UserMessagesComponent},
-
+  { path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard] },
+  { path: 'settings', component: SettingsComponent},
   // { path: 'chat', component: ChatComponent},
   // { path: 'chat/:receiverId', component: ChatComponent },
 

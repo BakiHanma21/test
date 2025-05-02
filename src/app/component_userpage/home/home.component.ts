@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FavoriteService } from '../../services/favorite.service';
-
+import { API_URL } from '../../services/auth.service';
 interface Work {
   title: string;
 }
@@ -38,7 +38,7 @@ export class HomeComponent {
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-      this.http.get(`http://localhost:8000/api/skilled_workers`, { headers })
+      this.http.get(`${API_URL}/skilled_workers`, { headers })
         .subscribe(
           (response: any) => {
             console.log('Response data:', response.data);
@@ -121,7 +121,7 @@ export class HomeComponent {
     };
     console.log('reviewData data:', reviewData);
 
-    this.http.post(`http://localhost:8000/api/add-reviews`, reviewData, { headers }).subscribe(
+    this.http.post(`${API_URL}/add-reviews`, reviewData, { headers }).subscribe(
       (response: any) => {
         alert('Review submitted successfully!');
         this.loadWorkers();
@@ -150,7 +150,7 @@ export class HomeComponent {
       user_id: userId 
     };
   
-    this.http.post(`http://localhost:8000/api/add-favorites`, favoriteData, { headers })
+    this.http.post(`${API_URL}/add-favorites`, favoriteData, { headers })
       .subscribe(
         (response: any) => {
           alert('Worker saved as favorite!');

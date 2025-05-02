@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ChartData, ChartConfiguration, ChartType } from 'chart.js/auto';
 import { RouterModule } from '@angular/router';
@@ -9,7 +9,7 @@ import { ChatService } from '../../services/chat.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Chart } from 'chart.js/auto';
-
+import { API_URL } from '../../services/auth.service';
 @Component({
   selector: 'app-dashboard-management',
   imports: [RouterModule, BaseChartDirective, NgStyle, NgClass, NgIf, CommonModule, FormsModule],
@@ -20,6 +20,9 @@ import { Chart } from 'chart.js/auto';
 export class DashboardManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
   sidebarOpen = true;
+  sidebarAnimating = false;
+  isIconOnly = false;
+  isMobileView = false;
   totalUsers: number = 0;
   totalSkilledWorkers: number = 0;
 
@@ -95,6 +98,27 @@ export class DashboardManagementComponent implements OnInit, AfterViewInit {
     }
   };
 
+  // Window resize listener
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  // Check if screen is mobile size
+  checkScreenSize() {
+    this.isMobileView = window.innerWidth <= 768;
+    
+    // Auto close sidebar on mobile
+    if (this.isMobileView && this.sidebarOpen) {
+      this.sidebarOpen = false;
+    }
+    
+    // If returning to desktop, ensure sidebar is open
+    if (!this.isMobileView && !this.sidebarOpen) {
+      this.sidebarOpen = true;
+    }
+  }
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -107,6 +131,7 @@ export class DashboardManagementComponent implements OnInit, AfterViewInit {
     this.totalUsers = 350;
     this.totalSkilledWorkers = 180;
     this.updateChart();
+    this.checkScreenSize(); // Check screen size on init
   }
 
   ngAfterViewInit(): void {
@@ -119,7 +144,7 @@ export class DashboardManagementComponent implements OnInit, AfterViewInit {
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-      this.http.get(`http://localhost:8000/api/dashboard-admin`, { headers }).subscribe(
+      this.http.get(`${API_URL}/dashboard-admin`, { headers }).subscribe(
         (response: any) => {
           this.totalUsers = response.totalUsers;
           this.totalSkilledWorkers = response.totalSkilledWorkers;
@@ -143,7 +168,26 @@ export class DashboardManagementComponent implements OnInit, AfterViewInit {
   }
 
   toggleSidebar(): void {
+    if (this.sidebarAnimating) return;
+    
+    this.sidebarAnimating = true;
     this.sidebarOpen = !this.sidebarOpen;
+    
+    // Add transition end listener
+    const sidebar = document.querySelector('.sidebar');
+    const onTransitionEnd = () => {
+      this.sidebarAnimating = false;
+      sidebar?.removeEventListener('transitionend', onTransitionEnd);
+    };
+    
+    sidebar?.addEventListener('transitionend', onTransitionEnd);
+    
+    // Update chart if visible
+    setTimeout(() => {
+      if (this.chart) {
+        this.chart.update();
+      }
+    }, 300);
   }
 
   toggleSidebarInside() {
@@ -302,5 +346,31 @@ export class DashboardManagementComponent implements OnInit, AfterViewInit {
       link.click();
       document.body.removeChild(link);
     }
+  }
+
+  toggleSidebarView(): void {
+    if (this.sidebarAnimating) return;
+    
+    this.sidebarAnimating = true;
+    this.isIconOnly = !this.isIconOnly;
+    
+    // Ensure sidebar is open when switching to icon-only view
+    if (this.isIconOnly && !this.sidebarOpen) {
+      this.sidebarOpen = true;
+    }
+    
+    // Add transition end listener
+    const sidebar = document.querySelector('.sidebar');
+    const onTransitionEnd = () => {
+      this.sidebarAnimating = false;
+      sidebar?.removeEventListener('transitionend', onTransitionEnd);
+      
+      // Update chart if visible
+      if (this.chart) {
+        this.chart.update();
+      }
+    };
+    
+    sidebar?.addEventListener('transitionend', onTransitionEnd);
   }
 }

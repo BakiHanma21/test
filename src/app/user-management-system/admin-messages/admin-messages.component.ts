@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, Inject, HostListener } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { CommonModule, NgClass } from '@angular/common';
@@ -60,6 +60,8 @@ interface PotentialUser {
 })
 export class AdminMessagesComponent implements OnInit, OnDestroy {
   sidebarOpen = true;
+  isIconOnly = false;
+  isMobileView = false;
   messages: ChatMessage[] = [];
   conversations: Conversation[] = [];
   newMessage: string = '';
@@ -75,8 +77,8 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
   
   // New properties for modern design
   searchText: string = '';
-  isMobileView = false;
   showChat = false;
+  screenWidth: number = window.innerWidth;
   
   // Mobile view properties
   showConversations = true;
@@ -93,6 +95,41 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
   ) {
     this.checkScreenSize();
     window.addEventListener('resize', () => this.checkScreenSize());
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.screenWidth = window.innerWidth;
+    this.isMobileView = window.innerWidth < 768;
+    if (this.isMobileView) {
+      this.sidebarOpen = false;
+      this.isIconOnly = false;
+    }
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+    if (this.sidebarOpen && this.isMobileView) {
+      this.isIconOnly = false;
+    }
+  }
+
+  toggleSidebarView() {
+    if (this.sidebarOpen) {
+      this.isIconOnly = !this.isIconOnly;
+      const sidebar = document.querySelector('.sidebar');
+      if (sidebar) {
+        const transitionEndHandler = () => {
+          window.dispatchEvent(new Event('resize'));
+          sidebar.removeEventListener('transitionend', transitionEndHandler);
+        };
+        sidebar.addEventListener('transitionend', transitionEndHandler);
+      }
+    }
   }
 
   ngOnInit() {
@@ -205,7 +242,14 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
     this.selectedConversation = this.conversations.find(conv => conv.id === receiverId) || null;
     this.errorMessage = '';
     this.loadMessages();
-    this.router.navigate(['/admin-messages', receiverId]);
+    if (this.screenWidth > 768) {
+      // Only navigate on desktop view
+      this.router.navigate(['/admin-messages', receiverId]);
+    }
+    // Don't toggle showConversations on desktop
+    if (this.screenWidth <= 768) {
+      this.showConversations = false;
+    }
   }
 
   loadMessages() {
@@ -288,10 +332,6 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
     }
   }
 
-  // getFileUrl(filePath: string): string {
-  //   return `${environment.apiUrl}/storage/${filePath}`;
-  // }
-
   onImageError(event: Event) {
     console.error('Failed to load image:', event);
     (event.target as HTMLImageElement).style.display = 'none'; // Hide the broken image
@@ -304,14 +344,6 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
         this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
       }
     }, 100);
-  }
-
-  toggleSidebar(): void {
-    this.sidebarOpen = !this.sidebarOpen;
-  }
-
-  toggleSidebarInside() {
-    this.sidebarOpen = !this.sidebarOpen;
   }
 
   logout() {
@@ -328,13 +360,6 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
   }
   
   // New methods for modern design
-  private checkScreenSize() {
-    this.isMobileView = window.innerWidth < 768;
-    if (!this.isMobileView) {
-      this.showConversations = true;
-    }
-  }
-
   toggleView() {
     this.showChat = !this.showChat;
   }
@@ -366,6 +391,12 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
 
   toggleConversations() {
     this.showConversations = !this.showConversations;
+  }
+
+  goBack() {
+    this.showConversations = true;
+    this.receiverId = null;
+    this.selectedConversation = null;
   }
 }
 

@@ -104,4 +104,8 @@ export class LoginComponent {
   navigateToForgotPassword() {
     this.router.navigate(['/forgot-password']);
   }
+
+  navigateToHomepage() {
+    this.router.navigate(['/']); // This will navigate to the landing page
+  }
 }

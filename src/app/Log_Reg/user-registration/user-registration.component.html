@@ -1,6 +1,27 @@
 <div class="registration-container">
+  <!-- Animated Background with Floating Icons -->
+  <div class="animated-background">
+    <!-- User-related icons -->
+    <i class="material-icons floating-icon" style="top: 15%; left: 10%; font-size: 50px; --duration: 4s;">person</i>
+    <i class="material-icons floating-icon" style="top: 25%; right: 15%; font-size: 65px; --duration: 5s;">people</i>
+    <i class="material-icons floating-icon" style="bottom: 20%; left: 20%; font-size: 55px; --duration: 3.5s;">account_circle</i>
+    <i class="material-icons floating-icon" style="top: 45%; right: 25%; font-size: 45px; --duration: 4.2s;">group</i>
+    
+    <!-- Service-related icons -->
+    <i class="material-icons floating-icon" style="bottom: 30%; right: 10%; font-size: 60px; --duration: 6s;">home_repair_service</i>
+    <i class="material-icons floating-icon" style="top: 60%; left: 15%; font-size: 50px; --duration: 5.5s;">handyman</i>
+    <i class="material-icons floating-icon" style="bottom: 40%; left: 30%; font-size: 70px; --duration: 4.8s;">build</i>
+    <i class="material-icons floating-icon" style="top: 30%; left: 40%; font-size: 65px; --duration: 5.8s;">engineering</i>
+    
+    <!-- Additional icons -->
+    <i class="material-icons floating-icon" style="top: 10%; left: 30%; font-size: 40px; --duration: 3s;">location_on</i>
+    <i class="material-icons floating-icon" style="top: 50%; left: 60%; font-size: 45px; --duration: 3.2s;">phone</i>
+    <i class="material-icons floating-icon" style="top: 70%; right: 20%; font-size: 50px; --duration: 4.5s;">email</i>
+    <i class="material-icons floating-icon" style="bottom: 10%; right: 30%; font-size: 55px; --duration: 3.8s;">verified_user</i>
+  </div>
+
   <div class="registration-card">
-    <img src="assets/user-login.jpg" alt="Worker Icon" class="registration-icon" />
+    <img src="assets/pict-Photoroom.png" alt="User Icon" class="registration-icon" />
 
     <!-- Registration Title -->
     <h2 class="registration-title">Register your account</h2>
@@ -9,12 +30,15 @@
     <form (ngSubmit)="onRegister()" #registrationForm="ngForm" enctype="multipart/form-data">
       <!-- General Form Error Message -->
       <div class="error-message" *ngIf="formSubmitted && !registrationForm.valid">
-        Please fill in all the required fields correctly before registering!!.
+        Please fill in all the required fields correctly before registering.
       </div>
 
       <!-- Name Field -->
       <div class="form-group">
-        <label for="name">Name:</label>
+        <label for="name">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">person</i>
+          Name:
+        </label>
         <input
           type="text"
           id="name"
@@ -30,8 +54,12 @@
         </div>
       </div>
 
+      <!-- Phone Number Field -->
       <div class="form-group">
-        <label for="phoneNumber">Phone Number:</label>
+        <label for="phoneNumber">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">phone</i>
+          Phone Number:
+        </label>
         <input
           type="tel"
           id="phoneNumber"
@@ -50,26 +78,32 @@
 
       <!-- Email Field -->
       <div class="form-group">
-        <label for="email">Email:</label>
+        <label for="email">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">email</i>
+          Email:
+        </label>
         <input
           type="email"
           id="email"
           name="email"
           class="form-control"
-          placeholder="Enter your email (e.g., example&#64;gmail.com)"
+          placeholder="Enter your email (e.g., example@gmail.com)"
           [(ngModel)]="formData.email"
           #email="ngModel"
           required
           pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
         />
         <div class="error-message" *ngIf="email.invalid && email.touched">
-          Please enter a valid email address (e.g., example&#64;gmail.com).
+          Please enter a valid email address.
         </div>
       </div>
 
       <!-- Password Field -->
       <div class="form-group">
-        <label for="password">Password:</label>
+        <label for="password">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">lock</i>
+          Password:
+        </label>
         <input
           type="password"
           id="password"
@@ -88,13 +122,16 @@
 
       <!-- Confirm Password Field -->
       <div class="form-group">
-        <label for="confirmPassword">Confirm Password:</label>
+        <label for="confirmPassword">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">lock_outline</i>
+          Confirm Password:
+        </label>
         <input
           type="password"
           id="confirmPassword"
           name="confirmPassword"
           class="form-control"
-          placeholder="Enter your confirmation password"
+          placeholder="Confirm your password"
           [(ngModel)]="formData.confirmPassword"
           #confirmPassword="ngModel"
           required
@@ -104,9 +141,12 @@
         </div>
       </div>
 
-      <!-- Location Fields - Split into Purok and Street -->
+      <!-- Location Fields -->
       <div class="form-group">
-        <label for="purok">District/Purok:</label>
+        <label for="purok">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">location_city</i>
+          District/Purok:
+        </label>
         <input
           type="text"
           id="purok"
@@ -123,7 +163,10 @@
       </div>
 
       <div class="form-group">
-        <label for="street">Street:</label>
+        <label for="street">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">add_road</i>
+          Street:
+        </label>
         <input
           type="text"
           id="street"
@@ -141,7 +184,10 @@
 
       <!-- Profile Picture Field -->
       <div class="form-group">
-        <label for="profilePicture">Profile Picture:</label>
+        <label for="profilePicture">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">add_photo_alternate</i>
+          Profile Picture:
+        </label>
         <input
           type="file"
           id="profilePicture"
@@ -155,8 +201,8 @@
         </div>
       </div>
 
-      <!-- Terms and Conditions Checkbox -->
-      <div class="form-group terms-checkbox">
+      <!-- Terms and Conditions -->
+      <div class="terms-checkbox">
         <div class="checkbox-container">
           <input
             type="checkbox"
@@ -171,27 +217,13 @@
           </label>
         </div>
         <div class="error-message" *ngIf="formSubmitted && !formData.termsAgreement">
-          <strong>You must agree to the Terms and Conditions to proceed!!</strong>
-        </div>
-      </div>
-
-      <!-- Terms Modal -->
-      <div class="terms-modal" *ngIf="showTermsModal">
-        <div class="terms-modal-content">
-          <span class="close-button" (click)="closeTermsModal()">&times;</span>
-          <h2>Terms and Conditions</h2>
-          <div class="terms-modal-body">
-            <app-terms-and-conditions></app-terms-and-conditions>
-          </div>
-          <div class="terms-modal-footer">
-            <button class="btn-accept" (click)="acceptTerms()">I Agree</button>
-            <button class="btn-decline" (click)="closeTermsModal()">I Disagree</button>
-          </div>
+          <strong>You must agree to the Terms and Conditions to proceed.</strong>
         </div>
       </div>
 
       <!-- Submit Button -->
       <button type="submit" class="btn-submit">
+        <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">how_to_reg</i>
         Register now
       </button>
     </form>
@@ -199,6 +231,27 @@
     <!-- Footer Links -->
     <div class="links">
       <p>Already have an account? <a [routerLink]="'/login'" class="link">Login</a></p>
+    </div>
+  </div>
+
+  <!-- Terms Modal -->
+  <div class="terms-modal" *ngIf="showTermsModal">
+    <div class="terms-modal-content">
+      <span class="close-button" (click)="closeTermsModal()">&times;</span>
+      <h2>Terms and Conditions</h2>
+      <div class="terms-modal-body">
+        <app-terms-and-conditions></app-terms-and-conditions>
+      </div>
+      <div class="terms-modal-footer">
+        <button class="btn-accept" (click)="acceptTerms()">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">check_circle</i>
+          I Agree
+        </button>
+        <button class="btn-decline" (click)="closeTermsModal()">
+          <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">cancel</i>
+          I Disagree
+        </button>
+      </div>
     </div>
   </div>
 </div>

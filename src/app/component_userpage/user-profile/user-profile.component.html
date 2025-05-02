@@ -1,0 +1,222 @@
+<div class="profile-container">
+  <!-- Loading overlay -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading your profile...</p>
+  </div>
+
+  <!-- Image update overlay -->
+  <div class="overlay" *ngIf="newImageSelected" (click)="cancelImageUpdate()"></div>
+
+  <!-- Header Section -->
+  <div class="header-container">
+    <div class="header-content">
+      <h1>Your Profile <span class="material-icons">person</span></h1>
+      <div class="divider"></div>
+      <p class="subtitle">Manage your personal information and account preferences</p>
+    </div>
+    <div class="header-background">PROFILE</div>
+  </div>
+
+  <!-- Image update modal - moved outside other containers for cleaner positioning -->
+  <div class="image-update-container" *ngIf="newImageSelected">
+    <div class="preview-image-container">
+      <img [src]="previewImageUrl" alt="Preview" class="preview-image" />
+    </div>
+    <div class="image-update-actions">
+      <button class="cancel-image-btn" (click)="cancelImageUpdate()">
+        <span class="material-icons">close</span>
+        Cancel
+      </button>
+      <button class="update-image-btn" (click)="updateProfileImage()">
+        <span class="material-icons">check</span>
+        Update Photo
+      </button>
+    </div>
+  </div>
+
+  <!-- Profile Card -->
+  <div class="profile-card">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-image-wrapper">
+        <img [src]="userProfile.profile_image || 'assets/user-icon.jpg'" alt="Profile Image" class="profile-image" />
+        <!-- Always show the camera button for better UX -->
+        <button class="edit-image-btn" (click)="openImageUpload()" aria-label="Change profile picture">
+          <span class="material-icons">photo_camera</span>
+        </button>
+        <input #fileInput type="file" style="display:none" (change)="onFileSelected($event)" accept="image/*" />
+      </div>
+      
+      <!-- Profile header info -->
+      <div class="profile-header-info">
+        <h2 class="profile-name">{{ userProfile.name }}</h2>
+        <div class="profile-meta">
+          <span class="profile-location" *ngIf="userProfile.location || userProfile.purok || userProfile.street">
+            <span class="material-icons">place</span>
+            {{ getFullAddress() }}
+          </span>
+          <span class="profile-contact" *ngIf="userProfile.phone">
+            <span class="material-icons">phone</span>
+            {{ userProfile.phone }}
+          </span>
+          <span class="profile-rating" *ngIf="userProfile.rating">
+            <span class="material-icons">star</span>
+            {{ userProfile.rating }} / 5
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Details -->
+    <div class="profile-details" *ngIf="!isEditing">
+      <div class="details-grid">
+        <div class="detail-item">
+          <span class="material-icons">account_circle</span>
+          <div class="detail-content">
+            <label>Full Name</label>
+            <p>{{ userProfile.name }}</p>
+          </div>
+        </div>
+        <div class="detail-item">
+          <span class="material-icons">email</span>
+          <div class="detail-content">
+            <label>Email Address</label>
+            <p>{{ userProfile.email }}</p>
+          </div>
+        </div>
+        <div class="detail-item" *ngIf="userProfile.phone">
+          <span class="material-icons">phone</span>
+          <div class="detail-content">
+            <label>Phone Number</label>
+            <p>{{ userProfile.phone }}</p>
+          </div>
+        </div>
+        <div class="detail-item" *ngIf="userProfile.location || userProfile.purok || userProfile.street">
+          <span class="material-icons">home</span>
+          <div class="detail-content">
+            <label>Address</label>
+            <p>{{ getFullAddress() }}</p>
+          </div>
+        </div>
+        <div class="detail-item" *ngIf="memberSince">
+          <span class="material-icons">calendar_today</span>
+          <div class="detail-content">
+            <label>Member Since</label>
+            <p>{{ memberSince }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Profile Button -->
+      <button class="edit-profile-btn" (click)="toggleEditMode()">
+        <span class="material-icons">edit</span>
+        Edit Profile
+      </button>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="profile-form" *ngIf="isEditing">
+      <form (ngSubmit)="saveProfile()" class="edit-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>
+              <span class="material-icons">person</span>
+              Full Name
+            </label>
+            <input type="text" [(ngModel)]="editableProfile.name" name="name" placeholder="Enter your full name" required />
+          </div>
+          <div class="form-group">
+            <label>
+              <span class="material-icons">email</span>
+              Email Address
+            </label>
+            <input type="email" [(ngModel)]="editableProfile.email" name="email" placeholder="Enter your email address" required />
+          </div>
+          <div class="form-group">
+            <label>
+              <span class="material-icons">phone</span>
+              Phone Number
+            </label>
+            <input type="tel" [(ngModel)]="editableProfile.phone" name="phone" placeholder="Enter your phone number" />
+          </div>
+          <div class="form-group">
+            <label>
+              <span class="material-icons">place</span>
+              Location
+            </label>
+            <input type="text" [(ngModel)]="editableProfile.location" name="location" placeholder="Enter your city/municipality" />
+          </div>
+          <div class="form-group">
+            <label>
+              <span class="material-icons">home</span>
+              Purok
+            </label>
+            <input type="text" [(ngModel)]="editableProfile.purok" name="purok" placeholder="Enter your purok" />
+          </div>
+          <div class="form-group">
+            <label>
+              <span class="material-icons">signpost</span>
+              Street
+            </label>
+            <input type="text" [(ngModel)]="editableProfile.street" name="street" placeholder="Enter your street" />
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="toggleEditMode()">
+            <span class="material-icons">close</span>
+            Cancel
+          </button>
+          <button type="submit" class="save-btn">
+            <span class="material-icons">save</span>
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Activity Section -->
+  <div class="activity-section">
+    <div class="section-header">
+      <h3><span class="material-icons">history</span> Recent Activity</h3>
+      <div class="divider"></div>
+    </div>
+    <div class="activity-content">
+      <div class="empty-state">
+        <span class="material-icons">hourglass_empty</span>
+        <p>No recent activity to display</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preferences Section -->
+  <div class="preferences-section">
+    <div class="section-header">
+      <h3><span class="material-icons">settings</span> Account Preferences</h3>
+      <div class="divider"></div>
+    </div>
+    <div class="preferences-grid">
+      <div class="preference-item">
+        <div class="preference-header">
+          <span class="material-icons">notifications</span>
+          <h4>Notifications</h4>
+        </div>
+        <p>Manage your email and system notification settings</p>
+        <button class="preference-btn">
+          <span class="material-icons">chevron_right</span>
+        </button>
+      </div>
+      <div class="preference-item">
+        <div class="preference-header">
+          <span class="material-icons">security</span>
+          <h4>Security</h4>
+        </div>
+        <p>Update password and configure account security options</p>
+        <button class="preference-btn">
+          <span class="material-icons">chevron_right</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,16 +1,59 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-landing-page',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, FontAwesomeModule],
   templateUrl: './landing-page.component.html',
-  styleUrl: './landing-page.component.css'
+  styleUrls: ['./landing-page.component.css']
 })
-export class LandingPageComponent {
+export class LandingPageComponent implements OnInit, AfterViewInit {
   constructor(private router: Router) {}
 
+  ngOnInit() {
+    // Initialize any required data
+  }
+
+  ngAfterViewInit() {
+    this.initScrollAnimations();
+  }
+
+  private initScrollAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate');
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    // Observe all elements with animation classes
+    document.querySelectorAll('.fade-in-up, .fade-in-left, .fade-in-right, .scale-in')
+      .forEach(element => observer.observe(element));
+  }
+
   goToHome() {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/login']);
+  }
+
+  goToWorkerRegistration() {
+    this.router.navigate(['/skilled-registration']);
+  }
+
+  goToAboutUs() {
+    this.router.navigate(['/about_us']);
+  }
+
+  goToContact() {
+    this.router.navigate(['/contact_us']);
+  }
+
+  goToTerms() {
+    this.router.navigate(['/terms-conditions']);
   }
 }

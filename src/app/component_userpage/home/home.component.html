@@ -1,105 +1,156 @@
-<div class="contact-us-container">
-  <section class="search-section">
-    <h2 class="section-title">Meet Our Skilled Professionals</h2>
-    <div class="search-bar">
-      <input
-      type="text"
-      placeholder="Search..."
-      class="search-input"
-      [(ngModel)]="searchText"
-      (input)="filteredWorkers()"
-      />
-
-      <select class="category-select" [(ngModel)]="availabilityFilter" (change)="filteredWorkers()">
-      <option value="">All</option>
-      <option value="1">Available</option>
-      <option value="0">Unavailable</option>
-      </select>
-
+<div class="home-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-content">
+      <h1>Find Skilled Professionals <span class="material-icons">search</span></h1>
+      <div class="divider"></div>
+      <p class="subtitle">Discover trusted experts for your service needs.</p>
     </div>
-    <div class="worker-grid">
+    <div class="header-background">SERVICES</div>
+  </div>
+
+  <!-- Search Section -->
+  <div class="search-container">
+    <div class="search-box">
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          placeholder="Search by name, job, or location..."
+          class="search-input"
+          [(ngModel)]="searchText"
+          (input)="filteredWorkers()"
+        />
+      </div>
+      <div class="filter-wrapper">
+        <select 
+          class="filter-select" 
+          [(ngModel)]="availabilityFilter" 
+          (change)="filteredWorkers()"
+          aria-label="Filter by availability status"
+        >
+          <option value="">All Status</option>
+          <option value="1">Available</option>
+          <option value="0">Unavailable</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Workers Grid -->
+  <div class="workers-section">
+    <div class="workers-grid">
       <div class="worker-card" *ngFor="let worker of filteredWorkers()">
-        <div class="worker-image-wrapper" (click)="openModal(worker)">
+        <div class="card-header" (click)="openModal(worker)">
           <img [src]="worker.image" alt="{{ worker.name }}" class="worker-image" />
+          <div class="availability-badge" [class.available]="worker.availability === 1">
+            {{ worker.availability === 1 ? 'Available' : 'Unavailable' }}
+          </div>
         </div>
-        <div class="worker-info">
+        <div class="card-content">
           <h3 class="worker-name">{{ worker.name }}</h3>
-          <p><strong>Average Rating:</strong> {{ worker.average_rating }} ★</p>
-          <p><strong>Job:</strong> {{ worker.job }}</p>
-          <p><strong>Location:</strong> {{ worker.location }}</p>
-          <p><strong>Experience:</strong> {{ worker.availability }}</p>
-          <p>
-            <strong>Availability:</strong>
-            <span [ngClass]="{
-              available: worker.availability === 1,
-              unavailable: worker.availability === 0
-            }">
-              {{ worker.availability === 1 ? 'Available' : 'Unavailable' }}
-            </span>
-          </p>
-          <button class="view-profile-btn" (click)="openModal(worker)">View Profile</button>
+          <div class="rating">
+            <span class="rating-value">{{ worker.average_rating }}</span>
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="worker-details">
+            <p class="job"><i class="fas fa-briefcase"></i> {{ worker.job }}</p>
+            <p class="location"><i class="fas fa-map-marker-alt"></i> {{ worker.location }}</p>
+          </div>
+          <button class="view-profile-btn" (click)="openModal(worker)">
+            View Profile <i class="fas fa-arrow-right"></i>
+          </button>
         </div>
       </div>
-    </div>    
-  </section>
+    </div>
+  </div>
 
+  <!-- Worker Profile Modal -->
   <div class="modal" [class.show]="isModalOpen">
     <div class="modal-content">
-      <span class="close-btn" (click)="closeModal()">&times;</span>
+      <button class="close-modal" (click)="closeModal()" aria-label="Close modal">
+        <i class="fas fa-times"></i>
+      </button>
+      
       <div class="modal-body">
-        <div class="modal-profile">
-          <img [src]="selectedWorker?.image" alt="{{ selectedWorker?.name }}" class="modal-profile-pic" />
-          <h2>{{ selectedWorker?.name }}</h2>
-          <p class="job-title">{{ selectedWorker?.average_rating }} ★</p>
-          <p class="job-title">{{ selectedWorker?.job }}</p>
+        <div class="profile-header">
+          <div class="profile-image-container">
+            <img [src]="selectedWorker?.image" alt="{{ selectedWorker?.name }}" class="profile-image" />
+          </div>
+          <div class="profile-info">
+            <h2>{{ selectedWorker?.name }}</h2>
+            <div class="rating-container">
+              <span class="rating">{{ selectedWorker?.average_rating }}</span>
+              <i class="fas fa-star"></i>
+            </div>
+            <p class="profession">{{ selectedWorker?.job }}</p>
+          </div>
         </div>
-        <div class="modal-details">
-          <p><strong>Location:</strong> {{ selectedWorker?.location }}</p>
-          <p><strong>Experience:</strong> {{ selectedWorker?.experience }}</p>
-          <p><strong>Availability:</strong>
-            <span [ngClass]="{ available: selectedWorker?.availability === 'Available', unavailable: selectedWorker?.availability === 'Unavailable' }">
-              {{ selectedWorker?.availability }}
-            </span>
-          </p>
-          <p><strong>Phone:</strong> {{ selectedWorker?.phone }}</p>
-          <p><strong>Email:</strong> <a href="mailto:{{ selectedWorker?.email }}">{{ selectedWorker?.email }}</a></p>
+
+        <div class="profile-details">
+          <div class="detail-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ selectedWorker?.location }}</span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-briefcase"></i>
+            <span>{{ selectedWorker?.experience }} Years Experience</span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-phone"></i>
+            <span>{{ selectedWorker?.phone }}</span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-envelope"></i>
+            <span>{{ selectedWorker?.email }}</span>
+          </div>
         </div>
-        <div class="work-section">
-          <h3>Examples of Work Done</h3>
-          <div class="work-example" *ngFor="let work of selectedWorker?.works">
-            <img [src]="work.image" alt="{{ work.title }}" class="work-image" />
-            <div class="work-description">
-              <h4>{{ work.title }}</h4>
-              <p>{{ work.description }}</p>
+
+        <div class="work-examples">
+          <h3>Portfolio</h3>
+          <div class="work-grid">
+            <div class="work-item" *ngFor="let work of selectedWorker?.works">
+              <img [src]="work.image" alt="{{ work.title }}" />
+              <div class="work-overlay">
+                <h4>{{ work.title }}</h4>
+                <p>{{ work.description }}</p>
+              </div>
             </div>
           </div>
         </div>
-        <div class="modal-actions">
-          <!-- Conditionally show the button only if the worker is available -->
-          <button class="btn btn-primary" (click)="bookWorker(selectedWorker)" *ngIf="selectedWorker?.availability === 1">Book</button>
-          <button class="btn btn-secondary" (click)="saveAsFavorite(selectedWorker)">Save as Favorite</button>
+
+        <div class="action-buttons">
+          <button 
+            class="book-btn" 
+            (click)="bookWorker(selectedWorker)" 
+            *ngIf="selectedWorker?.availability === 1"
+          >
+            <i class="fas fa-calendar-check"></i> Book Now
+          </button>
+          <button class="favorite-btn" (click)="saveAsFavorite(selectedWorker)">
+            <i class="fas fa-heart"></i> Save to Favorites
+          </button>
         </div>
+
         <div class="reviews-section">
-          <h3>Reviews and Ratings</h3>
-          <div *ngIf="selectedWorker?.reviews?.length > 0; else noReviews">
-            <div class="review" *ngFor="let review of selectedWorker?.reviews">
+          <h3>Reviews</h3>
+          <div class="reviews-container" *ngIf="selectedWorker?.reviews?.length > 0; else noReviews">
+            <div class="review-card" *ngFor="let review of selectedWorker?.reviews">
               <div class="review-header">
-                <h4 style="margin-top: 20px;">{{ review.name }}</h4>
+                <h4>{{ review.name }}</h4>
                 <div class="star-rating">
-                  <i
+                  <i 
+                    class="fas fa-star"
                     *ngFor="let star of [].constructor(5); let i = index"
-                    class="star"
-                    [ngClass]="{ filled: i < review.rating }"
-                  >
-                    ★
-                  </i>
+                    [class.filled]="i < review.rating"
+                  ></i>
                 </div>
               </div>
               <p class="review-text">{{ review.text }}</p>
             </div>
           </div>
           <ng-template #noReviews>
-            <p class="no-reviews-message">No reviews.</p>
+            <p class="no-reviews">No reviews yet</p>
           </ng-template>
         </div>
       </div>

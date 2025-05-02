@@ -1,72 +1,152 @@
-<div class="request-list">
-  <h2 class="title">Pending Requests</h2>
+<!-- Main Container -->
+<div class="request-container">
+  <!-- Header Section -->
+  <div class="header-container">
+    <div class="header-content">
+      <h1>Service Requests<span class="material-icons">assignment</span></h1>
+      <div class="divider"></div>
+        <p class="subtitle">Manage and respond to your service requests</p>
+    </div>
+    <div class="header-background">REQUESTS</div>
+  </div>
 
-  <div *ngIf="requests && requests.length > 0; else norequests" class="request-items">
-    <div *ngFor="let request of requests" class="request-item">
-      <div class="request-card">
-        <div class="request-header">
-          <p><strong class="request-name">{{ request.name }} </strong>
-            <span *ngIf="request.average_rating !== 'Not yet rated'">
-              ({{ request.average_rating }}★)
-            </span>
-            <span *ngIf="request.average_rating === 'Not yet rated'">
-              (Not yet rated)
-            </span>
-          </p>          
-          <span class="request-service">requested {{ request.service }}</span>
-        </div>
-        <div class="request-details">
-          <p class="request-date">Scheduled on: {{ request.date }} at {{ request.start_time }} to 
-            {{ request.end_date }}</p>
-          <div class="status">
-            <span>Status: </span>
-            <strong class="status-text">{{ request.status }}</strong>
+  <!-- Requests List -->
+  <div class="requests-list" *ngIf="requests && requests.length > 0; else norequests">
+    <div class="request-card" *ngFor="let request of requests">
+      <!-- Request Header -->
+      <div class="request-card-header">
+        <div class="user-info">
+          <span class="material-icons user-icon">account_circle</span>
+          <div class="user-details">
+            <h3 class="user-name">{{ request.name }}</h3>
+            <div class="user-rating">
+              <span *ngIf="request.average_rating !== 'Not yet rated'">
+                {{ request.average_rating }}
+                <span class="material-icons star-icon">star</span>
+              </span>
+              <span *ngIf="request.average_rating === 'Not yet rated'" class="not-rated">
+                Not yet rated
+              </span>
+            </div>
           </div>
         </div>
-        <div class="request-details">
-          <p><strong>Proposed Cost:</strong> ₱{{ request.proposedCost }}</p>
+        <div class="status-badge" [ngClass]="request.status.toLowerCase()">
+          {{ request.status }}
         </div>
+      </div>
+
+      <!-- Request Details -->
+      <div class="request-card-content">
+        <div class="service-info">
+          <span class="material-icons">build</span>
+          <span class="service-type">{{ request.service }}</span>
+        </div>
+
+        <div class="details-grid">
+          <div class="detail-item">
+              <span class="material-icons">event</span>
+            <div class="detail-content">
+              <div class="label">Schedule</div>
+              <div class="value">{{ request.date }}</div>
+            </div>
+          </div>
+          <div class="detail-item">
+              <span class="material-icons">schedule</span>
+            <div class="detail-content">
+              <div class="label">Time</div>
+              <div class="value">{{ request.start_time }} - {{ request.end_date }}</div>
+            </div>
+          </div>
+          <div class="detail-item">
+              <span class="material-icons">payments</span>
+            <div class="detail-content">
+              <div class="label">Proposed Cost</div>
+              <div class="value">₱{{ request.proposedCost }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
         <div class="request-actions">
-          <button class="view-btn" (click)="openModal(request)">
-            View Full Request
+          <button class="action-button view" (click)="openModal(request)">
+            <span class="material-icons">visibility</span>
+            View Details
           </button>
 
-          <div *ngIf="request.status === 'PENDING'">
-            <button class="approve-btn" (click)="onApprove(request)">
+          <div class="status-actions" *ngIf="request.status === 'PENDING'">
+            <button class="action-button approve" (click)="onApprove(request)">
+              <span class="material-icons">check_circle</span>
               Approve
             </button>
-            <button class="decline-btn" (click)="onDecline(request.id)">
+            <button class="action-button decline" (click)="onDecline(request.id)">
+              <span class="material-icons">cancel</span>
               Decline
             </button>
-          </div>
-        </div>
-
-        <div *ngIf="selectedRequest === request" class="modal">
-          <div class="modal-content">
-            <h3>Full Request Details:</h3>
-            <p><strong>Service:</strong> {{ selectedRequest.title }}</p>
-            <p><strong>Date:</strong> {{ selectedRequest.date }}</p>
-            <p><strong>Time:</strong> {{ selectedRequest.start_time }}</p>
-            <p><strong>Description:</strong> {{ selectedRequest.description }}</p>
-            <p><strong>Status:</strong> {{ selectedRequest.status }}</p>
-            <p><strong>Proposed Cost:</strong> ₱{{ selectedRequest.proposedCost }}</p>
-
-            <h4>User's Uploaded Picture:</h4>
-            <div *ngIf="selectedRequest.userPicture; else noImage">
-              <img [src]="selectedRequest.userPicture" alt="Uploaded Image" width="200" />
-            </div>
-            <ng-template #noImage>
-              <p>No image uploaded</p>
-            </ng-template>
-
-            <button class="close-btn" (click)="closeModal()">Close</button>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<ng-template #norequests>
-  <div class="no-worker">No requests found</div>
-</ng-template>
+  <!-- No Requests Template -->
+  <ng-template #norequests>
+    <div class="no-requests">
+      <span class="material-icons">inbox</span>
+      <h3>No Pending Requests</h3>
+      <p>You don't have any service requests at the moment</p>
+    </div>
+  </ng-template>
+
+  <!-- Request Details Modal -->
+  <div class="modal" *ngIf="selectedRequest">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Request Details</h2>
+        <button class="close-modal" (click)="closeModal()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="detail-row">
+          <span class="detail-label">Service</span>
+          <span class="detail-value">{{ selectedRequest.title }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Date</span>
+          <span class="detail-value">{{ selectedRequest.date }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Time</span>
+          <span class="detail-value">{{ selectedRequest.start_time }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Description</span>
+          <p class="detail-value description">{{ selectedRequest.description }}</p>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Status</span>
+          <span class="detail-value status" [ngClass]="selectedRequest.status.toLowerCase()">
+            {{ selectedRequest.status }}
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Proposed Cost</span>
+          <span class="detail-value">₱{{ selectedRequest.proposedCost }}</span>
+        </div>
+
+        <!-- Reference Image Section -->
+        <div class="image-section" *ngIf="selectedRequest.userPicture">
+          <h3>Reference Image</h3>
+          <div class="image-container">
+            <img [src]="selectedRequest.userPicture" alt="Reference Image">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="action-button close" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

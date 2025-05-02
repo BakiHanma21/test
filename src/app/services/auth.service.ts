@@ -1,18 +1,18 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
+export const API_URL = 'http://localhost:8000/api';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8000/api';
+ 
 
   constructor(private http: HttpClient) {}
 
   login(username: string, password: string): Observable<any> {
     const loginData = { username, password };
-    return this.http.post<any>(`${this.apiUrl}/login`, loginData, {
+    return this.http.post<any>(`${API_URL}/login`, loginData, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
   }
@@ -41,13 +41,13 @@ export class AuthService {
   }
 
   resetPassword(email: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/forgot-password`, { email }, {
+    return this.http.post<any>(`${API_URL}/forgot-password`, { email }, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });    
   }
 
   completePasswordReset(email: string, token: string, password: string, password_confirmation: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/reset-password`, {
+    return this.http.post<any>(`${API_URL}/reset-password`, {
       email,
       token,
       password,

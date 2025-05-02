@@ -1,76 +1,276 @@
-<div class="transaction-container">
-  <h2>My Transactions</h2>
+<div class="transaction-page">
+  <!-- Header Section -->
+  <div class="header-container">
+    <div class="header-content">
+      <h1>My Transactions<span class="material-icons">receipt_long</span></h1>
+      <div class="divider"></div>
+      <p class="subtitle">View and manage your transaction history</p>
+    </div>
+    <div class="header-background">TRANSACTIONS</div>
+  </div>
 
-  <div *ngIf="transactions && transactions.length > 0; else noTransactions">
-    <div *ngFor="let transaction of transactions" class="transaction-card">
-      <h3>{{ transaction.title }}</h3>
-      <p>{{ transaction.description }}</p>
-      <p><strong>Amount: </strong>₱{{ transaction.amount }}</p>
-      <p><strong>Status: </strong>{{ transaction.payment_status | uppercase }}</p>
-      <p><strong>Payment Date:</strong> {{ transaction?.payment_date }}</p>
-
-      <!-- Display Worker's QR Code -->
-      <div *ngIf="transaction.qr_code_url" class="qr-code-section">
-        <p><strong>Worker's Payment QR Code:</strong></p>
-        <img [src]="transaction.qr_code_url" alt="Worker QR Code" class="qr-code-image" (error)="onImageError($event)">
-      </div>
-
-      <!-- Upload Receipt Section -->
-      <div *ngIf="transaction.payment_status === 'PENDING'" class="receipt-upload">
-        <p>Scan the QR code above and upload your payment receipt:</p>
-        <input type="file" (change)="onFileSelected($event, transaction.transaction_id)" accept="image/*,.pdf">
-      </div>
-
-      <!-- Display Uploaded Receipt -->
-      <div *ngIf="transaction.receipt_url" class="receipt-section">
-        <p><strong>Your Payment Receipt:</strong></p>
-        <a [href]="transaction.receipt_url" target="_blank">View Receipt</a>
-      </div>
-
-      <!-- Review Section remains unchanged -->
-      <div *ngIf="transaction.review2 !== null">
-        <hr>
-        <p><strong>Your Review:</strong> {{ transaction.review2 }}</p>
-        <p><strong>Your Rate:</strong> {{ transaction.rating2 }} ★</p>
-      </div>
-      <div *ngIf="transaction.review !== null">
-        <hr>
-        <p><strong>Worker Review:</strong> {{ transaction.review }}</p>
-        <p><strong>Worker Rate:</strong> {{ transaction.rating }} ★</p>
-      </div>
-      <div *ngIf="(transaction.payment_status === 'PAID' || transaction.payment_status === 'MANUALLY UPDATED') && !transaction.review2">
-        <div class="review-section">
-          <h3>Submit Your Review</h3>
-          <textarea [(ngModel)]="reviewText" placeholder="Write your review here..."></textarea>
-          <div class="rating-section">
-            <label for="rating">Rating:</label>
-            <div class="star-rating">
-              <i *ngFor="let star of stars; let i = index" class="star" [ngClass]="{ filled: i < reviewRating }" (click)="setRating(i + 1)">
-                ★
-              </i>
-            </div>
-          </div>
-          <div class="center">
-            <button class="btn btn-submit" (click)="submitReview(transaction.transaction_id)">Submit Review</button>
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="transaction.payment_status === 'PAID'" class="paid-message">
-        Payment Completed
-        <span class="check-icon">
-          <i class="fas fa-check"></i>
-        </span>
-      </div>
+  <!-- Transaction Filters -->
+  <div class="filter-container">
+    <div class="filter-label">
+      <span class="material-icons">filter_list</span>
+      <span>Filter by Status:</span>
+    </div>
+    <div class="filter-buttons">
+      <button 
+        class="filter-btn" 
+        [class.active]="activeFilter === 'ALL'"
+        (click)="setFilter('ALL')">
+        All
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="activeFilter === 'PENDING'"
+        (click)="setFilter('PENDING')">
+        <span class="dot pending-dot"></span>
+        Pending
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="activeFilter === 'PAID'"
+        (click)="setFilter('PAID')">
+        <span class="dot paid-dot"></span>
+        Paid
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="activeFilter === 'MANUALLY UPDATED'"
+        (click)="setFilter('MANUALLY UPDATED')">
+        <span class="dot manually-dot"></span>
+        Manually Updated
+      </button>
     </div>
   </div>
 
-  <ng-template #noTransactions>
-    <div class="no-transactions">
-      <p>No transactions found</p>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading your transactions...</p>
+  </div>
+
+  <!-- Transactions List -->
+  <div class="transactions-container" *ngIf="!isLoading">
+    <div *ngIf="filteredTransactions && filteredTransactions.length > 0; else noTransactions" class="transaction-grid">
+      <div *ngFor="let transaction of filteredTransactions" class="transaction-card">
+        <!-- Transaction Header -->
+        <div class="card-header">
+          <div class="transaction-title">
+            <h3>{{ transaction.title }}</h3>
+            <span class="status-badge" [ngClass]="transaction.payment_status.toLowerCase()">
+              {{ transaction.payment_status }}
+            </span>
+          </div>
+          <p class="description">{{ transaction.description }}</p>
+        </div>
+
+        <!-- Transaction Details -->
+        <div class="card-content">
+          <div class="detail-row">
+            <div class="detail-item">
+              <span class="label">Amount</span>
+              <span class="value">₱{{ transaction.amount }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Payment Date</span>
+              <span class="value">{{ transaction?.payment_date || 'Pending' }}</span>
+            </div>
+          </div>
+
+          <!-- Upload Section -->
+          <div *ngIf="transaction.payment_status === 'PENDING'" class="upload-section">
+            <div class="section-title">
+              <span class="material-icons">upload_file</span>
+              <h4>Upload Payment Receipt</h4>
+            </div>
+            
+            <!-- Payment Options -->
+            <div class="payment-options">
+              <h5>Select Payment Method:</h5>
+              <div class="payment-buttons">
+                <button class="payment-btn cash-btn" (click)="selectPaymentMethod(transaction, 'cash')">
+                  <span class="material-icons">payments</span>
+                  Cash Payment
+                </button>
+                <button class="payment-btn online-btn" (click)="selectPaymentMethod(transaction, 'online')">
+                  <span class="material-icons">credit_card</span>
+                  Online Payment
+                </button>
+              </div>
+            </div>
+
+            <!-- Show QR only when online payment is selected -->
+            <div *ngIf="selectedPaymentMethod[transaction.transaction_id] === 'online' && transaction.qr_code_url" class="online-payment-qr">
+              <div class="qr-title">
+                <span class="material-icons">qr_code_2</span>
+                <h5>Scan to complete payment</h5>
+              </div>
+              <div class="qr-image-container">
+                <img [src]="transaction.qr_code_url" alt="Payment QR Code" class="qr-code-image" (error)="onImageError($event)">
+              </div>
+              <p class="qr-instructions">Scan this QR code with your payment app to complete the transaction</p>
+            </div>
+
+            <div class="upload-content">
+              <!-- File Selection Area -->
+              <div class="file-selection-area" *ngIf="!transaction.previewUrl">
+                <label for="receipt-upload-{{transaction.transaction_id}}" class="upload-button">
+                  <span class="material-icons">upload_file</span>
+                  Select Receipt
+                </label>
+                <input 
+                  id="receipt-upload-{{transaction.transaction_id}}"
+                  type="file" 
+                  (change)="handleFileSelect($event, transaction)" 
+                  accept="image/*,.pdf"
+                  class="file-input">
+                <p class="upload-hint">Supported formats: Images and PDF</p>
+              </div>
+
+              <!-- Preview Area -->
+              <div class="preview-area" *ngIf="transaction.previewUrl">
+                <div class="preview-header">
+                  <h5>Selected File Preview</h5>
+                  <button class="clear-button" (click)="clearFileSelection(transaction)">
+                    <span class="material-icons">close</span>
+                  </button>
+                </div>
+                
+                <!-- Image Preview -->
+                <div class="preview-content" *ngIf="transaction.fileType === 'image'">
+                  <img [src]="transaction.previewUrl" alt="Receipt Preview" class="preview-image">
+                </div>
+                
+                <!-- PDF Preview -->
+                <div class="preview-content pdf-preview" *ngIf="transaction.fileType === 'pdf'">
+                  <span class="material-icons pdf-icon">picture_as_pdf</span>
+                  <span class="pdf-name">{{ transaction.fileName }}</span>
+                </div>
+
+                <!-- File Info -->
+                <div class="file-info">
+                  <span class="file-name">{{ transaction.fileName }}</span>
+                  <span class="file-size">{{ transaction.fileSize }}</span>
+                </div>
+
+                <!-- Upload Button -->
+                <button class="confirm-upload-button" (click)="uploadFile(transaction)">
+                  <span class="material-icons">cloud_upload</span>
+                  Confirm Upload
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Receipt Section -->
+          <div *ngIf="transaction.receipt_url" class="receipt-section">
+            <div class="section-title">
+              <span class="material-icons">receipt</span>
+              <h4>Payment Receipt</h4>
+            </div>
+            <a [href]="transaction.receipt_url" target="_blank" class="view-receipt-btn">
+              <span class="material-icons">visibility</span>
+              View Receipt
+            </a>
+          </div>
+
+          <!-- Reviews Section -->
+          <div class="reviews-section">
+            <!-- User's Review -->
+            <div *ngIf="transaction.review2 !== null" class="review-box user-review">
+              <div class="review-header">
+                <span class="material-icons">person</span>
+                <h4>Your Review</h4>
+              </div>
+              <p class="review-text">{{ transaction.review2 }}</p>
+              <div class="rating">
+                <span class="rating-value">{{ transaction.rating2 }}</span>
+                <div class="stars">
+                  <span class="material-icons" *ngFor="let star of [].constructor(5); let i = index"
+                        [class.filled]="i < transaction.rating2">
+                    star
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Worker's Review -->
+            <div *ngIf="transaction.review !== null" class="review-box worker-review">
+              <div class="review-header">
+                <span class="material-icons">engineering</span>
+                <h4>Worker's Review</h4>
+              </div>
+              <p class="review-text">{{ transaction.review }}</p>
+              <div class="rating">
+                <span class="rating-value">{{ transaction.rating }}</span>
+                <div class="stars">
+                  <span class="material-icons" *ngFor="let star of [].constructor(5); let i = index"
+                        [class.filled]="i < transaction.rating">
+                    star
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Review Form -->
+            <div *ngIf="(transaction.payment_status === 'PAID' || transaction.payment_status === 'MANUALLY UPDATED') && !transaction.review2" 
+                 class="review-form">
+              <div class="section-title">
+                <span class="material-icons">rate_review</span>
+                <h4>Write a Review</h4>
+              </div>
+              <textarea 
+                [(ngModel)]="reviewText" 
+                placeholder="Share your experience with the service..."
+                class="review-textarea"></textarea>
+              <div class="rating-input">
+                <span class="label">Rating:</span>
+                <div class="star-rating">
+                  <span class="material-icons" 
+                        *ngFor="let star of stars; let i = index"
+                        [class.filled]="stars[i]"
+                        (click)="setRating(i + 1)">
+                    star
+                  </span>
+                </div>
+              </div>
+              <button class="submit-review-btn" (click)="submitReview(transaction.transaction_id)">
+                <span class="material-icons">send</span>
+                Submit Review
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completed Transaction Badge -->
+        <div *ngIf="transaction.payment_status === 'PAID'" class="completion-badge">
+          <span class="material-icons">task_alt</span>
+          Transaction Complete
+        </div>
+      </div>
     </div>
-  </ng-template>
-  <div class="transaction-footer shadow">
-    <p>If you have any <strong>CONCERN</strong> or <strong>PROBLEM</strong>, please visit or proceed directly to the barangay hall for assistance.</p>
+
+    <!-- No Transactions Template -->
+    <ng-template #noTransactions>
+      <div class="empty-state">
+        <span class="material-icons">receipt_long</span>
+        <h3>No Transactions Yet</h3>
+        <p>Your transaction history will appear here</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Footer Notice -->
+  <div class="notice-card">
+    <div class="notice-icon">
+      <span class="material-icons">info</span>
+    </div>
+    <div class="notice-content">
+      <h4>Need Assistance?</h4>
+      <p>If you have any concerns or problems with your transactions, please visit the barangay hall for immediate assistance.</p>
+    </div>
   </div>
 </div>

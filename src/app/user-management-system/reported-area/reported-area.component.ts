@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';;
+import { API_URL } from '../../services/auth.service';
 interface Report {
   id: number;
   date: Date;
@@ -52,7 +53,7 @@ export class ReportedAreaComponent {
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-      this.http.get('http://localhost:8000/api/show-reports', { headers })
+      this.http.get(`${API_URL}/show-reports`, { headers })
         .subscribe(
           (response: any) => {
             console.log('Profile Response:', response);
@@ -92,7 +93,7 @@ export class ReportedAreaComponent {
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-      this.http.get('http://localhost:8000/api/send-reports', { headers })
+      this.http.get(`${API_URL}/send-reports`, { headers })
         .subscribe(
           (response: any) => {
             this.filteredUsers = response;

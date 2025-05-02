@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-
+import { API_URL } from '../../services/auth.service';
 @Component({
   selector: 'app-add-work',
   standalone: true,
@@ -39,7 +39,7 @@ export class AddWorkComponent {
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-      this.http.get(`http://localhost:8000/api/profile`, { headers })
+      this.http.get(`${API_URL}/profile`, { headers })
         .subscribe(
           (response: any) => {
             this.worker = response.data || this.worker;

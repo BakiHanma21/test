@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ChatService } from '../../services/chat.service';
+import { API_URL } from '../../services/auth.service';
 
 interface User {
   id: number;
@@ -32,10 +33,12 @@ interface User {
   templateUrl: './user-verification.component.html',
   styleUrls: ['./user-verification.component.css']
 })
-export class UserVerificationComponent {
+export class UserVerificationComponent implements OnInit {
   users: User[] = [];
   filteredUsers: User[] = [];
   sidebarOpen = true;
+  isIconOnly = false;
+  isMobileView = false;
   isProfileModalVisible: boolean = false;
   currentUser: any = {};
   selectedFilter: string = 'all';
@@ -44,6 +47,7 @@ export class UserVerificationComponent {
   isDenyFormVisible = false;
   isCommentFormVisible = false;
   commentText: string = '';
+  isCardView = false;
 
   constructor(
     private router: Router,
@@ -54,13 +58,48 @@ export class UserVerificationComponent {
   ngOnInit(): void {
     this.loadUsers();
     this.initializeChat();
+    this.checkScreenSize();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isMobileView = window.innerWidth < 768;
+    if (this.isMobileView) {
+      this.sidebarOpen = false;
+      this.isIconOnly = false;
+    }
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+    if (this.sidebarOpen && this.isMobileView) {
+      this.isIconOnly = false;
+    }
+  }
+
+  toggleSidebarView() {
+    if (this.sidebarOpen) {
+      this.isIconOnly = !this.isIconOnly;
+      const sidebar = document.querySelector('.sidebar');
+      if (sidebar) {
+        const transitionEndHandler = () => {
+          window.dispatchEvent(new Event('resize'));
+          sidebar.removeEventListener('transitionend', transitionEndHandler);
+        };
+        sidebar.addEventListener('transitionend', transitionEndHandler);
+      }
+    }
   }
 
   loadUsers(): void {
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-      this.http.get<User[]>('http://localhost:8000/api/show-verification', { headers })
+      this.http.get<User[]>(`${API_URL}/show-verification`, { headers })
         .subscribe(
           (response: User[]) => {
             this.users = response || [];
@@ -119,7 +158,7 @@ export class UserVerificationComponent {
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
       
-      this.http.put(`http://localhost:8000/api/update-verification/${user.id}`, { 
+      this.http.put(`${API_URL}/update-verification/${user.id}`, { 
         status: 'Approved',
         sendEmail: true,
         emailType: 'approval'
@@ -151,7 +190,7 @@ export class UserVerificationComponent {
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
       
-      this.http.delete(`http://localhost:8000/api/delete-verification/${user.id}`, { 
+      this.http.delete(`${API_URL}/delete-verification/${user.id}`, { 
         headers,
         body: { 
           sendEmail: true,
@@ -206,7 +245,7 @@ export class UserVerificationComponent {
     if (authToken) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
       
-      this.http.post(`http://localhost:8000/api/send-comment/${user.id}`, { 
+      this.http.post(`${API_URL}/send-comment/${user.id}`, { 
         comment: this.commentText
       }, { headers })
         .subscribe(
@@ -224,10 +263,6 @@ export class UserVerificationComponent {
     }
     
     this.closeForms();
-  }
-
-  toggleSidebar() {
-    this.sidebarOpen = !this.sidebarOpen;
   }
 
   logout() {
