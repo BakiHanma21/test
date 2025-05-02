@@ -306,13 +306,55 @@
           <p>{{ currentUser.experience }} years</p>
         </div>
       </div>
-      <div class="valid-id-section" *ngIf="currentUser.valid_id">
+      
+      <!-- Valid ID Section -->
+      <div class="document-section" *ngIf="currentUser.valid_id">
         <h4>Valid ID</h4>
-        <img [src]="currentUser.valid_id" alt="Valid ID" class="valid-id-img">
+        <div class="document-container">
+          <img [src]="currentUser.valid_id" alt="Valid ID" class="document-img">
+          <div class="document-overlay">
+            <a [href]="currentUser.valid_id" target="_blank" class="view-full-btn">
+              <i class="fas fa-search-plus"></i> View Full Size
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Work Examples Section -->
+      <div class="document-section" *ngIf="currentUser.work_examples && currentUser.work_examples.length > 0">
+        <h4>Work Examples</h4>
+        <div class="work-examples-container">
+          <div class="work-example-card" *ngFor="let work of currentUser.work_examples; let i = index">
+            <div class="work-example-header">
+              <h5>Example {{i+1}}: {{work.title}}</h5>
+            </div>
+            <div class="work-example-content">
+              <p>{{work.description}}</p>
+              <div class="work-image-container" *ngIf="work.image">
+                <img [src]="work.image" alt="Work Example" class="work-example-img">
+                <div class="image-overlay">
+                  <a [href]="work.image" target="_blank" class="view-full-btn">
+                    <i class="fas fa-search-plus"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="cancel-btn" (click)="closeProfileModal()">Close</button>
+      <div class="modal-actions">
+        <button class="action-btn approve" (click)="openApproveForm(currentUser)" title="Approve">
+          <i class="fas fa-check"></i>
+          <span>Approve</span>
+        </button>
+        <button class="action-btn deny" (click)="openDenyForm(currentUser)" title="Deny">
+          <i class="fas fa-times"></i>
+          <span>Deny</span>
+        </button>
+        <button class="cancel-btn" (click)="closeProfileModal()">Close</button>
+      </div>
     </div>
   </div>
 </div>

@@ -683,6 +683,18 @@
   padding: 20px;
   animation: slideIn 0.3s ease-out;
   border-top: 2px solid rgba(255, 196, 117, 0.5);
+  max-width: 550px;
+  margin: 0 auto;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.image-update-container h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 10px 0;
+  text-align: center;
 }
 
 @keyframes slideIn {
@@ -700,13 +712,16 @@
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
-  max-height: 300px;
+  height: auto;
+  max-height: 250px;
   overflow: hidden;
+  border-radius: 8px;
 }
 
 .preview-image {
+  width: auto;
   max-width: 100%;
-  max-height: 300px;
+  max-height: 250px;
   object-fit: contain;
   border-radius: 8px;
 }
@@ -756,34 +771,47 @@
 
 @media (max-width: 768px) {
   .image-update-container {
-    height: auto;
-    max-height: 80vh;
-    overflow-y: auto;
+    border-radius: 12px;
+    bottom: 50%;
+    transform: translateY(50%);
+    width: 90%;
+    max-height: 70vh;
+    animation: zoomIn 0.3s ease-out;
   }
   
-  .profile-header {
-    flex-direction: column;
-  }
-  
-  @keyframes slideIn {
+  @keyframes zoomIn {
     from {
-      transform: translateY(100%);
+      transform: translateY(50%) scale(0.8);
       opacity: 0;
     }
     to {
-      transform: translateY(0);
+      transform: translateY(50%) scale(1);
       opacity: 1;
     }
+  }
+  
+  .preview-image-container {
+    max-height: 200px;
+  }
+  
+  .preview-image {
+    max-height: 200px;
   }
 }
 
 @media (max-width: 480px) {
   .image-update-container {
+    width: 95%;
     padding: 16px;
+    max-height: 60vh;
   }
   
   .preview-image-container {
-    max-height: 200px;
+    max-height: 180px;
+  }
+  
+  .preview-image {
+    max-height: 180px;
   }
   
   .cancel-image-btn,

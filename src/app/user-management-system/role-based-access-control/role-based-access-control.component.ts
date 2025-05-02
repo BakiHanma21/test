@@ -80,6 +80,7 @@ export class RoleBasedAccessControlComponent implements OnInit {
   filteredWorkers = this.workers;
   userSearchTerm = '';
   workerSearchTerm = '';
+  viewMode = 'table'; // Default view mode
 
   isDeleteUserModalOpen = false;
   isDeleteWorkerModalOpen = false;
