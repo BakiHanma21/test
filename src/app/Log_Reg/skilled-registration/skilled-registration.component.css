@@ -770,3 +770,44 @@
       opacity: 0.3;
     }
 }
+
+/* Required field indicator */
+label.required::after {
+  content: ' *';
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* Validation styling */
+input:required:invalid, 
+textarea:required:invalid,
+input.ng-invalid.ng-touched, 
+textarea.ng-invalid.ng-touched {
+  border: 1px solid #e74c3c;
+  background-color: rgba(231, 76, 60, 0.05);
+}
+
+/* Make file input validation visible */
+input[type="file"].ng-invalid.ng-touched::before {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+}
+
+/* Error message enhancement */
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 5px;
+  font-weight: 500;
+  padding: 5px 10px;
+  background-color: rgba(231, 76, 60, 0.1);
+  border-radius: 5px;
+  display: inline-block;
+  width: fit-content;
+}
+
+/* Custom error message for file inputs */
+.file-error {
+  border: 1px dashed #e74c3c;
+  background-color: rgba(231, 76, 60, 0.05);
+}

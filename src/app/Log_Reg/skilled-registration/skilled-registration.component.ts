@@ -97,6 +97,23 @@ export class SkilledRegistrationComponent implements OnInit {
 
   onSubmit(skilledRegistrationForm: NgForm) {
     this.formSubmitted = true;
+    
+    // Check if images are provided
+    if (!this.user.image) {
+      this.profilePictureError = 'Profile picture is required.';
+      return;
+    }
+    
+    if (!this.user.valid_id) {
+      alert('Valid ID is required.');
+      return;
+    }
+    
+    if (!this.user.work_examples[0].image || !this.user.work_examples[1].image) {
+      alert('All work example images are required.');
+      return;
+    }
+    
     if (skilledRegistrationForm.invalid) {
       return;
     }

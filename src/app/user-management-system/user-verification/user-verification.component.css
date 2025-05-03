@@ -747,24 +747,180 @@
   font-size: 1.1rem;
 }
 
-.valid-id-section {
+/* Document Section Styles */
+.document-section {
   margin-top: 24px;
   padding-top: 24px;
   border-top: 1px solid #eee;
 }
 
-.valid-id-section h4 {
+.document-section h4 {
   margin: 0 0 16px;
   color: #2c3e50;
   font-size: 1.2rem;
+  font-weight: 600;
 }
 
-.valid-id-img {
-    width: 100%;
+.document-section h5 {
+  margin: 0 0 12px;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.document-container {
+  position: relative;
+  max-width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.document-img {
+  width: 100%;
   max-height: 300px;
   object-fit: contain;
+  display: block;
+  background-color: #f8f9fa;
+}
+
+.document-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.document-container:hover .document-overlay {
+  opacity: 1;
+}
+
+.view-full-btn {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.view-full-btn:hover {
+  text-decoration: underline;
+}
+
+/* Work Examples Styles */
+.work-examples-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.work-example-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s;
+}
+
+.work-example-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.work-example-header {
+  padding: 16px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #eee;
+}
+
+.work-example-content {
+  padding: 16px;
+}
+
+.work-example-content p {
+  color: #4a5568;
+  font-size: 0.95rem;
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+
+.work-image-container {
+  position: relative;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.work-example-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.work-image-container:hover .image-overlay {
+  opacity: 1;
+}
+
+/* Modal Actions */
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.modal-actions .action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .work-examples-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .document-img, .work-example-img {
+    max-height: 220px;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .document-img, .work-example-img {
+    max-height: 180px;
+  }
 }
 
 /* Confirmation Modals Styles */

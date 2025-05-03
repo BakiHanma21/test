@@ -55,7 +55,7 @@
       <div class="form-step" *ngIf="currentStep === 1">
         <h3>Personal Information</h3>
         <div class="form-group">
-          <label for="name">Name:</label>
+          <label for="name" class="required">Name:</label>
           <input
             type="text"
             id="name"
@@ -72,7 +72,7 @@
         </div>
 
         <div class="form-group">
-          <label for="phoneNumber">Phone Number:</label>
+          <label for="phoneNumber" class="required">Phone Number:</label>
           <input
             type="tel"
             id="phoneNumber"
@@ -90,7 +90,7 @@
         </div>
 
         <div class="form-group">
-          <label for="email">Email:</label>
+          <label for="email" class="required">Email:</label>
           <input
             type="email"
             id="email"
@@ -112,7 +112,7 @@
       <div class="form-step" *ngIf="currentStep === 2">
         <h3>Security Information</h3>
         <div class="form-group">
-          <label for="password">
+          <label for="password" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">lock</i>
             Password:
           </label>
@@ -133,7 +133,7 @@
         </div>
 
         <div class="form-group">
-          <label for="confirmPassword">
+          <label for="confirmPassword" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">lock_outline</i>
             Confirm Password:
           </label>
@@ -153,7 +153,7 @@
         </div>
 
         <div class="form-group">
-          <label for="profilePicture">
+          <label for="profilePicture" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">image</i>
             Profile Picture:
           </label>
@@ -164,6 +164,7 @@
             class="form-control"
             (change)="onProfilePictureChange($event)"
             accept="image/*"
+            required
           />
           <div class="error-message" *ngIf="profilePictureError">
             {{ profilePictureError }}
@@ -175,7 +176,7 @@
       <div class="form-step" *ngIf="currentStep === 3">
         <h3>Professional Information</h3>
         <div class="form-group">
-          <label for="location">
+          <label for="location" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">location_on</i>
             Location:
           </label>
@@ -195,7 +196,7 @@
         </div>
 
         <div class="form-group">
-          <label for="skills">
+          <label for="skills" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">build</i>
             Skills:
           </label>
@@ -215,7 +216,7 @@
         </div>
 
         <div class="form-group">
-          <label for="years_of_experience">
+          <label for="years_of_experience" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">history</i>
             Years of Experience:
           </label>
@@ -235,7 +236,7 @@
         </div>
 
         <div class="form-group">
-          <label for="valid_id">
+          <label for="valid_id" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">badge</i>
             Upload Valid ID:
           </label>
@@ -255,7 +256,7 @@
       <div class="form-step" *ngIf="currentStep === 4">
         <h3>Work Examples</h3>
         <div class="form-group">
-          <label for="work_example_1_title">
+          <label for="work_example_1_title" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">work</i>
             Work Example 1 Title:
           </label>
@@ -272,7 +273,7 @@
         </div>
 
         <div class="form-group">
-          <label for="work_example_1_description">
+          <label for="work_example_1_description" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">description</i>
             Work Example 1 Description:
           </label>
@@ -288,7 +289,7 @@
         </div>
 
         <div class="form-group">
-          <label for="work_example_1_image">
+          <label for="work_example_1_image" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">insert_photo</i>
             Work Example 1 Image:
           </label>
@@ -299,11 +300,12 @@
             class="form-control"
             (change)="onWorkExampleImageChange($event, 0)"
             accept="image/*"
+            required
           />
         </div>
 
         <div class="form-group">
-          <label for="work_example_2_title">
+          <label for="work_example_2_title" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">work</i>
             Work Example 2 Title:
           </label>
@@ -320,7 +322,7 @@
         </div>
 
         <div class="form-group">
-          <label for="work_example_2_description">
+          <label for="work_example_2_description" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">description</i>
             Work Example 2 Description:
           </label>
@@ -336,7 +338,7 @@
         </div>
 
         <div class="form-group">
-          <label for="work_example_2_image">
+          <label for="work_example_2_image" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">insert_photo</i>
             Work Example 2 Image:
           </label>
@@ -347,6 +349,7 @@
             class="form-control"
             (change)="onWorkExampleImageChange($event, 1)"
             accept="image/*"
+            required
           />
         </div>
 

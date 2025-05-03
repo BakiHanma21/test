@@ -105,6 +105,15 @@
     <div class="section-container">
       <div class="section-header">
         <h2>Regular Users</h2>
+        <div class="actions-container">
+          <div class="view-toggle">
+            <button [class.active]="viewMode === 'table'" (click)="viewMode = 'table'" title="Table View">
+              <i class="fas fa-table"></i>
+            </button>
+            <button [class.active]="viewMode === 'cards'" (click)="viewMode = 'cards'" title="Cards View">
+              <i class="fas fa-th-large"></i>
+            </button>
+          </div>
         <div class="search-container">
           <input 
             type="text" 
@@ -114,10 +123,11 @@
             class="search-input"
           >
           <i class="fas fa-search search-icon"></i>
+          </div>
         </div>
       </div>
 
-      <div class="table-responsive">
+      <div class="table-responsive" *ngIf="viewMode === 'table'">
         <table class="data-table">
           <thead>
             <tr>
@@ -135,8 +145,8 @@
               <td>{{ user.created_at | date:'medium' }}</td>
               <td><span class="role-badge">{{ user.role }}</span></td>
               <td>
-                <span [class]="user.availability === 1 ? 'status-badge active' : 'status-badge inactive'">
-                  {{ user.availability === 1 ? 'Active' : 'Disabled' }}
+                <span [class]="user.availability === 0 ? 'status-badge active' : 'status-badge inactive'">
+                  {{ user.availability === 0 ? 'Active' : 'Disabled' }}
                 </span>
               </td>
               <td>{{ user.report_reason || '-' }}</td>
@@ -152,12 +162,56 @@
           </tbody>
         </table>
       </div>
+      
+      <!-- Cards View for Users -->
+      <div class="cards-view" *ngIf="viewMode === 'cards'">
+        <div class="card-grid">
+          <div class="user-card" *ngFor="let user of filteredUsers">
+            <div class="card-header">
+              <h3>{{ user.name }}</h3>
+              <span class="status-badge {{ user.availability === 0 ? 'active' : 
+                                         user.availability === 1 ? 'inactive' : 
+                                         user.availability === 2 ? 'suspended' : 
+                                         user.availability === 4 ? 'disabled' : '' }}">
+                {{ user.availability === 0 ? 'Active' : 
+                   user.availability === 1 ? 'Inactive' : 
+                   user.availability === 2 ? 'Suspended' : 
+                   user.availability === 4 ? 'Disabled' : 'Unknown' }}
+              </span>
+            </div>
+            <div class="card-content">
+              <div class="card-info">
+                <p><strong>Role:</strong> <span class="role-badge">{{ user.role }}</span></p>
+                <p><strong>Date Created:</strong> {{ user.created_at | date:'medium' }}</p>
+                <p *ngIf="user.report_reason"><strong>Reason:</strong> {{ user.report_reason }}</p>
+              </div>
+              <div class="card-actions">
+                <button class="action-btn edit" (click)="editUser(user)" title="Edit user">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn delete" (click)="openDeleteUserModal(user.id)" title="Disable user">
+                  <i class="fas fa-ban"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Workers Section -->
     <div class="section-container">
       <div class="section-header">
         <h2>Skilled Workers</h2>
+        <div class="actions-container">
+          <div class="view-toggle">
+            <button [class.active]="viewMode === 'table'" (click)="viewMode = 'table'" title="Table View">
+              <i class="fas fa-table"></i>
+            </button>
+            <button [class.active]="viewMode === 'cards'" (click)="viewMode = 'cards'" title="Cards View">
+              <i class="fas fa-th-large"></i>
+            </button>
+          </div>
         <div class="search-container">
           <input 
             type="text" 
@@ -167,14 +221,17 @@
             class="search-input"
           >
           <i class="fas fa-search search-icon"></i>
+          </div>
         </div>
       </div>
 
-      <div class="table-responsive">
+      <!-- Table View -->
+      <div class="table-responsive" *ngIf="viewMode === 'table'">
         <table class="data-table">
           <thead>
             <tr>
               <th>Name</th>
+              <th>Role</th>
               <th>Skills</th>
               <th>Date Created</th>
               <th>Status</th>
@@ -185,11 +242,18 @@
           <tbody>
             <tr *ngFor="let worker of filteredWorkers">
               <td>{{ worker.name }}</td>
+              <td><span class="role-badge">Skilled Worker</span></td>
               <td>{{ worker.skills }}</td>
               <td>{{ worker.created_at | date:'medium' }}</td>
               <td>
-                <span [class]="worker.availability === 1 ? 'status-badge active' : 'status-badge inactive'">
-                  {{ worker.availability === 1 ? 'Active' : 'Disabled' }}
+                <span class="status-badge {{ worker.availability === 1 ? 'active' : 
+                                            worker.availability === 0 ? 'inactive' : 
+                                            worker.availability === 2 ? 'suspended' : 
+                                            worker.availability === 4 ? 'disabled' : '' }}">
+                  {{ worker.availability === 1 ? 'Available' : 
+                     worker.availability === 0 ? 'Unavailable' : 
+                     worker.availability === 2 ? 'Suspended' : 
+                     worker.availability === 4 ? 'Disabled' : 'Unknown' }}
                 </span>
               </td>
               <td>{{ worker.report_reason || '-' }}</td>
@@ -204,6 +268,42 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      
+      <!-- Cards View -->
+      <div class="cards-view" *ngIf="viewMode === 'cards'">
+        <div class="card-grid">
+          <div class="worker-card" *ngFor="let worker of filteredWorkers">
+            <div class="card-header">
+              <h3>{{ worker.name }}</h3>
+              <span class="status-badge {{ worker.availability === 1 ? 'active' : 
+                                         worker.availability === 0 ? 'inactive' : 
+                                         worker.availability === 2 ? 'suspended' : 
+                                         worker.availability === 4 ? 'disabled' : '' }}">
+                {{ worker.availability === 1 ? 'Available' : 
+                   worker.availability === 0 ? 'Unavailable' : 
+                   worker.availability === 2 ? 'Suspended' : 
+                   worker.availability === 4 ? 'Disabled' : 'Unknown' }}
+              </span>
+            </div>
+            <div class="card-content">
+              <div class="card-info">
+                <p><strong>Role:</strong> <span class="role-badge">Skilled Worker</span></p>
+                <p><strong>Skills:</strong> {{ worker.skills }}</p>
+                <p><strong>Date Created:</strong> {{ worker.created_at | date:'medium' }}</p>
+                <p *ngIf="worker.report_reason"><strong>Reason:</strong> {{ worker.report_reason }}</p>
+              </div>
+              <div class="card-actions">
+                <button class="action-btn edit" (click)="editWorker(worker)" title="Edit worker">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn delete" (click)="openDeleteWorkerModal(worker.id)" title="Disable worker">
+                  <i class="fas fa-ban"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

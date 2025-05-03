@@ -24,6 +24,13 @@ interface User {
   valid_id?: string;
   created_at?: string;
   status: string;
+  work_examples?: WorkExample[];
+}
+
+interface WorkExample {
+  title: string;
+  description: string;
+  image?: string;
 }
 
 @Component({
@@ -137,7 +144,8 @@ export class UserVerificationComponent implements OnInit {
     this.currentUser = {
       ...user,
       image: user.image,
-      valid_id: user.valid_id
+      valid_id: user.valid_id,
+      work_examples: user.work_examples || []
     };
     this.isProfileModalVisible = true;
   }
