@@ -26,7 +26,7 @@ body {
   padding: 12px 20px;
   position: fixed;
   top: 0;
-  left: 250px;
+  left: 220px;  /* Changed from 250px */
   right: 0;
   z-index: 1000;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -36,7 +36,7 @@ body {
 
 /* When the sidebar is in icon-only mode, adjust header */
 .dashboard-header.icon-mode-header {
-  left: 80px;
+  left: 65px;  /* Changed from 80px */
 }
 
 /* When the sidebar is closed, shift the header */
@@ -83,7 +83,7 @@ body {
 
 /* Sidebar styles */
 .sidebar {
-  width: 250px;
+  width: 220px;  /* Changed from 250px */
   height: 100vh;
   background: linear-gradient(180deg, #2c3e50 0%, #3498db 100%);
   color: white;
@@ -97,11 +97,15 @@ body {
   overflow-y: auto;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(0);
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
 }
 
 .sidebar:not(.open) {
   transform: translateX(-100%);
-  width: 70px;
+  width: 65px;  /* Changed from 70px */
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
 }
 
 .sidebar-header {
@@ -129,8 +133,8 @@ body {
 }
 
 .logo img {
-  height: 100px;
-  width: 100px;
+  height: 80px;  /* Changed from 100px */
+  width: 80px;   /* Changed from 100px */
   display: block;
   margin: 0 auto;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -174,7 +178,7 @@ body {
 }
 
 .nav-links li {
-  margin: 5px 15px;
+  margin: 3px 12px;  /* Reduced from 5px 15px */
   border-radius: 10px;
   transition: all 0.3s ease;
 }
@@ -184,7 +188,7 @@ body {
   color: rgba(255, 255, 255, 0.8);
   font-weight: 400;
   font-size: 15px;
-  padding: 12px 20px;
+  padding: 10px 16px;  /* Reduced from 12px 20px */
   display: flex;
   align-items: center;
   transition: all 0.3s ease;
@@ -301,7 +305,9 @@ body {
 
 /* Icons-only view */
 .sidebar.icons-only {
-  width: 80px;
+  width: 65px;  /* Changed from 80px */
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 .sidebar.icons-only .pol,
@@ -354,17 +360,21 @@ body {
 .main-content {
   flex: 1;
   padding: 0;
-  margin-left: 250px;
+  margin-left: 220px;  /* Changed from 250px */
   margin-top: 70px;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: #fafafa;
   height: calc(100vh - 70px);
   overflow: hidden;
   position: relative;
+  width: calc(100% - 220px); /* Add this */
+  box-sizing: border-box; /* Add this */
+  overflow-x: hidden; /* Add this */
 }
 
 .sidebar.icons-only ~ .main-content {
-  margin-left: 80px;
+  margin-left: 65px;  /* Changed from 80px */
+  width: calc(100% - 65px); /* Add this */
 }
 
 /* Hover effect for minimized sidebar */
@@ -1022,6 +1032,7 @@ body {
   right: 0;
   z-index: 1051;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .attachment-btn label {
@@ -1087,6 +1098,8 @@ body {
   transition: background-color 0.2s;
   padding: 0;
   margin: 0;
+  min-width: 36px;
+  margin-right: 8px; /* Add padding to prevent cropping */
 }
 
 .send-btn:hover {
@@ -1224,6 +1237,19 @@ body {
   
   .user-status {
     font-size: 12px;
+  }
+
+  .message-form {
+    position: fixed;
+    bottom: 60px;
+    padding: 8px 12px;
+    background: white;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    padding-bottom: 16px; /* Add extra padding at bottom for mobile */
+  }
+
+  .message-form .send-btn {
+    margin-right: 4px; /* Smaller margin on mobile */
   }
 }
 

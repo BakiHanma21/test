@@ -82,7 +82,7 @@ body {
   padding: 12px 20px;
     position: fixed;
     top: 0;
-  left: 250px;
+  left: 220px;
     right: 0;
     z-index: 1000;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -92,7 +92,7 @@ body {
   
   /* When the sidebar is in icon-only mode, adjust header */
   .dashboard-header.icon-mode-header {
-    left: 80px;
+    left: 65px;
   }
   
   /* When the sidebar is closed, shift the header */
@@ -139,7 +139,7 @@ body {
   
   /* Sidebar styles */
   .sidebar {
-  width: 250px;
+  width: 220px;
   height: 100vh;
   background: linear-gradient(180deg, #2c3e50 0%, #3498db 100%);
   color: white;
@@ -153,11 +153,15 @@ body {
   overflow-y: auto;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(0);
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
 }
 
 .sidebar:not(.open) {
   transform: translateX(-100%);
-  width: 70px;
+  width: 65px;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
 }
 
 .sidebar-header {
@@ -185,8 +189,8 @@ body {
 }
 
 .logo img {
-  height: 100px;
-  width: 100px;
+  height: 80px;
+  width: 80px;
   display: block;
   margin: 0 auto;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -380,6 +384,10 @@ body {
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: #fafafa;
   min-height: calc(100vh - 70px);
+  margin-left: 220px;
+  width: calc(100% - 220px); /* Add this */
+  box-sizing: border-box; /* Add this */
+  overflow-x: hidden; /* Add this */
 }
 
 /* Dashboard title */
@@ -571,7 +579,8 @@ body {
   }
   
   .main-content {
-    margin-left: 0;
+    margin-left: 0 !important;
+    width: 100% !important; /* Add this */
     padding: 20px;
     margin-top: 70px;
   }
@@ -927,7 +936,9 @@ body {
 
 /* Icons-only view */
 .sidebar.icons-only {
-  width: 80px;
+  width: 65px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 .sidebar.icons-only .pol,
@@ -982,7 +993,8 @@ body {
 }
 
 .sidebar.icons-only ~ .main-content {
-  margin-left: 80px;
+  margin-left: 65px;
+  width: calc(100% - 65px); /* Add this */
 }
 
 /* Mobile Bottom Navigation */
@@ -1078,4 +1090,3 @@ body {
     z-index: 1020;
   }
 }
-  

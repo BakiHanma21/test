@@ -5,7 +5,9 @@
     'icon-mode-header': isIconOnly && sidebarOpen
   }">
     <div class="sidebar-toggle-container">
-      <button class="sidebar-toggle-inside" (click)="toggleSidebar()">☰</button>
+      <button class="sidebar-toggle-inside" (click)="toggleSidebar()" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+      </button>
       <button class="sidebar-collapse-btn" (click)="toggleSidebarView()" aria-label="Toggle Sidebar View">
         <i class="fas" [ngClass]="isIconOnly ? 'fa-expand-arrows-alt' : 'fa-compress-arrows-alt'"></i>
       </button>
@@ -88,7 +90,8 @@
 
   <!-- Main Content Area -->
   <div class="main-content" [ngStyle]="{
-    'margin-left': sidebarOpen ? (isIconOnly ? '80px' : '250px') : '0'
+    'margin-left': sidebarOpen ? (isIconOnly ? '65px' : '220px') : '0',
+    'width': sidebarOpen ? (isIconOnly ? 'calc(100% - 65px)' : 'calc(100% - 220px)') : '100%'
   }">
     <!-- Header Section -->
     <div class="header-container">
@@ -248,7 +251,7 @@
   </div>
   
   <!-- Mobile Bottom Navigation -->
-  <div class="mobile-bottom-nav">
+  <div class="mobile-bottom-nav" *ngIf="isMobileView">
     <a routerLink="/dashboard-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <i class="fas fa-chart-line"></i>
       <span>Dashboard</span>

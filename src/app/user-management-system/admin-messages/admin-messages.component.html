@@ -89,8 +89,8 @@
 
   <!-- Main Content Area -->
   <div class="main-content" [ngStyle]="{
-    'margin-left': sidebarOpen ? (isIconOnly ? '80px' : '250px') : '0',
-    'padding-bottom': isMobileView ? '80px' : '30px'
+    'margin-left': sidebarOpen ? (isIconOnly ? '65px' : '220px') : '0',
+    'width': sidebarOpen ? (isIconOnly ? 'calc(100% - 65px)' : 'calc(100% - 220px)') : '100%'
   }">
     <div class="messenger-container">
       <!-- Connection status indicator -->

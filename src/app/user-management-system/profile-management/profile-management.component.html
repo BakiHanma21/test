@@ -87,7 +87,8 @@
 
   <!-- Main Content Area -->
   <div class="main-content" [ngStyle]="{
-    'margin-left': sidebarOpen ? (isIconOnly ? '80px' : '250px') : '0'
+    'margin-left': sidebarOpen ? (isIconOnly ? '65px' : '220px') : '0',
+    'width': sidebarOpen ? (isIconOnly ? 'calc(100% - 65px)' : 'calc(100% - 220px)') : '100%'
   }">
     <!-- Header Section -->
     <div class="header-container">
@@ -114,7 +115,7 @@
             <i class="fas fa-user-shield"></i>
           </div>
           <div class="stat-content">
-            <span class="stat-value">Administrator</span>
+            <span class="stat-value">{{ profile.role }}</span>
             <span class="stat-label">Access Level</span>
           </div>
         </div>
@@ -124,7 +125,7 @@
             <i class="fas fa-calendar-check"></i>
           </div>
           <div class="stat-content">
-            <span class="stat-value">{{ profile.accountCreated || '2023-05-15' }}</span>
+            <span class="stat-value">{{ getFormattedDate(profile.accountCreated) }}</span>
             <span class="stat-label">Account Created</span>
           </div>
         </div>
@@ -134,7 +135,7 @@
             <i class="fas fa-clock"></i>
           </div>
           <div class="stat-content">
-            <span class="stat-value">{{ profile.lastLogin || 'Today, 09:45 AM' }}</span>
+            <span class="stat-value">{{ getFormattedDate(profile.lastLogin) }}</span>
             <span class="stat-label">Last Login</span>
           </div>
         </div>
@@ -158,8 +159,8 @@
             />
           </div>
           <div class="profile-title">
-            <h2>{{ profile.username || 'Admin Profile' }}</h2>
-            <span class="role-badge">{{ profile.role || 'Administrator' }}</span>
+            <h2>{{ profile.username }}</h2>
+            <span class="role-badge">{{ profile.role }}</span>
           </div>
         </div>
       </div>
@@ -179,7 +180,7 @@
               <i class="fas fa-user"></i>
               <span>Username</span>
             </div>
-            <div class="info-value">{{ profile.username || 'Admin' }}</div>
+            <div class="info-value">{{ profile.username }}</div>
           </div>
 
           <div class="info-item">
@@ -187,20 +188,7 @@
               <i class="fas fa-envelope"></i>
               <span>Email Address</span>
             </div>
-            <div class="info-value">{{ profile.email || 'admin@example.com' }}</div>
-          </div>
-
-          <div class="info-item">
-            <div class="info-label">
-              <i class="fas fa-lock"></i>
-              <span>Password</span>
-            </div>
-            <div class="info-value password-field">
-              {{ passwordVisible ? profile.password : '********' }}
-              <button class="toggle-password" (click)="togglePasswordVisibility()" aria-label="Toggle password visibility">
-                <i [class]="passwordVisible ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-              </button>
-            </div>
+            <div class="info-value">{{ profile.email }}</div>
           </div>
 
           <div class="info-item">
@@ -208,75 +196,15 @@
               <i class="fas fa-user-tag"></i>
               <span>Role</span>
             </div>
-            <div class="info-value">{{ profile.role || 'Administrator' }}</div>
+            <div class="info-value">{{ profile.role }}</div>
           </div>
 
-          <div class="info-item">
-            <div class="info-label">
-              <i class="fas fa-shield-alt"></i>
-              <span>Two-Factor Auth</span>
-            </div>
-            <div class="info-value">
-              <span [class]="profile.twoFactorEnabled ? 'status-enabled' : 'status-disabled'">
-                {{ profile.twoFactorEnabled ? 'Enabled' : 'Disabled' }}
-              </span>
-            </div>
-          </div>
-          
           <div class="info-item">
             <div class="info-label">
               <i class="fas fa-globe"></i>
               <span>Language</span>
             </div>
-            <div class="info-value">{{ profile.language || 'English' }}</div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Security Card -->
-      <div class="profile-info-card security-card">
-        <div class="card-header">
-          <h3><i class="fas fa-shield-alt"></i> Security Settings</h3>
-        </div>
-        
-        <div class="security-items">
-          <div class="security-item">
-            <div class="security-info">
-              <h4>Two-Factor Authentication</h4>
-              <p>Add an extra layer of security to your account</p>
-            </div>
-            <div class="security-toggle">
-              <label class="switch">
-                <input type="checkbox" [checked]="profile.twoFactorEnabled" (change)="toggleSecuritySetting('twoFactor')" title="Toggle two-factor authentication" aria-label="Toggle two-factor authentication">
-                <span class="slider round"></span>
-              </label>
-            </div>
-          </div>
-          
-          <div class="security-item">
-            <div class="security-info">
-              <h4>Login Notifications</h4>
-              <p>Get notified when someone logs into your account</p>
-            </div>
-            <div class="security-toggle">
-              <label class="switch">
-                <input type="checkbox" [checked]="profile.loginNotifications" (change)="toggleSecuritySetting('loginNotifications')" title="Toggle login notifications" aria-label="Toggle login notifications">
-                <span class="slider round"></span>
-              </label>
-            </div>
-          </div>
-          
-          <div class="security-item">
-            <div class="security-info">
-              <h4>API Access</h4>
-              <p>Enable API access for this account</p>
-            </div>
-            <div class="security-toggle">
-              <label class="switch">
-                <input type="checkbox" [checked]="profile.apiAccess" (change)="toggleSecuritySetting('apiAccess')" title="Toggle API access" aria-label="Toggle API access">
-                <span class="slider round"></span>
-              </label>
-            </div>
+            <div class="info-value">{{ profile.language }}</div>
           </div>
         </div>
       </div>
@@ -334,19 +262,14 @@
                   <i class="fas fa-lock"></i>
                   Current Password
                 </label>
-                <div class="password-input-wrapper">
-                  <input 
-                    [type]="showPassword ? 'text' : 'password'"
-                    id="currentPassword" 
-                    [(ngModel)]="editForm.currentPassword" 
-                    name="currentPassword" 
-                    required 
-                    placeholder="Enter current password"
-                  />
-                  <button type="button" class="toggle-password-btn" (click)="toggleEditPasswordVisibility()" title="Toggle password visibility">
-                    <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-                  </button>
-                </div>
+                <input 
+                  type="password"
+                  id="currentPassword" 
+                  [(ngModel)]="editForm.currentPassword" 
+                  name="currentPassword" 
+                  required 
+                  placeholder="Enter current password"
+                />
               </div>
   
               <div class="form-group">
@@ -354,18 +277,13 @@
                   <i class="fas fa-key"></i>
                   New Password
                 </label>
-                <div class="password-input-wrapper">
-                  <input 
-                    [type]="showPassword ? 'text' : 'password'"
-                    id="newPassword" 
-                    [(ngModel)]="editForm.password" 
-                    name="password" 
-                    placeholder="Enter new password (optional)"
-                  />
-                  <button type="button" class="toggle-password-btn" (click)="toggleEditPasswordVisibility()" title="Toggle password visibility">
-                    <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-                  </button>
-                </div>
+                <input 
+                  type="password"
+                  id="newPassword" 
+                  [(ngModel)]="editForm.newPassword" 
+                  name="newPassword" 
+                  placeholder="Enter new password (optional)"
+                />
               </div>
   
               <div class="form-group">
@@ -395,47 +313,8 @@
                   [(ngModel)]="editForm.language" 
                   name="language"
                 >
-                  <option value="English">English</option>
-                  <option value="Spanish">Spanish</option>
-                  <option value="Filipino">Filipino</option>
+                  <option *ngFor="let lang of availableLanguages" [value]="lang.value">{{ lang.label }}</option>
                 </select>
-              </div>
-            </div>
-            
-            <div class="security-options">
-              <h4>Security Options</h4>
-              
-              <div class="checkbox-group">
-                <label>
-                  <input 
-                    type="checkbox" 
-                    [(ngModel)]="editForm.twoFactorEnabled" 
-                    name="twoFactorEnabled"
-                  />
-                  <span>Enable Two-Factor Authentication</span>
-                </label>
-              </div>
-              
-              <div class="checkbox-group">
-                <label>
-                  <input 
-                    type="checkbox" 
-                    [(ngModel)]="editForm.loginNotifications" 
-                    name="loginNotifications"
-                  />
-                  <span>Enable Login Notifications</span>
-                </label>
-              </div>
-              
-              <div class="checkbox-group">
-                <label>
-                  <input 
-                    type="checkbox" 
-                    [(ngModel)]="editForm.apiAccess" 
-                    name="apiAccess"
-                  />
-                  <span>Enable API Access</span>
-                </label>
               </div>
             </div>
 
@@ -482,4 +361,3 @@
   <!-- Backdrop/Overlay for Mobile -->
   <div class="sidebar-backdrop" *ngIf="sidebarOpen && isMobileView" (click)="toggleSidebar()"></div>
 </div>
-  

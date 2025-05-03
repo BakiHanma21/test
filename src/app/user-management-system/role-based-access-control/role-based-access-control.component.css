@@ -82,7 +82,7 @@ body {
   padding: 12px 20px;
     position: fixed;
     top: 0;
-  left: 250px;
+  left: 220px;  /* Changed from 250px */
     right: 0;
     z-index: 1000;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -92,7 +92,7 @@ body {
   
   /* When the sidebar is in icon-only mode, adjust header */
   .dashboard-header.icon-mode-header {
-    left: 80px;
+    left: 65px;  /* Changed from 80px */
   }
   
   /* When the sidebar is closed, shift the header */
@@ -139,7 +139,7 @@ body {
   
   /* Sidebar styles */
   .sidebar {
-  width: 250px;
+  width: 220px;  /* Changed from 250px */
   height: 100vh;
     background: linear-gradient(180deg, #2c3e50 0%, #3498db 100%);
     color: white;
@@ -153,15 +153,21 @@ body {
   overflow-y: auto;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(0);
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
 }
 
 .sidebar:not(.open) {
   transform: translateX(-100%);
-  width: 70px;
+  width: 65px;  /* Changed from 70px */
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
 }
 
 .sidebar.icons-only {
-  width: 80px;
+  width: 65px;  /* Changed from 80px */
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 .sidebar-header {
@@ -189,8 +195,8 @@ body {
 }
 
   .logo img {
-  height: 100px;
-  width: 100px;
+  height: 80px;  /* Changed from 100px */
+  width: 80px;   /* Changed from 100px */
     display: block;
   margin: 0 auto;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -366,11 +372,14 @@ body {
   .main-content {
     flex: 1;
     padding: 30px;
-  margin-left: 250px;
+  margin-left: 220px;  /* Changed from 250px */
   margin-top: 70px;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: #fafafa;
   min-height: calc(100vh - 70px);
+  width: calc(100% - 220px); /* Add this */
+  box-sizing: border-box; /* Add this */
+  overflow-x: hidden; /* Add this */
 }
 
 /* Section Styles */
@@ -748,7 +757,8 @@ button:disabled {
   }
   
   .main-content {
-    margin-left: 0;
+    margin-left: 0 !important;
+    width: 100% !important; /* Add this */
   }
   
   .close-sidebar {
@@ -990,7 +1000,7 @@ button:disabled {
 
 /* Icons-only view */
 .sidebar.icons-only {
-  width: 80px;
+  width: 65px;
 }
 
 .sidebar.icons-only .pol,
@@ -1045,12 +1055,13 @@ button:disabled {
 }
 
 .sidebar.icons-only ~ .main-content {
-  margin-left: 80px;
+  margin-left: 65px;  /* Changed from 80px */
+  width: calc(100% - 65px); /* Add this */
 }
 
 /* Update existing sidebar styles */
 .sidebar {
-  width: 250px;
+  width: 220px;  /* Changed from 250px */
   height: 100vh;
   background: linear-gradient(180deg, #2c3e50 0%, #3498db 100%);
   color: white;
@@ -1068,7 +1079,7 @@ button:disabled {
 
 .sidebar:not(.open) {
   transform: translateX(-100%);
-  width: 70px;
+  width: 65px;  /* Changed from 70px */
 }
 
 /* Logo section */
@@ -1079,8 +1090,8 @@ button:disabled {
 }
 
 .logo img {
-  height: 100px;
-  width: 100px;
+  height: 80px;  /* Changed from 100px */
+  width: 80px;   /* Changed from 100px */
   display: block;
   margin: 0 auto;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1090,7 +1101,6 @@ button:disabled {
 .sidebar:not(.open) .logo img {
   height: 50px;
   width: 50px;
-  transform: scale(0.8);
 }
 
 /* Navigation links */

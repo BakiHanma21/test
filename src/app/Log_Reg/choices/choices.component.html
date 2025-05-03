@@ -1,22 +1,34 @@
 <div class="choices-container">
-    <div class="choices-card">
-      <h2>Choose Your Registration Type</h2>
-      <div class="choices-options">
-        <div class="choice" (click)="navigateToUserRegistration()">
-          <div class="icon">
-            <img src="assets/user-icon.jpg" alt="User Icon" />
-          </div>
-          <h3>Register for User</h3>
-          <p>Register as a regular user.</p>
+  <!-- Animated Background with Floating Icons -->
+  <div class="animated-background">
+    <!-- User-related icons -->
+    <i class="material-icons floating-icon" style="top: 15%; left: 10%; font-size: 50px; --duration: 4s;">person</i>
+    <i class="material-icons floating-icon" style="top: 25%; right: 15%; font-size: 65px; --duration: 5s;">group</i>
+    <i class="material-icons floating-icon" style="bottom: 20%; left: 20%; font-size: 55px; --duration: 3.5s;">people</i>
+    
+    <!-- Worker-related icons -->
+    <i class="material-icons floating-icon" style="top: 45%; right: 25%; font-size: 45px; --duration: 4.2s;">build</i>
+    <i class="material-icons floating-icon" style="bottom: 30%; right: 10%; font-size: 60px; --duration: 6s;">handyman</i>
+    <i class="material-icons floating-icon" style="top: 60%; left: 15%; font-size: 50px; --duration: 5.5s;">home_repair_service</i>
+  </div>
+
+  <div class="choices-card">
+    <h2>Choose Your Registration Type</h2>
+    <div class="choices-options">
+      <div class="choice" (click)="navigateToUserRegistration()">
+        <div class="icon">
+          <img src="assets/user-icon.jpg" alt="User Icon" />
         </div>
-        <div class="choice" (click)="navigateToSkilledRegistration()">
-          <div class="icon">
-            <img src="assets/skilled-worker.png" alt="Skilled Worker Icon" />
-          </div>
-          <h3>Register for Skilled Worker</h3>
-          <p>Register as a skilled worker with additional services.</p>
+        <h3>Register as User</h3>
+        <p>Join our community as a service seeker</p>
+      </div>
+      <div class="choice" (click)="navigateToSkilledRegistration()">
+        <div class="icon">
+          <img src="assets/skilled-worker.png" alt="Skilled Worker Icon" />
         </div>
+        <h3>Register as Worker</h3>
+        <p>Offer your skills and services</p>
       </div>
     </div>
   </div>
-  
+</div>

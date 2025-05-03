@@ -10,15 +10,11 @@ import { API_URL } from '../../services/auth.service';
 
 interface ProfileData {
   username: string;
-  password: string;
   email: string;
   role: string;
   image: string;
   lastLogin?: string;
   accountCreated?: string;
-  twoFactorEnabled: boolean;
-  loginNotifications: boolean;
-  apiAccess: boolean;
   language: string;
 }
 
@@ -34,39 +30,27 @@ export class ProfileManagementComponent implements OnInit {
   sidebarAnimating = false;
   isIconOnly = false;
   isMobileView = false;
-  passwordVisible = false;
   isEditFormVisible = false;
-  isSaved = false;
   isLoading = false;
   showSuccessToast = false;
   defaultProfileImage: string = 'assets/default-profile.png';
-  showPassword: boolean = false;
-  showEditPassword: boolean = false;
-  showEditCurrentPassword: boolean = false;
   
   profile: ProfileData = {
     username: '',
-    password: '',
     email: '',
     role: '',
     image: '',
     lastLogin: '',
     accountCreated: '',
-    twoFactorEnabled: false,
-    loginNotifications: false,
-    apiAccess: false,
     language: 'English'
   };
 
   editForm = {
     username: '',
     email: '',
-    password: '',
-    role: '',
     currentPassword: '',
-    twoFactorEnabled: false,
-    loginNotifications: false,
-    apiAccess: false,
+    newPassword: '',
+    role: '',
     language: 'English'
   };
 
@@ -150,18 +134,6 @@ export class ProfileManagementComponent implements OnInit {
     sidebar?.addEventListener('transitionend', onTransitionEnd);
   }
 
-  togglePasswordVisibility(): void {
-    this.passwordVisible = !this.passwordVisible;
-  }
-
-  toggleEditPasswordVisibility(): void {
-    this.showEditPassword = !this.showEditPassword;
-  }
-
-  toggleEditCurrentPasswordVisibility(): void {
-    this.showEditCurrentPassword = !this.showEditCurrentPassword;
-  }
-
   loadProfile(): void {
     this.isLoading = true;
     const authToken = localStorage.getItem('authToken');
@@ -175,20 +147,14 @@ export class ProfileManagementComponent implements OnInit {
               ...response.data,
               lastLogin: response.data.last_login || 'Never',
               accountCreated: response.data.created_at || 'Unknown',
-              twoFactorEnabled: Boolean(response.data.two_factor_enabled) || false,
-              loginNotifications: Boolean(response.data.login_notifications) || false,
-              apiAccess: Boolean(response.data.api_access) || false,
               language: response.data.language || 'English'
             };
             this.editForm = {
               username: this.profile.username,
               email: this.profile.email,
-              password: '',
-              role: this.profile.role,
               currentPassword: '',
-              twoFactorEnabled: this.profile.twoFactorEnabled,
-              loginNotifications: this.profile.loginNotifications,
-              apiAccess: this.profile.apiAccess,
+              newPassword: '',
+              role: this.profile.role,
               language: this.profile.language
             };
             this.isLoading = false;
@@ -214,12 +180,9 @@ export class ProfileManagementComponent implements OnInit {
       this.editForm = {
         username: this.profile.username,
         email: this.profile.email,
-        password: '',
-        role: this.profile.role,
         currentPassword: '',
-        twoFactorEnabled: this.profile.twoFactorEnabled,
-        loginNotifications: this.profile.loginNotifications,
-        apiAccess: this.profile.apiAccess,
+        newPassword: '',
+        role: this.profile.role,
         language: this.profile.language
       };
     }
@@ -243,12 +206,9 @@ export class ProfileManagementComponent implements OnInit {
     const formData = {
       username: this.editForm.username,
       email: this.editForm.email,
-      password: this.editForm.password,
+      password: this.editForm.newPassword,
       role: this.editForm.role,
       currentPassword: this.editForm.currentPassword,
-      twoFactorEnabled: this.editForm.twoFactorEnabled,
-      loginNotifications: this.editForm.loginNotifications,
-      apiAccess: this.editForm.apiAccess,
       language: this.editForm.language
     };
 
@@ -272,32 +232,6 @@ export class ProfileManagementComponent implements OnInit {
           alert(error.error.message || 'Error updating profile. Please try again.');
         }
       });
-  }
-
-  toggleSecuritySetting(setting: string): void {
-    switch(setting) {
-      case 'twoFactor':
-        this.profile.twoFactorEnabled = !this.profile.twoFactorEnabled;
-        break;
-      case 'loginNotifications':
-        this.profile.loginNotifications = !this.profile.loginNotifications;
-        break;
-      case 'apiAccess':
-        this.profile.apiAccess = !this.profile.apiAccess;
-        break;
-    }
-    
-    // For demonstration purposes, we'll show the success toast without saving to backend
-    this.showSuccessToast = true;
-    setTimeout(() => {
-      this.showSuccessToast = false;
-    }, 3000);
-    
-    // In a real application, you would save these settings to the backend here
-  }
-
-  togglePassword(): void {
-    this.passwordVisible = !this.passwordVisible;
   }
 
   openFileDialog() {

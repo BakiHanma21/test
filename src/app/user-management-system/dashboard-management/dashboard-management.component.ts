@@ -23,6 +23,7 @@ export class DashboardManagementComponent implements OnInit, AfterViewInit {
   sidebarAnimating = false;
   isIconOnly = false;
   isMobileView = false;
+  screenWidth = window.innerWidth;
   totalUsers: number = 0;
   totalSkilledWorkers: number = 0;
 
@@ -106,16 +107,11 @@ export class DashboardManagementComponent implements OnInit, AfterViewInit {
 
   // Check if screen is mobile size
   checkScreenSize() {
-    this.isMobileView = window.innerWidth <= 768;
-    
-    // Auto close sidebar on mobile
-    if (this.isMobileView && this.sidebarOpen) {
+    this.screenWidth = window.innerWidth;
+    this.isMobileView = window.innerWidth < 768;
+    if (this.isMobileView) {
       this.sidebarOpen = false;
-    }
-    
-    // If returning to desktop, ensure sidebar is open
-    if (!this.isMobileView && !this.sidebarOpen) {
-      this.sidebarOpen = true;
+      this.isIconOnly = false;
     }
   }
 

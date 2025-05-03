@@ -87,7 +87,8 @@
 
   <!-- Main Content Area -->
   <div class="main-content" [ngStyle]="{
-    'margin-left': sidebarOpen ? (isIconOnly ? '80px' : '250px') : '0'
+    'margin-left': sidebarOpen ? (isIconOnly ? '65px' : '220px') : '0',
+    'width': sidebarOpen ? (isIconOnly ? 'calc(100% - 65px)' : 'calc(100% - 220px)') : '100%'
   }">
     <!-- Header Section -->
     <div class="header-container">
@@ -519,4 +520,3 @@
   <!-- Backdrop/Overlay for Mobile -->
   <div class="sidebar-backdrop" *ngIf="sidebarOpen && isMobileView" (click)="toggleSidebar()"></div>
 </div>
-  

@@ -28,6 +28,14 @@ export class ResetPasswordComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Add Material Icons link to the document head if not already present
+    if (!document.querySelector('link[href*="material-icons"]')) {
+      const link = document.createElement('link');
+      link.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+    }
+
     // Get token and email from URL parameters
     this.route.queryParams.subscribe(params => {
       this.token = params['token'] || '';

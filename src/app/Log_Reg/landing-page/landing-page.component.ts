@@ -15,6 +15,14 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     // Initialize any required data
+
+    // Add Material Icons link to the document head if not already present
+    if (!document.querySelector('link[href*="material-icons"]')) {
+      const link = document.createElement('link');
+      link.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+    }
   }
 
   ngAfterViewInit() {

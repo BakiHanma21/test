@@ -29,6 +29,69 @@ html, body {
   overflow: hidden;
 }
 
+/* Animated Background with Floating Icons */
+.animated-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.floating-icon {
+  position: absolute;
+  opacity: 0.15;
+  z-index: 1;
+  color: #2c3e50;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  animation-duration: var(--duration, 6s);
+  animation-name: float;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  animation-direction: alternate;
+  transform-origin: center;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-30px) rotate(5deg) scale(1.05);
+  }
+  50% {
+    transform: translateY(-15px) rotate(10deg) scale(1.1);
+  }
+  75% {
+    transform: translateY(-25px) rotate(3deg) scale(1.05);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+.floating-icon:nth-child(even) {
+  animation-name: float2;
+  animation-delay: 0.5s;
+}
+
+@keyframes float2 {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  30% {
+    transform: translateY(25px) rotate(-8deg) scale(1.08);
+  }
+  60% {
+    transform: translateY(10px) rotate(-4deg) scale(1.03);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
 .hero-content {
   text-align: center;
   position: relative;
