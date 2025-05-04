@@ -39,5 +39,20 @@ export class UserprofileserviceService {
     });
   }
 
-  
+  changeUserPassword(currentPassword: string, newPassword: string, newPasswordConfirmation: string): Observable<any> {
+    const token = localStorage.getItem('authToken');
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${token}`)
+      .set('Content-Type', 'application/json');
+    
+    const passwordData = {
+      current_password: currentPassword,
+      new_password: newPassword,
+      new_password_confirmation: newPasswordConfirmation
+    };
+    
+    return this.http.post(`${this.apiUrl}/change-user-password`, passwordData, {
+      headers: headers
+    });
+  }
 }

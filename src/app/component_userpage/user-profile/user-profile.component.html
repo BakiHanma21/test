@@ -115,6 +115,93 @@
         <span class="material-icons">edit</span>
         Edit Profile
       </button>
+
+      <!-- Change Password Button -->
+      <button class="change-password-btn" (click)="togglePasswordChangeForm()">
+        <span class="material-icons">lock</span>
+        Change Password
+      </button>
+    </div>
+
+    <!-- Password Change Form -->
+    <div class="password-form-container" *ngIf="isChangingPassword">
+      <form (ngSubmit)="changePassword()" class="password-form">
+        <h3><span class="material-icons">lock</span> Change Password</h3>
+        <div class="divider"></div>
+        
+        <div class="form-error" *ngIf="passwordError">
+          <span class="material-icons">error</span>
+          {{ passwordError }}
+        </div>
+        
+        <div class="form-group password-input-group">
+          <label>
+            <span class="material-icons">lock_outline</span>
+            Current Password
+          </label>
+          <div class="password-input-wrapper">
+            <input 
+              [type]="showCurrentPassword ? 'text' : 'password'" 
+              [(ngModel)]="passwordForm.currentPassword" 
+              name="currentPassword" 
+              placeholder="Enter your current password" 
+              required
+            />
+            <button type="button" class="toggle-password-btn" (click)="togglePasswordVisibility('current')">
+              <span class="material-icons">{{ showCurrentPassword ? 'visibility_off' : 'visibility' }}</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="form-group password-input-group">
+          <label>
+            <span class="material-icons">lock_open</span>
+            New Password
+          </label>
+          <div class="password-input-wrapper">
+            <input 
+              [type]="showNewPassword ? 'text' : 'password'" 
+              [(ngModel)]="passwordForm.newPassword" 
+              name="newPassword" 
+              placeholder="Enter new password" 
+              required
+            />
+            <button type="button" class="toggle-password-btn" (click)="togglePasswordVisibility('new')">
+              <span class="material-icons">{{ showNewPassword ? 'visibility_off' : 'visibility' }}</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="form-group password-input-group">
+          <label>
+            <span class="material-icons">done</span>
+            Confirm New Password
+          </label>
+          <div class="password-input-wrapper">
+            <input 
+              [type]="showConfirmPassword ? 'text' : 'password'" 
+              [(ngModel)]="passwordForm.newPasswordConfirmation" 
+              name="newPasswordConfirmation" 
+              placeholder="Confirm new password" 
+              required
+            />
+            <button type="button" class="toggle-password-btn" (click)="togglePasswordVisibility('confirm')">
+              <span class="material-icons">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="togglePasswordChangeForm()">
+            <span class="material-icons">close</span>
+            Cancel
+          </button>
+          <button type="submit" class="save-btn">
+            <span class="material-icons">save</span>
+            Change Password
+          </button>
+        </div>
+      </form>
     </div>
 
     <!-- Edit Form -->
@@ -179,7 +266,7 @@
   </div>
 
   <!-- Activity Section -->
-  <div class="activity-section">
+  <!-- <div class="activity-section">
     <div class="section-header">
       <h3><span class="material-icons">history</span> Recent Activity</h3>
       <div class="divider"></div>
@@ -190,10 +277,9 @@
         <p>No recent activity to display</p>
       </div>
     </div>
-  </div>
+  </div> -->
 
-  <!-- Preferences Section -->
-  <div class="preferences-section">
+  <!-- <div class="preferences-section">
     <div class="section-header">
       <h3><span class="material-icons">settings</span> Account Preferences</h3>
       <div class="divider"></div>
@@ -220,5 +306,5 @@
         </button>
       </div>
     </div>
-  </div>
+  </div>  -->
 </div>

@@ -9,9 +9,135 @@
     <div class="header-background">TRANSACTIONS</div>
   </div>
 
-  <!-- Transactions List -->
-  <div class="transactions-list" *ngIf="transactions && transactions.length > 0; else noTransactions">
-    <div class="transaction-card" *ngFor="let transaction of transactions">
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <div class="filter-header">
+      <div class="view-toggle">
+        <button 
+          [class.active]="!isTableView" 
+          (click)="isTableView = false" 
+          class="view-btn card-view-btn" 
+          title="Card View">
+          <span class="material-icons">view_module</span>
+        </button>
+        <button 
+          [class.active]="isTableView" 
+          (click)="isTableView = true" 
+          class="view-btn table-view-btn" 
+          title="Table View">
+          <span class="material-icons">view_list</span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="filter-controls">
+      <div class="search-container">
+        <span class="material-icons">search</span>
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery" 
+          placeholder="Search by name, title, ID, or description..." 
+          class="search-input"
+          (keyup.enter)="applySearch()"
+        >
+        <button class="search-btn" (click)="applySearch()">
+          <span class="material-icons">search</span>
+        </button>
+      </div>
+      
+      <div class="status-filter-buttons">
+        <button 
+          class="status-btn" 
+          [class.active]="statusFilter === 'ALL'"
+          (click)="filterByStatus('ALL')">
+          <span class="material-icons">list_alt</span>
+          All
+        </button>
+        <button 
+          class="status-btn pending-btn" 
+          [class.active]="statusFilter === 'PENDING'"
+          (click)="filterByStatus('PENDING')">
+          <span class="material-icons">schedule</span>
+          Not Paid
+        </button>
+        <button 
+          class="status-btn paid-btn" 
+          [class.active]="statusFilter === 'PAID'"
+          (click)="filterByStatus('PAID')">
+          <span class="material-icons">check_circle</span>
+          Paid
+        </button>
+        <button 
+          class="status-btn failed-btn" 
+          [class.active]="statusFilter === 'FAILED'"
+          (click)="filterByStatus('FAILED')">
+          <span class="material-icons">cancel</span>
+          Failed
+        </button>
+        <button 
+          class="status-btn clear-btn" 
+          (click)="clearFilters()">
+          <span class="material-icons">clear_all</span>
+          Clear
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table View -->
+  <div class="table-container" *ngIf="isTableView && filteredTransactions && filteredTransactions.length > 0">
+    <table class="transactions-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Customer</th>
+          <th>Service</th>
+          <th>Amount</th>
+          <th>Payment Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaction of filteredTransactions" [ngClass]="transaction?.payment_status?.toLowerCase()">
+          <td class="transaction-id-cell">#{{ transaction?.transaction_id }}</td>
+          <td>{{ transaction?.name }}</td>
+          <td>{{ transaction?.title || 'N/A' }}</td>
+          <td class="amount-cell">₱{{ transaction?.amount }}</td>
+          <td>{{ transaction?.payment_date || 'Not yet paid' }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="transaction?.payment_status?.toLowerCase()">
+              {{ getPaymentStatus(transaction?.payment_status) }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <button class="table-action-btn details-btn" title="View Details" [attr.data-transaction-id]="transaction.transaction_id">
+              <span class="material-icons">visibility</span>
+            </button>
+            
+            <button 
+              *ngIf="transaction.payment_status === 'PENDING' && transaction.receipt_url"
+              class="table-action-btn approve-btn" 
+              title="Mark as Paid"
+              (click)="markAsPaidManually(transaction.transaction_id)">
+              <span class="material-icons">check_circle</span>
+            </button>
+            
+            <button 
+              *ngIf="!hasWorkerReview(transaction) && (transaction.payment_status === 'PAID' || transaction.payment_status === 'MANUALLY UPDATED')"
+              class="table-action-btn review-btn" 
+              title="Write Review">
+              <span class="material-icons">rate_review</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Card View -->
+  <div class="transactions-list" *ngIf="!isTableView && filteredTransactions && filteredTransactions.length > 0; else noTransactions">
+    <div class="transaction-card" *ngFor="let transaction of filteredTransactions">
       <!-- Transaction Header -->
       <div class="transaction-card-header">
         <div class="transaction-info">
@@ -75,6 +201,9 @@
           <div class="qr-display" *ngIf="transaction.qr_code_url">
             <div class="qr-preview">
               <img [src]="transaction.qr_code_url" alt="QR Code" (error)="onImageError($event)">
+              <button class="remove-qr-btn" (click)="removeQrCode(transaction.transaction_id)" title="Remove QR Code">
+                <span class="material-icons">delete</span>
+              </button>
             </div>
           </div>
         </div>

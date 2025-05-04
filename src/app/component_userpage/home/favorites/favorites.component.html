@@ -67,6 +67,7 @@
     <div class="modal-content">
       <button class="close-modal" (click)="closeModal()" aria-label="Close modal">
         <i class="fas fa-times"></i>
+        <span class="sr-only">Close</span>
       </button>
       
       <div class="modal-body" *ngIf="selectedWorker">
@@ -107,7 +108,7 @@
         </div>
 
         <div class="work-examples" *ngIf="selectedWorker.works && selectedWorker.works.length > 0">
-          <h3>Portfolio</h3>
+          <h3>Work Examples</h3>
           <div class="work-grid">
             <div class="work-item" *ngFor="let work of selectedWorker.works">
               <img [src]="work.image" alt="{{ work.title }}" />

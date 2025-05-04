@@ -590,11 +590,11 @@ html, body {
 .modal-header {
   display: flex;
   justify-content: space-between;
-    align-items: center;
+  align-items: center;
   margin-bottom: 24px;
   padding-bottom: 12px;
   border-bottom: 1px solid rgba(44, 62, 80, 0.1);
-  }
+}
 
 .modal-header h3 {
   display: flex;
@@ -622,13 +622,13 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  }
+}
 
 .close-modal:hover {
   background: #f0f2f5;
   color: #1a1a1a;
   transform: rotate(90deg);
-  }
+}
 
 /* Edit Form */
 .edit-form {
@@ -640,13 +640,13 @@ html, body {
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
   margin-bottom: 24px;
-  }
+}
 
 .form-group {
   display: flex;
-    flex-direction: column;
+  flex-direction: column;
   gap: 8px;
-  }
+}
 
 .form-group label {
   display: flex;
@@ -655,7 +655,7 @@ html, body {
   color: #2c3e50;
   font-weight: 500;
   font-size: 14px;
-  }
+}
 
 .form-group label .material-icons {
   color: #ffc475;
@@ -730,7 +730,7 @@ html, body {
   margin-top: 12px;
 }
 
-.cancel-btn, 
+.cancel-btn,
 .save-btn {
   display: inline-flex;
   align-items: center;
@@ -849,11 +849,11 @@ html, body {
 }
 
 @media (max-width: 768px) {
-  .profile-container {
+.profile-container {
     padding: 0;
   }
 
-  .header-container {
+.header-container {
     padding: 16px;
     margin: 0;
     margin-bottom: 8px;
@@ -867,7 +867,7 @@ html, body {
 
   .profile-header {
     flex-direction: column;
-    align-items: center;
+  align-items: center;
     text-align: center;
     gap: 20px;
   }
@@ -908,6 +908,12 @@ html, body {
     grid-template-columns: 1fr;
     gap: 16px;
   }
+
+  .edit-profile-btn,
+  .change-password-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 480px) {
@@ -942,7 +948,7 @@ html, body {
   .cancel-btn,
   .save-btn {
     width: 100%;
-    justify-content: center;
+  justify-content: center;
     padding: 10px;
   }
 
@@ -1001,4 +1007,195 @@ html, body {
 .empty-state p {
   font-size: 16px;
   margin: 0;
+}
+
+/* Change Password Button */
+.change-password-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #ffde59 0%, #ffc475 100%);
+  color: #2c3e50;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-left: 12px;
+}
+
+.change-password-btn:hover {
+  background: linear-gradient(135deg, #ffc475 0%, #ffde59 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Password form container */
+.password-form-container {
+  margin-top: 2rem;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 196, 117, 0.2);
+}
+
+.password-form h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.password-form h3 .material-icons {
+  color: #ffc475;
+}
+
+/* Password input group */
+.password-input-group {
+  margin-bottom: 1.5rem;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding: 12px;
+  padding-right: 40px;
+  border: 1px solid #e4e6eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.password-input-wrapper input:focus {
+  border-color: #ffc475;
+  box-shadow: 0 0 0 2px rgba(255, 196, 117, 0.2);
+  outline: none;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #2c3e50;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+}
+
+.toggle-password-btn:hover {
+  color: #ffc475;
+}
+
+.toggle-password-btn .material-icons {
+  font-size: 20px;
+}
+
+/* Form error styling */
+.form-error {
+  background-color: #fff3f3;
+  color: #dc3545;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+.form-error .material-icons {
+  color: #dc3545;
+}
+
+/* Add some space between buttons */
+.edit-profile-btn + .change-password-btn {
+  margin-left: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .password-form-container {
+  padding: 1.5rem;
+  }
+  
+  .edit-profile-btn,
+  .change-password-btn {
+    width: 100%;
+  }
+  
+  .edit-profile-btn + .change-password-btn {
+    margin-left: 0;
+    margin-top: 1rem;
+  }
+}
+
+/* Profile action buttons */
+.profile-action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 576px) {
+  .profile-action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+/* Password input wrapper and toggle */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.toggle-password-btn:hover {
+  color: #0084ff;
+}
+
+.toggle-password-btn:focus {
+  outline: none;
+}
+
+.toggle-password-btn .material-icons {
+  font-size: 20px;
 }

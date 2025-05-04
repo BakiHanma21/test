@@ -24,6 +24,16 @@ export class WorkerProfileComponent {
   editWorker = { ...this.worker };
   isEditWorkModalOpen = false;
   currentEditWork: any = null;
+  isChangePasswordModalOpen = false;
+  passwordForm = {
+    current_password: '',
+    new_password: '',
+    new_password_confirmation: ''
+  };
+  passwordError: string = '';
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
   
   isPosted = false; // Flag to track posting status
   postMessage: string = ''; // Message to display when the worker is posted
@@ -247,5 +257,76 @@ export class WorkerProfileComponent {
 
   openWorkImageFileDialog() {
     document.getElementById('workImageInput')?.click();
+  }
+
+  openChangePasswordModal() {
+    this.isChangePasswordModalOpen = true;
+    this.passwordForm = {
+      current_password: '',
+      new_password: '',
+      new_password_confirmation: ''
+    };
+    this.passwordError = '';
+    this.showCurrentPassword = false;
+    this.showNewPassword = false;
+    this.showConfirmPassword = false;
+  }
+
+  closeChangePasswordModal() {
+    this.isChangePasswordModalOpen = false;
+  }
+
+  togglePasswordVisibility(field: 'current' | 'new' | 'confirm') {
+    if (field === 'current') {
+      this.showCurrentPassword = !this.showCurrentPassword;
+    } else if (field === 'new') {
+      this.showNewPassword = !this.showNewPassword;
+    } else if (field === 'confirm') {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    }
+  }
+
+  changePassword() {
+    // Basic validation
+    if (this.passwordForm.new_password !== this.passwordForm.new_password_confirmation) {
+      this.passwordError = 'New passwords do not match';
+      return;
+    }
+
+    if (this.passwordForm.new_password.length < 8) {
+      this.passwordError = 'New password must be at least 8 characters';
+      return;
+    }
+
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
+
+    this.http.post(`${API_URL}/change-password`, this.passwordForm, { headers })
+      .subscribe(
+        (response: any) => {
+          if (response.success) {
+            alert('Password changed successfully');
+            this.closeChangePasswordModal();
+          } else {
+            this.passwordError = response.message || 'An error occurred';
+          }
+        },
+        (error) => {
+          console.error('Error changing password:', error);
+          if (error.status === 422) {
+            this.passwordError = error.error.message || 'Current password is incorrect';
+          } else if (error.status === 401) {
+            alert('Unauthorized! Please log in again.');
+            this.router.navigate(['/login']);
+          } else {
+            this.passwordError = 'An error occurred while changing the password';
+          }
+        }
+      );
   }
 }

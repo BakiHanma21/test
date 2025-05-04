@@ -29,14 +29,20 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.requestCalendarService.getEvents();
     this.requestCalendarService.events$.subscribe(events => {
-      const formattedEvents = events.map(event => ({
-        ...event,
-        start: new Date(event.start).toISOString(),
-        end: new Date(event.end).toISOString(),
-        backgroundColor: 'linear-gradient(135deg, #ffde59 0%, #ffc475 100%)',
-        borderColor: 'rgba(255, 196, 117, 0.2)',
-        textColor: '#2c3e50'
-      }));
+      const formattedEvents = events.map(event => {
+        // Use date part from start and end, but preserve the startTime
+        const startDate = new Date(event.start);
+        const endDate = new Date(event.end);
+        
+        return {
+          ...event,
+          start: startDate,
+          end: endDate,
+          backgroundColor: 'linear-gradient(135deg, #ffde59 0%, #ffc475 100%)',
+          borderColor: 'rgba(255, 196, 117, 0.2)',
+          textColor: '#2c3e50'
+        };
+      });
   
       this.calendarOptions = {
         initialView: 'dayGridMonth',
@@ -110,13 +116,21 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   onEventClick(event: any) {
     const clickedEvent = event.event;
+    
+    console.log('Raw event data:', clickedEvent);
+    console.log('Event extended props:', clickedEvent._def.extendedProps);
   
     this.selectedEvent = {
       title: clickedEvent._def.title,
       description: clickedEvent._def.extendedProps.description || 'No description available',
       start: clickedEvent._instance.range.start,
       end: clickedEvent._instance.range.end,
-      extendedProps: clickedEvent._def.extendedProps,
+      extendedProps: {
+        ...clickedEvent._def.extendedProps,
+        status: clickedEvent._def.extendedProps.status || 'No status',
+        start_time: clickedEvent._def.extendedProps.start_time,
+        client_name: clickedEvent._def.extendedProps.client_name || 'Client information not available'
+      },
     };
   
     console.log('Clicked event details:', this.selectedEvent);

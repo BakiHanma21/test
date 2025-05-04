@@ -136,18 +136,18 @@
         </div>
       </div>
 
-      <!-- Post to User Page Button -->
-      <div class="action-buttons">
-      <button class="edit-profile-btn" (click)="openEditModal()">
-        <span class="material-icons">edit</span>
-        Edit Profile
-      </button>
-        <button class="edit-profile-btn" (click)="postToUserPage(worker)" [disabled]="isPosted">
-          <span class="material-icons">publish</span>
-          {{ isPosted ? 'Posted' : 'Post to User Page' }}
+      <!-- Edit Profile Button -->
+      <div class="profile-action-buttons">
+        <button class="edit-profile-btn" (click)="openEditModal()">
+          <span class="material-icons">edit</span>
+          Edit Profile
+        </button>
+        
+        <button class="change-password-btn" (click)="openChangePasswordModal()">
+          <span class="material-icons">lock</span>
+          Change Password
         </button>
       </div>
-      <p class="post-message" *ngIf="isPosted">{{ postMessage }}</p>
     </div>
   </div>
 
@@ -277,6 +277,94 @@
           <button type="submit" class="save-btn">
             <span class="material-icons">save</span>
             Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal" *ngIf="isChangePasswordModalOpen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><span class="material-icons">lock</span> Change Password</h3>
+        <button class="close-modal" (click)="closeChangePasswordModal()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form (ngSubmit)="changePassword()" class="edit-form">
+        <div class="password-form">
+          <div class="form-error" *ngIf="passwordError">
+            <span class="material-icons">error</span>
+            {{ passwordError }}
+          </div>
+          
+          <div class="form-group">
+            <label>
+              <span class="material-icons">lock_outline</span>
+              Current Password
+            </label>
+            <div class="password-input-wrapper">
+              <input 
+                [type]="showCurrentPassword ? 'text' : 'password'" 
+                [(ngModel)]="passwordForm.current_password" 
+                name="current_password" 
+                placeholder="Enter your current password" 
+                required
+              />
+              <button type="button" class="toggle-password-btn" (click)="togglePasswordVisibility('current')">
+                <span class="material-icons">{{ showCurrentPassword ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>
+              <span class="material-icons">lock_open</span>
+              New Password
+            </label>
+            <div class="password-input-wrapper">
+              <input 
+                [type]="showNewPassword ? 'text' : 'password'" 
+                [(ngModel)]="passwordForm.new_password" 
+                name="new_password" 
+                placeholder="Enter your new password" 
+                required
+              />
+              <button type="button" class="toggle-password-btn" (click)="togglePasswordVisibility('new')">
+                <span class="material-icons">{{ showNewPassword ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>
+              <span class="material-icons">done</span>
+              Confirm New Password
+            </label>
+            <div class="password-input-wrapper">
+              <input 
+                [type]="showConfirmPassword ? 'text' : 'password'" 
+                [(ngModel)]="passwordForm.new_password_confirmation" 
+                name="new_password_confirmation" 
+                placeholder="Confirm your new password" 
+                required
+              />
+              <button type="button" class="toggle-password-btn" (click)="togglePasswordVisibility('confirm')">
+                <span class="material-icons">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeChangePasswordModal()">
+            <span class="material-icons">close</span>
+            Cancel
+          </button>
+          <button type="submit" class="save-btn">
+            <span class="material-icons">save</span>
+            Change Password
           </button>
         </div>
       </form>

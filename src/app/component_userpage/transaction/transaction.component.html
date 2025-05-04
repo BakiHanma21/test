@@ -9,11 +9,29 @@
     <div class="header-background">TRANSACTIONS</div>
   </div>
 
-  <!-- Transaction Filters -->
+  <!-- Transaction Filters and View Toggle -->
   <div class="filter-container">
-    <div class="filter-label">
-      <span class="material-icons">filter_list</span>
-      <span>Filter by Status:</span>
+    <div class="filter-header">
+      <div class="filter-label">
+        <span class="material-icons">filter_list</span>
+        <span>Filter by Status:</span>
+      </div>
+      <div class="view-toggle">
+        <button 
+          [class.active]="!isTableView" 
+          (click)="isTableView = false" 
+          class="view-btn card-view-btn" 
+          title="Card View">
+          <span class="material-icons">view_module</span>
+        </button>
+        <button 
+          [class.active]="isTableView" 
+          (click)="isTableView = true" 
+          class="view-btn table-view-btn" 
+          title="Table View">
+          <span class="material-icons">view_list</span>
+        </button>
+      </div>
     </div>
     <div class="filter-buttons">
       <button 
@@ -36,13 +54,6 @@
         <span class="dot paid-dot"></span>
         Paid
       </button>
-      <button 
-        class="filter-btn" 
-        [class.active]="activeFilter === 'MANUALLY UPDATED'"
-        (click)="setFilter('MANUALLY UPDATED')">
-        <span class="dot manually-dot"></span>
-        Manually Updated
-      </button>
     </div>
   </div>
 
@@ -52,8 +63,56 @@
     <p>Loading your transactions...</p>
   </div>
 
-  <!-- Transactions List -->
-  <div class="transactions-container" *ngIf="!isLoading">
+  <!-- Table View -->
+  <div class="table-container" *ngIf="isTableView && !isLoading && filteredTransactions && filteredTransactions.length > 0">
+    <table class="transactions-table">
+      <thead>
+        <tr>
+          <th class="id-column">ID</th>
+          <th class="service-column">Service</th>
+          <th class="amount-column">Amount</th>
+          <th class="date-column">Date</th>
+          <th class="status-column">Status</th>
+          <th class="actions-column">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaction of filteredTransactions" [ngClass]="transaction.payment_status.toLowerCase()">
+          <td class="transaction-id-cell">#{{ transaction.transaction_id }}</td>
+          <td class="service-cell" [title]="transaction.title">{{ transaction.title }}</td>
+          <td class="amount-cell">₱{{ transaction.amount }}</td>
+          <td class="date-cell">{{ transaction.payment_date || 'Not yet paid' }}</td>
+          <td class="status-cell">
+            <span class="status-badge" [ngClass]="transaction.payment_status.toLowerCase()">
+              {{ getPaymentStatus(transaction.payment_status) }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <div class="action-buttons">
+              <ng-container *ngIf="transaction.payment_status === 'PENDING'">
+                <button class="table-action-btn upload-btn" title="Upload Receipt" (click)="isTableView = false">
+                  <span class="material-icons">upload_file</span>
+                </button>
+              </ng-container>
+              <ng-container *ngIf="transaction.receipt_url">
+                <a [href]="transaction.receipt_url" target="_blank" class="table-action-btn view-btn" title="View Receipt">
+                  <span class="material-icons">visibility</span>
+                </a>
+              </ng-container>
+              <ng-container *ngIf="(transaction.payment_status === 'PAID' || transaction.payment_status === 'MANUALLY UPDATED') && !transaction.review2">
+                <button class="table-action-btn review-btn" title="Write Review" (click)="isTableView = false">
+                  <span class="material-icons">rate_review</span>
+                </button>
+              </ng-container>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Card View -->
+  <div class="transactions-container" *ngIf="!isTableView && !isLoading">
     <div *ngIf="filteredTransactions && filteredTransactions.length > 0; else noTransactions" class="transaction-grid">
       <div *ngFor="let transaction of filteredTransactions" class="transaction-card">
         <!-- Transaction Header -->
@@ -61,7 +120,7 @@
           <div class="transaction-title">
             <h3>{{ transaction.title }}</h3>
             <span class="status-badge" [ngClass]="transaction.payment_status.toLowerCase()">
-              {{ transaction.payment_status }}
+              {{ getPaymentStatus(transaction.payment_status) }}
             </span>
           </div>
           <p class="description">{{ transaction.description }}</p>
@@ -91,11 +150,19 @@
             <div class="payment-options">
               <h5>Select Payment Method:</h5>
               <div class="payment-buttons">
-                <button class="payment-btn cash-btn" (click)="selectPaymentMethod(transaction, 'cash')">
+                <button 
+                  class="payment-btn cash-btn" 
+                  [class.active]="selectedPaymentMethod[transaction.transaction_id] === 'cash' && !transaction.qr_code_url"
+                  (click)="selectPaymentMethod(transaction, 'cash')"
+                  [disabled]="transaction.qr_code_url">
                   <span class="material-icons">payments</span>
                   Cash Payment
                 </button>
-                <button class="payment-btn online-btn" (click)="selectPaymentMethod(transaction, 'online')">
+                <button 
+                  class="payment-btn online-btn" 
+                  [class.active]="selectedPaymentMethod[transaction.transaction_id] === 'online' || transaction.qr_code_url"
+                  (click)="selectPaymentMethod(transaction, 'online')"
+                  [disabled]="!transaction.qr_code_url">
                   <span class="material-icons">credit_card</span>
                   Online Payment
                 </button>
@@ -103,7 +170,7 @@
             </div>
 
             <!-- Show QR only when online payment is selected -->
-            <div *ngIf="selectedPaymentMethod[transaction.transaction_id] === 'online' && transaction.qr_code_url" class="online-payment-qr">
+            <div *ngIf="(selectedPaymentMethod[transaction.transaction_id] === 'online' || transaction.qr_code_url) && transaction.qr_code_url" class="online-payment-qr">
               <div class="qr-title">
                 <span class="material-icons">qr_code_2</span>
                 <h5>Scan to complete payment</h5>
@@ -246,7 +313,7 @@
         </div>
 
         <!-- Completed Transaction Badge -->
-        <div *ngIf="transaction.payment_status === 'PAID'" class="completion-badge">
+        <div *ngIf="transaction.payment_status === 'PAID' || transaction.payment_status === 'MANUALLY UPDATED'" class="completion-badge">
           <span class="material-icons">task_alt</span>
           Transaction Complete
         </div>
@@ -261,6 +328,12 @@
         <p>Your transaction history will appear here</p>
       </div>
     </ng-template>
+  </div>
+
+  <!-- Status Toast -->
+  <div class="status-toast" *ngIf="statusToast">
+    <span class="material-icons">info</span>
+    <p>{{ statusToast }}</p>
   </div>
 
   <!-- Footer Notice -->

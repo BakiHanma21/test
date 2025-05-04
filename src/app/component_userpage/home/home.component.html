@@ -40,7 +40,11 @@
   <!-- Workers Grid -->
   <div class="workers-section">
     <div class="workers-grid">
-      <div class="worker-card" *ngFor="let worker of filteredWorkers()">
+      <div class="worker-card animated-card" 
+           *ngFor="let worker of filteredWorkers()" 
+           [@cardHover]="getCardState(worker.id)"
+           (mouseenter)="setCardState(worker.id, 'hovered')"
+           (mouseleave)="setCardState(worker.id, 'default')">
         <div class="card-header" (click)="openModal(worker)">
           <img [src]="worker.image" alt="{{ worker.name }}" class="worker-image" />
           <div class="availability-badge" [class.available]="worker.availability === 1">
@@ -107,7 +111,7 @@
         </div>
 
         <div class="work-examples">
-          <h3>Portfolio</h3>
+          <h3>Work examples</h3>
           <div class="work-grid">
             <div class="work-item" *ngFor="let work of selectedWorker?.works">
               <img [src]="work.image" alt="{{ work.title }}" />

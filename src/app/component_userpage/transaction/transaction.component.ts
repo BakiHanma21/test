@@ -42,6 +42,10 @@ export class TransactionComponent implements OnInit {
   activeFilter: string = 'ALL';
   isLoading: boolean = false;
   error: string | null = null;
+  
+  // Add table view toggle
+  isTableView: boolean = false;
+  statusToast: string | null = null;
 
   constructor(private router: Router, private http: HttpClient) {}
 
@@ -86,17 +90,46 @@ export class TransactionComponent implements OnInit {
   setFilter(status: string): void {
     this.activeFilter = status;
     this.applyFilter(status);
+    
+    // Show status toast
+    let filterName = status === 'ALL' ? 'All Transactions' : status;
+    this.statusToast = `Filtered by: ${filterName}`;
+    setTimeout(() => {
+      this.statusToast = null;
+    }, 2000);
   }
 
   // Apply filter to transactions
   applyFilter(status: string): void {
     if (status === 'ALL') {
       this.filteredTransactions = [...this.transactions];
+    } else if (status === 'PAID') {
+      // Combine PAID and MANUALLY UPDATED
+      this.filteredTransactions = this.transactions.filter(
+        transaction => transaction.payment_status === 'PAID' || transaction.payment_status === 'MANUALLY UPDATED'
+      );
     } else {
       this.filteredTransactions = this.transactions.filter(
         transaction => transaction.payment_status === status
       );
     }
+  }
+
+  // Helper method to get display status
+  getPaymentStatus(status: string): string {
+    if (!status) return 'Unknown';
+    
+    switch(status.toUpperCase()) {
+      case 'PENDING': return 'PENDING';
+      case 'PAID': return 'PAID';
+      case 'MANUALLY UPDATED': return 'PAID'; // Display MANUALLY UPDATED as PAID
+      default: return status;
+    }
+  }
+
+  // Toggle view mode
+  toggleView(): void {
+    this.isTableView = !this.isTableView;
   }
 
   onFileSelected(event: Event, transactionId: number): void {
@@ -268,6 +301,12 @@ export class TransactionComponent implements OnInit {
   }
 
   selectPaymentMethod(transaction: Transaction, method: string): void {
+    // Check if method is online but no QR code is available
+    if (method === 'online' && !transaction.qr_code_url) {
+      console.warn('Cannot select online payment: No QR code available');
+      return; // Prevent selection
+    }
+    
     // Store the selected payment method using the transaction_id as the key
     this.selectedPaymentMethod[transaction.transaction_id] = method;
     
@@ -279,10 +318,6 @@ export class TransactionComponent implements OnInit {
       }
     } else if (method === 'online') {
       console.log('Online payment selected for transaction:', transaction.transaction_id);
-      // If online payment selected but no QR code, log warning
-      if (!transaction.qr_code_url) {
-        console.warn('Online payment selected but no QR code available for transaction:', transaction.transaction_id);
-      }
     }
   }
   

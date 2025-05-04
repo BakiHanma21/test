@@ -108,10 +108,10 @@
         <h2>Regular Users</h2>
         <div class="actions-container">
           <div class="view-toggle">
-            <button [class.active]="viewMode === 'table'" (click)="viewMode = 'table'" title="Table View">
+            <button [class.active]="userViewMode === 'table'" (click)="userViewMode = 'table'" title="Table View">
               <i class="fas fa-table"></i>
             </button>
-            <button [class.active]="viewMode === 'cards'" (click)="viewMode = 'cards'" title="Cards View">
+            <button [class.active]="userViewMode === 'cards'" (click)="userViewMode = 'cards'" title="Cards View">
               <i class="fas fa-th-large"></i>
             </button>
           </div>
@@ -128,7 +128,7 @@
         </div>
       </div>
 
-      <div class="table-responsive" *ngIf="viewMode === 'table'">
+      <div class="table-responsive" *ngIf="userViewMode === 'table'">
         <table class="data-table">
           <thead>
             <tr>
@@ -165,7 +165,7 @@
       </div>
       
       <!-- Cards View for Users -->
-      <div class="cards-view" *ngIf="viewMode === 'cards'">
+      <div class="cards-view" *ngIf="userViewMode === 'cards'">
         <div class="card-grid">
           <div class="user-card" *ngFor="let user of filteredUsers">
             <div class="card-header">
@@ -206,10 +206,10 @@
         <h2>Skilled Workers</h2>
         <div class="actions-container">
           <div class="view-toggle">
-            <button [class.active]="viewMode === 'table'" (click)="viewMode = 'table'" title="Table View">
+            <button [class.active]="workerViewMode === 'table'" (click)="workerViewMode = 'table'" title="Table View">
               <i class="fas fa-table"></i>
             </button>
-            <button [class.active]="viewMode === 'cards'" (click)="viewMode = 'cards'" title="Cards View">
+            <button [class.active]="workerViewMode === 'cards'" (click)="workerViewMode = 'cards'" title="Cards View">
               <i class="fas fa-th-large"></i>
             </button>
           </div>
@@ -227,7 +227,7 @@
       </div>
 
       <!-- Table View -->
-      <div class="table-responsive" *ngIf="viewMode === 'table'">
+      <div class="table-responsive" *ngIf="workerViewMode === 'table'">
         <table class="data-table">
           <thead>
             <tr>
@@ -272,7 +272,7 @@
       </div>
       
       <!-- Cards View -->
-      <div class="cards-view" *ngIf="viewMode === 'cards'">
+      <div class="cards-view" *ngIf="workerViewMode === 'cards'">
         <div class="card-grid">
           <div class="worker-card" *ngFor="let worker of filteredWorkers">
             <div class="card-header">

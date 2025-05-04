@@ -51,6 +51,18 @@ export class UserProfileComponent implements OnInit {
   newImageSelected = false;
   previewImageUrl: string | ArrayBuffer | null = null;
 
+  // Password change related properties
+  isChangingPassword = false;
+  passwordForm = {
+    currentPassword: '',
+    newPassword: '',
+    newPasswordConfirmation: ''
+  };
+  passwordError: string = '';
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
+
   constructor(
     private userProfileService: UserprofileserviceService,
     private snackBar: MatSnackBar
@@ -236,6 +248,79 @@ export class UserProfileComponent implements OnInit {
       duration: 3000,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
+    });
+  }
+
+  // Password change related methods
+  togglePasswordChangeForm(): void {
+    this.isChangingPassword = !this.isChangingPassword;
+    if (this.isChangingPassword) {
+      // Reset the form when opening
+      this.passwordForm = {
+        currentPassword: '',
+        newPassword: '',
+        newPasswordConfirmation: ''
+      };
+      this.passwordError = '';
+      this.showCurrentPassword = false;
+      this.showNewPassword = false;
+      this.showConfirmPassword = false;
+    }
+  }
+
+  togglePasswordVisibility(field: 'current' | 'new' | 'confirm'): void {
+    if (field === 'current') {
+      this.showCurrentPassword = !this.showCurrentPassword;
+    } else if (field === 'new') {
+      this.showNewPassword = !this.showNewPassword;
+    } else if (field === 'confirm') {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    }
+  }
+
+  changePassword(): void {
+    // Basic validation
+    if (!this.passwordForm.currentPassword || !this.passwordForm.newPassword || !this.passwordForm.newPasswordConfirmation) {
+      this.passwordError = 'All fields are required';
+      return;
+    }
+
+    if (this.passwordForm.newPassword.length < 8) {
+      this.passwordError = 'New password must be at least 8 characters';
+      return;
+    }
+
+    if (this.passwordForm.newPassword !== this.passwordForm.newPasswordConfirmation) {
+      this.passwordError = 'New passwords do not match';
+      return;
+    }
+
+    this.isLoading = true;
+    this.passwordError = '';
+
+    this.userProfileService.changeUserPassword(
+      this.passwordForm.currentPassword,
+      this.passwordForm.newPassword,
+      this.passwordForm.newPasswordConfirmation
+    ).subscribe({
+      next: (response) => {
+        if (response && response.status === 'success') {
+          this.showNotification('Password changed successfully');
+          this.togglePasswordChangeForm(); // Close the form
+        } else {
+          this.passwordError = response.message || 'An error occurred';
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error changing password:', error);
+        if (error.status === 422) {
+          this.passwordError = error.error.message || 'Current password is incorrect';
+        } else {
+          this.passwordError = 'An error occurred while changing the password';
+        }
+        this.isLoading = false;
+      }
     });
   }
 }

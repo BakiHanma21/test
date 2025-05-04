@@ -25,30 +25,30 @@ export class RequestCalendarService {
           console.log('Fetched events:', response);
           if (Array.isArray(response.data)) {
             const formattedEvents = response.data.map((event: any) => {
-              console.log(event);
-              const eventStart = event.start;
-
-              const startDate = new Date(`${event.start}T${event.start_time}`);
-              const endDate = new Date(`${event.end}T${event.start_time}`);
-
-  
-              if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-                console.error('Invalid Date:', event.start);
-              }
+              console.log('Processing event:', event);
+              
+              // Use only the date parts without trying to combine with time
+              const startDate = new Date(event.start);
+              const endDate = new Date(event.end);
   
               return {
                 title: event.title,
                 description: event.description,
                 start: startDate,
                 end: endDate,
+                start_time: event.start_time,
                 status: event.status,
                 extendedProps: {
                   status: event.status,
-                  requestId: event.booking_id
+                  requestId: event.extendedProps?.requestId,
+                  customer_id: event.extendedProps?.customer_id,
+                  client_name: event.extendedProps?.client_name || 'Client Data Not Available',
+                  start_time: event.start_time
                 }
               };
             });
   
+            console.log('Formatted events for calendar:', formattedEvents);
             this.eventsSubject.next(formattedEvents);
           } else {
             console.error('Received data is not in the expected format:', response);

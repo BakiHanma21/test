@@ -36,6 +36,13 @@
           <p>{{ selectedEvent.title }}</p>
         </div>
       </div>
+      <div class="detail-item" *ngIf="selectedEvent.extendedProps?.client_name">
+        <span class="material-icons">person</span>
+        <div class="detail-content">
+          <label>Client</label>
+          <p>{{ selectedEvent.extendedProps.client_name }}</p>
+        </div>
+      </div>
       <div class="detail-item" *ngIf="selectedEvent.description">
         <span class="material-icons">description</span>
         <div class="detail-content">
@@ -47,14 +54,21 @@
         <span class="material-icons">event_available</span>
         <div class="detail-content">
           <label>Start</label>
-          <p>{{ selectedEvent.start | date: 'short' }}</p>
+          <p>{{ selectedEvent.start | date: 'mediumDate' }}</p>
+        </div>
+      </div>
+      <div class="detail-item">
+        <span class="material-icons">schedule</span>
+        <div class="detail-content">
+          <label>Time</label>
+          <p>{{ selectedEvent.extendedProps?.start_time || 'Not specified' }}</p>
         </div>
       </div>
       <div class="detail-item">
         <span class="material-icons">event_busy</span>
         <div class="detail-content">
           <label>End</label>
-          <p>{{ selectedEvent.end | date: 'short' }}</p>
+          <p>{{ selectedEvent.end | date: 'mediumDate' }}</p>
         </div>
       </div>
       <div class="detail-item">

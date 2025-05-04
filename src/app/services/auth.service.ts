@@ -56,4 +56,17 @@ export class AuthService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
   }
+
+  changeUserPassword(currentPassword: string, newPassword: string, newPasswordConfirmation: string): Observable<any> {
+    const passwordData = {
+      current_password: currentPassword,
+      new_password: newPassword,
+      new_password_confirmation: newPasswordConfirmation
+    };
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${this.getAuthorizationToken()}`);
+    
+    return this.http.post<any>(`${API_URL}/change-user-password`, passwordData, { headers });
+  }
 }

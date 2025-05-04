@@ -29,10 +29,19 @@ interface Transaction {
 })
 export class WorkerTransactionComponent implements OnInit {
   transactions: Transaction[] = [];
+  filteredTransactions: Transaction[] = [];
   manualStatus: string | null = null;
   reviewText: string = '';
   reviewRating: number = 1;
   stars: boolean[] = [true, false, false, false, false];
+  
+  // Filter properties
+  statusFilter: string = 'ALL';
+  searchQuery: string = '';
+  showFilters: boolean = false;
+  
+  // View mode
+  isTableView: boolean = false;
 
   constructor(private router: Router, private http: HttpClient) {}
 
@@ -48,6 +57,7 @@ export class WorkerTransactionComponent implements OnInit {
         .subscribe(
           (response) => {
             this.transactions = response.data || [];
+            this.filteredTransactions = [...this.transactions];
             console.log('Loaded transactions:', this.transactions); // Debug
           },
           (error) => {
@@ -96,15 +106,50 @@ export class WorkerTransactionComponent implements OnInit {
     }
   }
 
+  removeQrCode(transactionId: number): void {
+    const authToken = localStorage.getItem('authToken');
+    if (authToken) {
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
+      this.http.post<{ message: string }>(
+        `${API_URL}/transactions/${transactionId}/remove-qr-code`,
+        {},
+        { headers }
+      ).subscribe(
+        (response) => {
+          alert(response.message || 'QR code removed successfully');
+          const transaction = this.transactions.find(t => t.transaction_id === transactionId);
+          if (transaction) {
+            transaction.qr_code_url = undefined;
+            // Also update in filtered transactions
+            const filteredTransaction = this.filteredTransactions.find(t => t.transaction_id === transactionId);
+            if (filteredTransaction) {
+              filteredTransaction.qr_code_url = undefined;
+            }
+          }
+        },
+        (error) => {
+          console.error('Error removing QR code:', error);
+          alert('Failed to remove QR code');
+        }
+      );
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
+
   getPaymentStatus(status: string | undefined): string {
     if (!status) return 'Unknown Status';
     switch (status.toUpperCase()) {
       case 'PENDING': return 'NOT YET PAID';
       case 'PAID': return 'PAID';
-      case 'MANUALLY UPDATED': return 'MANUALLY UPDATED';
+      case 'MANUALLY UPDATED': return 'PAID';
       case 'FAILED': return 'FAILED';
       default: return 'Unknown Status';
     }
+  }
+
+  toggleView(): void {
+    this.isTableView = !this.isTableView;
   }
 
   markAsPaidManually(transactionId: number): void {
@@ -171,5 +216,73 @@ export class WorkerTransactionComponent implements OnInit {
       alt: imgElement.alt,
       event: event
     });
+  }
+
+  // Filter functions
+  toggleFilters(): void {
+    this.showFilters = !this.showFilters;
+  }
+
+  filterByStatus(status: string): void {
+    this.statusFilter = status;
+    this.applyFilters();
+    // Show a toast message
+    this.manualStatus = `Filtered by: ${status === 'ALL' ? 'All Status' : status === 'PAID' ? 'Paid' : status === 'PENDING' ? 'Not Yet Paid' : 'Failed'}`;
+    setTimeout(() => {
+      this.manualStatus = null;
+    }, 2000);
+  }
+
+  applySearch(): void {
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    this.filteredTransactions = this.transactions.filter(transaction => {
+      // First filter by status
+      if (this.statusFilter !== 'ALL') {
+        // Special case for PAID status, which includes MANUALLY UPDATED
+        if (this.statusFilter === 'PAID') {
+          if (transaction.payment_status.toUpperCase() !== 'PAID' && transaction.payment_status.toUpperCase() !== 'MANUALLY UPDATED') {
+            return false;
+          }
+        } else if (transaction.payment_status.toUpperCase() !== this.statusFilter) {
+          return false;
+        }
+      }
+      
+      // Then filter by search query
+      if (this.searchQuery.trim() !== '') {
+        const query = this.searchQuery.toLowerCase().trim();
+        return (
+          transaction.name.toLowerCase().includes(query) || 
+          transaction.title?.toLowerCase().includes(query) ||
+          transaction.description?.toLowerCase().includes(query) ||
+          transaction.transaction_id.toString().includes(query)
+        );
+      }
+      
+      return true;
+    });
+  }
+
+  clearFilters(): void {
+    this.statusFilter = 'ALL';
+    this.searchQuery = '';
+    this.filteredTransactions = [...this.transactions];
+    this.manualStatus = "Filters cleared";
+    setTimeout(() => {
+      this.manualStatus = null;
+    }, 2000);
+  }
+
+  // Helper function to determine if a transaction has a review from the worker
+  hasWorkerReview(transaction: Transaction): boolean {
+    return transaction.review !== null && transaction.review !== undefined;
+  }
+
+  // Helper function to determine if a transaction has a review from the customer
+  hasCustomerReview(transaction: Transaction): boolean {
+    return transaction.review2 !== null && transaction.review2 !== undefined;
   }
 }

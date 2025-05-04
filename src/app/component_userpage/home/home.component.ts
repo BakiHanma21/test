@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FavoriteService } from '../../services/favorite.service';
 import { API_URL } from '../../services/auth.service';
+import { trigger, state, style, animate, transition } from '@angular/animations';
+
 interface Work {
   title: string;
 }
@@ -14,7 +16,25 @@ interface Work {
   selector: 'app-home',
   imports: [CommonModule, FormsModule],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  animations: [
+    trigger('cardHover', [
+      state('default', style({
+        transform: 'translateY(0) scale(1)',
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)'
+      })),
+      state('hovered', style({
+        transform: 'translateY(-12px) scale(1.02)',
+        boxShadow: '0 12px 30px rgba(0, 0, 0, 0.15)'
+      })),
+      transition('default => hovered', [
+        animate('0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)')
+      ]),
+      transition('hovered => default', [
+        animate('0.2s ease-out')
+      ])
+    ])
+  ]
 })
 export class HomeComponent {
   isModalOpen = false;
@@ -26,6 +46,7 @@ export class HomeComponent {
   reviews: any[] = [];
   searchText = '';
   availabilityFilter: string = '';
+  cardState: {[key: number]: string} = {};
 
   constructor(private router: Router, private favoriteService: FavoriteService, private http: HttpClient) {}
 
@@ -43,6 +64,10 @@ export class HomeComponent {
           (response: any) => {
             console.log('Response data:', response.data);
             this.workers = this.shuffleArray(response.data || []);
+            // Initialize card states
+            this.workers.forEach(worker => {
+              this.cardState[worker.id] = 'default';
+            });
           },
           (error) => {
             if (error.status === 401) {
@@ -54,6 +79,15 @@ export class HomeComponent {
     } else {
       this.router.navigate(['/login']);
     }
+  }
+  
+  // Functions to handle card hover state
+  setCardState(workerId: number, state: string): void {
+    this.cardState[workerId] = state;
+  }
+
+  getCardState(workerId: number): string {
+    return this.cardState[workerId] || 'default';
   }
   
   redirectBasedOnRole() {

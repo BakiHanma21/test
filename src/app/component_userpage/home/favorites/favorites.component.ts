@@ -99,9 +99,13 @@ export class FavoritesComponent implements OnInit {
   }
   
   bookWorker(worker: any) {
-    // Store worker ID in localStorage for the booking page
-    localStorage.setItem('selected_worker_id', worker.id.toString());
-    // Navigate to booking page
-    this.router.navigate(['/booking']);
+    // Navigate to booking page with query parameters
+    this.router.navigate(['/book'], {
+      queryParams: {
+        id: worker.id,
+        name: worker.name,
+        job: worker.job_title || worker.job
+      }
+    });
   }
 }

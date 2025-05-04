@@ -60,6 +60,9 @@ export class ProfileManagementComponent implements OnInit {
     { value: 'Filipino', label: 'Filipino' }
   ];
 
+  showCurrentPassword = false;
+  showNewPassword = false;
+
   // Window resize listener
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -232,6 +235,14 @@ export class ProfileManagementComponent implements OnInit {
           alert(error.error.message || 'Error updating profile. Please try again.');
         }
       });
+  }
+
+  togglePasswordVisibility(field: 'current' | 'new'): void {
+    if (field === 'current') {
+      this.showCurrentPassword = !this.showCurrentPassword;
+    } else if (field === 'new') {
+      this.showNewPassword = !this.showNewPassword;
+    }
   }
 
   openFileDialog() {
