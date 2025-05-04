@@ -1,7 +1,7 @@
 {
-  "name": "temp-angular",
-  "short_name": "temp-angular",
-  "theme_color": "#1976d2",
+  "name": "Service Connect",
+  "short_name": "ServConnect",
+  "theme_color": "#FED480",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
