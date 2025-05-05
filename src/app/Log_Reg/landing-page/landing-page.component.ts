@@ -45,12 +45,30 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
       .forEach(element => observer.observe(element));
   }
 
-  goToHome() {
+  gotoLogin(): void {
     this.router.navigate(['/login']);
   }
 
+  goToHome() {
+    // Add smooth scroll before navigation
+    const roleSection = document.querySelector('.role-choice-section');
+    if (roleSection) {
+      roleSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    setTimeout(() => {
+      this.router.navigate(['/login']);
+    }, 800);
+  }
+
   goToWorkerRegistration() {
-    this.router.navigate(['/skilled-registration']);
+    // Add smooth scroll before navigation
+    const roleSection = document.querySelector('.role-choice-section');
+    if (roleSection) {
+      roleSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    setTimeout(() => {
+      this.router.navigate(['/skilled-registration']);
+    }, 800);
   }
 
   goToAboutUs() {

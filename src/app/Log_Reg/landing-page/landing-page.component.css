@@ -52,43 +52,70 @@ html, body {
   animation-timing-function: ease-in-out;
   animation-direction: alternate;
   transform-origin: center;
+  transition: all 0.3s ease;
+}
+
+.floating-icon:hover {
+  opacity: 0.3;
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.2));
+  transform: scale(1.2);
+}
+
+/* Every third icon gets a different animation */
+.floating-icon:nth-child(3n) {
+  animation-name: float2;
+  animation-delay: 0.7s;
+}
+
+/* Every fourth icon gets a slower duration */
+.floating-icon:nth-child(4n) {
+  --duration: 7s;
+}
+
+/* Small icons get faster animations */
+.floating-icon[style*="font-size: 3"] {
+  --duration: 4s;
 }
 
 @keyframes float {
   0% {
     transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 0.1;
   }
   25% {
-    transform: translateY(-30px) rotate(5deg) scale(1.05);
+    transform: translateY(-20px) rotate(5deg) scale(1.1);
+    opacity: 0.15;
   }
   50% {
-    transform: translateY(-15px) rotate(10deg) scale(1.1);
+    transform: translateY(-30px) rotate(-3deg) scale(1.05);
+    opacity: 0.2;
   }
   75% {
-    transform: translateY(-25px) rotate(3deg) scale(1.05);
+    transform: translateY(-15px) rotate(2deg) scale(1.15);
+    opacity: 0.15;
   }
   100% {
     transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 0.1;
   }
-}
-
-.floating-icon:nth-child(even) {
-  animation-name: float2;
-  animation-delay: 0.5s;
 }
 
 @keyframes float2 {
   0% {
     transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 0.12;
   }
   30% {
-    transform: translateY(25px) rotate(-8deg) scale(1.08);
+    transform: translateY(25px) rotate(-8deg) scale(1.1);
+    opacity: 0.18;
   }
   60% {
-    transform: translateY(10px) rotate(-4deg) scale(1.03);
+    transform: translateY(10px) rotate(5deg) scale(1.15);
+    opacity: 0.15;
   }
   100% {
     transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 0.12;
   }
 }
 
@@ -197,6 +224,34 @@ html, body {
   line-height: 1.6;
 }
 
+/* Enhanced Feature Card Animations */
+.feature-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.feature-card:hover i {
+  transform: scale(1.2) rotate(10deg);
+}
+
+/* Feature Card Enhancements */
+.feature-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 222, 89, 0.1);
+  box-shadow: 0 4px 15px rgba(255, 222, 89, 0.1);
+}
+
+.feature-card:hover {
+  transform: translateY(-15px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(255, 222, 89, 0.3);
+  border-color: rgba(255, 222, 89, 0.3);
+}
+
 /* Services Section */
 .services-section {
   padding: 5rem 2rem;
@@ -249,6 +304,34 @@ html, body {
 .service-card p {
   color: #666;
   line-height: 1.6;
+}
+
+/* Enhanced Service Card Animations */
+.service-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.service-card:hover .service-icon {
+  transform: scale(1.1) rotate(10deg);
+  background: linear-gradient(135deg, #ffde59, #ffc475);
+}
+
+/* Service Card Enhancements */
+.service-card {
+  border: 1px solid rgba(255, 222, 89, 0.1);
+  box-shadow: 0 4px 15px rgba(255, 222, 89, 0.1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-card:hover {
+  transform: translateY(-15px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(255, 222, 89, 0.3);
+  border-color: rgba(255, 222, 89, 0.3);
 }
 
 /* How It Works Section */
@@ -524,6 +607,20 @@ html, body {
   margin-bottom: 2rem;
 }
 
+/* Enhanced Process Step Animations */
+.process-step {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.process-step:hover {
+  transform: translateY(-8px);
+}
+
+.process-step:hover .process-icon {
+  transform: scale(1.1) rotate(10deg);
+  box-shadow: 0 10px 25px rgba(255, 222, 89, 0.3);
+}
+
 /* Example Cards */
 .example-card {
   background: white;
@@ -531,6 +628,29 @@ html, body {
   padding: 1.5rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   margin-top: 1.5rem;
+}
+
+/* Enhanced Example Card Animations */
+.example-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.example-card:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Process Step Card Enhancements */
+.example-card {
+  border: 1px solid rgba(255, 222, 89, 0.1);
+  box-shadow: 0 4px 15px rgba(255, 222, 89, 0.1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.example-card:hover {
+  transform: translateY(-15px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(255, 222, 89, 0.3);
+  border-color: rgba(255, 222, 89, 0.3);
 }
 
 /* Worker Profiles */
@@ -592,6 +712,36 @@ html, body {
   color: #333;
   font-weight: bold;
   margin: 0;
+}
+
+/* Enhanced Worker Card Animations */
+.worker-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.worker-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(to right, #f8f9fa, #ffffff);
+}
+
+.worker-card:hover img {
+  transform: scale(1.1);
+  border: 3px solid #ffde59;
+}
+
+/* Worker Card Enhancements */
+.worker-card {
+  border: 1px solid rgba(255, 222, 89, 0.1);
+  box-shadow: 0 4px 15px rgba(255, 222, 89, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.worker-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(255, 222, 89, 0.3);
+  border-color: rgba(255, 222, 89, 0.3);
 }
 
 /* Booking Example */
@@ -664,6 +814,35 @@ html, body {
   color: #666;
   font-size: 0.9rem;
   margin: 0;
+}
+
+/* Enhanced Review Card Animations */
+.review-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(to right, #f8f9fa, #ffffff);
+}
+
+.review-card:hover .reviewer-img {
+  transform: scale(1.1);
+  border: 3px solid #ffde59;
+}
+
+/* Review Card Enhancements */
+.review-card {
+  border: 1px solid rgba(255, 222, 89, 0.1);
+  box-shadow: 0 4px 15px rgba(255, 222, 89, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(255, 222, 89, 0.3);
+  border-color: rgba(255, 222, 89, 0.3);
 }
 
 /* Responsive Adjustments */
@@ -751,4 +930,451 @@ html, body {
 /* Add animation delays for cascading effects */
 [style*="animation-delay"] {
   transition-delay: var(--animation-delay);
+}
+
+/* Role Choice Section */
+.role-choice-section {
+  padding: 5rem 2rem;
+  background: #fff;
+}
+
+.role-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.role-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+}
+
+.role-card:hover {
+  transform: translateY(-10px);
+  border-color: #FFde59;
+  box-shadow: 0 20px 40px rgba(255, 222, 89, 0.2);
+}
+
+.role-icon {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 2rem;
+  background: linear-gradient(135deg, #FFde59, #ffc475);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.role-card:hover .role-icon {
+  transform: scale(1.1) rotate(10deg);
+}
+
+.role-title {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.role-description {
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.benefits-list {
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.benefit-item i {
+  color: #FFde59;
+  font-size: 1.2rem;
+}
+
+.role-card:hover .benefit-item {
+  background: rgba(255, 222, 89, 0.1);
+  transform: translateX(10px);
+}
+
+.register-btn {
+  background: linear-gradient(135deg, #FFde59, #ffc475);
+  color: #2c3e50;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.register-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(255, 222, 89, 0.3);
+}
+
+@media (max-width: 768px) {
+  .role-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .role-card {
+    padding: 1.5rem;
+  }
+  
+  .role-icon {
+    width: 80px;
+    height: 80px;
+    font-size: 2.5rem;
+  }
+}
+
+/* Role Card Enhancements */
+.role-card {
+  border: 1px solid rgba(255, 222, 89, 0.1);
+  box-shadow: 0 4px 15px rgba(255, 222, 89, 0.1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.role-card:hover {
+  transform: translateY(-15px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(255, 222, 89, 0.4);
+  border-color: rgba(255, 222, 89, 0.5);
+}
+
+/* Enhanced Button Animations */
+.get-started-btn, .join-btn {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.get-started-btn:hover, .join-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.get-started-btn:hover::after, .join-btn:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  animation: shine 1.5s infinite;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+/* Enhanced Link Animations */
+.footer-links a {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.footer-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #ffde59;
+  transition: width 0.3s ease;
+}
+
+.footer-links a:hover::after {
+  width: 100%;
+}
+
+/* Enhanced Logo Animation */
+.logo img {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo:hover img {
+  transform: scale(1.1) rotate(5deg);
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.2));
+}
+
+/* Enhanced Step Number Animations */
+.step-number {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.step:hover .step-number {
+  transform: scale(1.1) rotate(10deg);
+  background: linear-gradient(135deg, #ffde59, #ffc475);
+  box-shadow: 0 10px 20px rgba(255, 222, 89, 0.3);
+}
+
+/* Add pop-up animation for all cards */
+@keyframes popUp {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.feature-card,
+.service-card,
+.example-card,
+.worker-card,
+.review-card,
+.role-card {
+  animation: popUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  animation-delay: calc(var(--card-index, 0) * 0.1s);
+}
+
+/* Enhanced Card Animations */
+.feature-card, .service-card, .role-card {
+  animation: floatCard 6s ease-in-out infinite;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+/* Staggered animation delay for cards */
+.feature-card:nth-child(1), .service-card:nth-child(1), .role-card:nth-child(1) { animation-delay: 0s; }
+.feature-card:nth-child(2), .service-card:nth-child(2), .role-card:nth-child(2) { animation-delay: 0.2s; }
+.feature-card:nth-child(3), .service-card:nth-child(3) { animation-delay: 0.4s; }
+.feature-card:nth-child(4), .service-card:nth-child(4) { animation-delay: 0.6s; }
+
+@keyframes floatCard {
+  0% {
+    transform: translateY(0) translateZ(0) rotateX(0) rotateY(0);
+  }
+  25% {
+    transform: translateY(-10px) translateZ(20px) rotateX(2deg) rotateY(-2deg);
+  }
+  50% {
+    transform: translateY(-15px) translateZ(30px) rotateX(-1deg) rotateY(1deg);
+  }
+  75% {
+    transform: translateY(-10px) translateZ(20px) rotateX(2deg) rotateY(-2deg);
+  }
+  100% {
+    transform: translateY(0) translateZ(0) rotateX(0) rotateY(0);
+  }
+}
+
+.feature-card:hover, .service-card:hover, .role-card:hover {
+  transform: translateY(-20px) translateZ(40px) rotateX(3deg) rotateY(-3deg);
+  box-shadow: 
+    0 20px 40px rgba(255, 222, 89, 0.3),
+    0 15px 20px rgba(255, 222, 89, 0.2);
+  animation-play-state: paused;
+}
+
+.feature-card:hover i, .service-card:hover i, .role-card:hover i {
+  animation: iconPop 0.5s ease-out forwards;
+}
+
+@keyframes iconPop {
+  0% {
+    transform: scale(1) rotate(0);
+  }
+  50% {
+    transform: scale(1.4) rotate(10deg);
+  }
+  100% {
+    transform: scale(1.2) rotate(5deg);
+  }
+}
+
+/* Add hover glow effect */
+.feature-card::before, .service-card::before, .role-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 222, 89, 0.2), rgba(255, 196, 117, 0.2));
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.feature-card:hover::before, .service-card:hover::before, .role-card:hover::before {
+  opacity: 1;
+}
+
+/* Service icon enhancement */
+.service-icon {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.service-card:hover .service-icon {
+  transform: rotateY(360deg) scale(1.2);
+}
+
+/* Enhanced Card Hover Animations */
+.feature-card, 
+.service-card, 
+.role-card,
+.example-card,
+.review-card,
+.worker-card {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(1) translateY(0);
+  box-shadow: 0 4px 6px rgba(255, 222, 89, 0.1);
+  background: white;
+}
+
+.feature-card:hover, 
+.service-card:hover, 
+.role-card:hover,
+.example-card:hover,
+.review-card:hover,
+.worker-card:hover {
+  transform: scale(1.05) translateY(-15px);
+  box-shadow: 
+    0 20px 30px rgba(255, 222, 89, 0.2),
+    0 0 0 1px rgba(255, 222, 89, 0.1);
+  position: relative;
+  z-index: 2;
+}
+
+/* Add glow effect on hover */
+.feature-card::after,
+.service-card::after,
+.role-card::after,
+.example-card::after,
+.review-card::after,
+.worker-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 0;
+  box-shadow: 0 0 0 2px rgba(255, 222, 89, 0.3);
+}
+
+.feature-card:hover::after,
+.service-card:hover::after,
+.role-card:hover::after,
+.example-card:hover::after,
+.review-card:hover::after,
+.worker-card:hover::after {
+  opacity: 1;
+  animation: glowPulse 1.5s infinite;
+}
+
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 222, 89, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 222, 89, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 222, 89, 0);
+  }
+}
+
+/* Remove any existing card animations */
+.feature-card,
+.service-card,
+.example-card,
+.worker-card,
+.review-card,
+.role-card {
+  animation: none;
+  opacity: 1;
+}
+
+/* Login Button Styles */
+.login-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 25px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-btn i {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.login-btn:hover {
+  transform: translateY(-3px);
+  background: white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.login-btn:hover i {
+  transform: translateX(3px);
+}
+
+@media (max-width: 768px) {
+  .login-btn {
+    top: 15px;
+    right: 15px;
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
 }

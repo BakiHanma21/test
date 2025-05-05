@@ -20,6 +20,7 @@ export class SkilledRegistrationComponent implements OnInit {
   showTermsModal = false;
   profilePictureError: string | null = null;
   floatingIcons: { icon: string, top: string, left: string, right?: string, bottom?: string, size: string, duration: string }[] = [];
+  showStepError = false;
 
   user = {
     name: '',
@@ -38,6 +39,9 @@ export class SkilledRegistrationComponent implements OnInit {
       { title: '', description: '', image: '' }
     ]
   };
+
+  showPassword = false;
+  showConfirmPassword = false;
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -68,19 +72,36 @@ export class SkilledRegistrationComponent implements OnInit {
   }
 
   goToStep(step: number): void {
+    // Prevent going to future steps directly
+    if (step > this.currentStep) {
+      return;
+    }
+    // Allow going back to previous steps
     if (step >= 1 && step <= this.totalSteps) {
       this.currentStep = step;
+      this.showStepError = false;
     }
   }
 
-  nextStep(): void {
-    if (this.currentStep < this.totalSteps) {
-      this.currentStep++;
-      // Add smooth scroll to top of form
-      const formElement = document.querySelector('.registration-form-card');
-      if (formElement) {
-        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  nextStep(form: NgForm): void {
+    this.showStepError = false;
+    if (this.validateCurrentStep()) {
+      if (this.currentStep < this.totalSteps) {
+        this.currentStep++;
+        const formElement = document.querySelector('.registration-form-card');
+        if (formElement) {
+          formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
+    } else {
+      this.showStepError = true;
+      // Mark all fields in current step as touched to trigger validation
+      Object.keys(form.controls).forEach(key => {
+        const control = form.controls[key];
+        if (control) {
+          control.markAsTouched();
+        }
+      });
     }
   }
 
@@ -161,6 +182,37 @@ export class SkilledRegistrationComponent implements OnInit {
       );
   }
 
+  validateCurrentStep(): boolean {
+    switch (this.currentStep) {
+      case 1:
+        return !!(this.user.name?.trim() && 
+                 this.user.email?.trim() && 
+                 this.user.phoneNumber?.trim() &&
+                 this.user.phoneNumber.length === 11 &&
+                 this.isValidEmail(this.user.email));
+      case 2:
+        return !!(this.user.password?.trim() && 
+                 this.user.confirmPassword?.trim() && 
+                 this.user.password === this.user.confirmPassword &&
+                 this.user.password.length >= 8 &&
+                 this.user.image);
+      case 3:
+        return !!(this.user.location?.trim() && 
+                 this.user.skills?.trim() && 
+                 this.user.years_of_experience &&
+                 this.user.valid_id);
+      case 4:
+        return true; // Final step validation is handled by form submit
+      default:
+        return false;
+    }
+  }
+
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailRegex.test(email);
+  }
+
   onProfilePictureChange(event: any): void {
     const file = event.target.files[0];
     if (file && file.size <= 2048 * 1024) { // 2MB max size
@@ -207,5 +259,13 @@ export class SkilledRegistrationComponent implements OnInit {
 
   navigateToChoices() {
     this.router.navigate(['/choices']);
+  }
+
+  togglePasswordVisibility(field: 'password' | 'confirmPassword'): void {
+    if (field === 'password') {
+      this.showPassword = !this.showPassword;
+    } else {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    }
   }
 }

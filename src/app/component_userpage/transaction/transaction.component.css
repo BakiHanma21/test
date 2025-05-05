@@ -1200,7 +1200,7 @@
   .transactions-table {
     min-width: 650px; /* Prevents columns from becoming too narrow */
   }
-  
+
   .action-buttons {
     flex-wrap: wrap;
   }

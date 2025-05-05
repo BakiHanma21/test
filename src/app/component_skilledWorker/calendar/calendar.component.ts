@@ -35,12 +35,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         const endDate = new Date(event.end);
         
         return {
-          ...event,
+        ...event,
           start: startDate,
           end: endDate,
-          backgroundColor: 'linear-gradient(135deg, #ffde59 0%, #ffc475 100%)',
-          borderColor: 'rgba(255, 196, 117, 0.2)',
-          textColor: '#2c3e50'
+        backgroundColor: 'linear-gradient(135deg, #ffde59 0%, #ffc475 100%)',
+        borderColor: 'rgba(255, 196, 117, 0.2)',
+        textColor: '#2c3e50'
         };
       });
   

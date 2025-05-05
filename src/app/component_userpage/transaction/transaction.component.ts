@@ -42,7 +42,7 @@ export class TransactionComponent implements OnInit {
   activeFilter: string = 'ALL';
   isLoading: boolean = false;
   error: string | null = null;
-  
+
   // Add table view toggle
   isTableView: boolean = false;
   statusToast: string | null = null;

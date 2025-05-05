@@ -1,19 +1,40 @@
 <div class="landing-container">
+  <button class="login-btn" (click)="gotoLogin()">
+    <i class="fas fa-sign-in-alt"></i>
+    Login
+  </button>
   <!-- Hero Section -->
   <section class="hero-section">
     <!-- Animated Background with Floating Icons -->
     <div class="animated-background">
-      <!-- Service-related icons -->
+      <!-- First row -->
       <i class="material-icons floating-icon" style="top: 15%; left: 10%; font-size: 50px; --duration: 4s;">build</i>
       <i class="material-icons floating-icon" style="top: 25%; right: 15%; font-size: 65px; --duration: 5s;">home_repair_service</i>
       <i class="material-icons floating-icon" style="bottom: 20%; left: 20%; font-size: 55px; --duration: 3.5s;">engineering</i>
       <i class="material-icons floating-icon" style="top: 45%; right: 25%; font-size: 45px; --duration: 4.2s;">plumbing</i>
       
-      <!-- Additional service icons -->
+      <!-- Second row -->
       <i class="material-icons floating-icon" style="bottom: 30%; right: 10%; font-size: 60px; --duration: 6s;">electrical_services</i>
       <i class="material-icons floating-icon" style="top: 60%; left: 15%; font-size: 50px; --duration: 5.5s;">construction</i>
       <i class="material-icons floating-icon" style="bottom: 40%; left: 30%; font-size: 70px; --duration: 7s;">handyman</i>
       <i class="material-icons floating-icon" style="top: 30%; left: 40%; font-size: 65px; --duration: 5.8s;">carpenter</i>
+
+      <!-- New Additional Icons -->
+      <i class="material-icons floating-icon" style="top: 5%; left: 45%; font-size: 48px; --duration: 4.7s;">paint</i>
+      <i class="material-icons floating-icon" style="top: 35%; right: 5%; font-size: 52px; --duration: 5.3s;">architecture</i>
+      <i class="material-icons floating-icon" style="bottom: 15%; right: 35%; font-size: 45px; --duration: 4.9s;">lightbulb</i>
+      <i class="material-icons floating-icon" style="top: 75%; left: 25%; font-size: 56px; --duration: 5.7s;">format_paint</i>
+      <i class="material-icons floating-icon" style="top: 85%; right: 45%; font-size: 42px; --duration: 4.5s;">power</i>
+      <i class="material-icons floating-icon" style="bottom: 60%; left: 5%; font-size: 58px; --duration: 6.2s;">hardware</i>
+      <i class="material-icons floating-icon" style="top: 20%; right: 38%; font-size: 44px; --duration: 5.1s;">home_work</i>
+      <i class="material-icons floating-icon" style="bottom: 25%; left: 38%; font-size: 49px; --duration: 5.9s;">gavel</i>
+      
+      <!-- Small Decorative Icons -->
+      <i class="material-icons floating-icon" style="top: 12%; left: 55%; font-size: 32px; --duration: 3.8s;">settings</i>
+      <i class="material-icons floating-icon" style="bottom: 8%; right: 58%; font-size: 34px; --duration: 4.3s;">build_circle</i>
+      <i class="material-icons floating-icon" style="top: 67%; right: 12%; font-size: 36px; --duration: 4.8s;">construction</i>
+      <i class="material-icons floating-icon" style="bottom: 45%; left: 62%; font-size: 30px; --duration: 4.1s;">home_repair_service</i>
+      <i class="material-icons floating-icon" style="top: 82%; left: 8%; font-size: 38px; --duration: 5.2s;">handyman</i>
     </div>
 
     <div class="hero-content">
@@ -189,6 +210,74 @@
             <p class="review-date">March 10, 2024</p>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Add this before the Join Us Section -->
+  <section class="role-choice-section">
+    <h2 class="section-title fade-in-up">Choose Your Role</h2>
+    <div class="role-cards">
+      <div class="role-card fade-in-left">
+        <div class="role-icon">
+          <i class="fas fa-user"></i>
+        </div>
+        <h3 class="role-title">Join as a Client</h3>
+        <p class="role-description">Looking for skilled professionals? Register as a client to access our network of verified service providers.</p>
+        
+        <div class="benefits-list">
+          <div class="benefit-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Browse skilled workers in your area</span>
+          </div>
+          <div class="benefit-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Book services with verified professionals</span>
+          </div>
+          <div class="benefit-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Secure payment system</span>
+          </div>
+          <div class="benefit-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Rate and review service providers</span>
+          </div>
+        </div>
+        
+        <button class="register-btn scale-in" (click)="goToHome()">
+          Register as Client
+        </button>
+      </div>
+      
+      <div class="role-card fade-in-right">
+        <div class="role-icon">
+          <i class="fas fa-tools"></i>
+        </div>
+        <h3 class="role-title">Join as a Worker</h3>
+        <p class="role-description">Are you a skilled professional? Join our platform to connect with clients and grow your business.</p>
+        
+        <div class="benefits-list">
+          <div class="benefit-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Showcase your skills and experience</span>
+          </div>
+          <div class="benefit-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Get job requests from verified clients</span>
+          </div>
+          <div class="benefit-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Manage your schedule and availability</span>
+          </div>
+          <div class="benefit-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Build your reputation with reviews</span>
+          </div>
+        </div>
+        
+        <button class="register-btn scale-in" (click)="goToWorkerRegistration()">
+          Register as Worker
+        </button>
       </div>
     </div>
   </section>

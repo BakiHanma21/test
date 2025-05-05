@@ -385,27 +385,41 @@
 
 <!-- Deny Modal -->
 <div class="modal-overlay" *ngIf="isDenyFormVisible">
-  <div class="modal-content">
+  <div class="modal-content deny-modal">
     <div class="modal-header">
-      <h3>Confirm Denial</h3>
+      <h3>Deny User Registration</h3>
       <button class="close-modal" (click)="closeForms()">&times;</button>
     </div>
     <div class="modal-body">
       <div class="confirmation-content">
-        <i class="fas fa-times-circle danger-icon"></i>
-        <p>Are you sure you want to deny <strong>{{ currentUser.name }}</strong>?</p>
-        <p class="sub-text">This action cannot be undone.</p>
+        <i class="fas fa-exclamation-circle danger-icon"></i>
+        <h4 class="confirmation-title">Deny Registration Request</h4>
+        <p class="confirmation-text">You are about to deny <strong>{{ currentUser.name }}'s</strong> registration request.</p>
+        <p class="sub-text">This action cannot be undone and the user will be notified via email.</p>
       </div>
+      
       <div class="form-group">
-        <label>Reason for Denial:</label>
-        <textarea class="form-control" [(ngModel)]="commentText" placeholder="Please provide a reason..."></textarea>
+        <label>
+          <i class="fas fa-comment-alt"></i>
+          Please provide a reason for denial:
+        </label>
+        <textarea 
+          class="form-control" 
+          [(ngModel)]="commentText" 
+          placeholder="Example: Missing or invalid documentation provided..."
+          rows="4">
+        </textarea>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="delete-btn" (click)="denyUser(currentUser)">
-        <i class="fas fa-times"></i> Confirm Denial
+      <button class="cancel-btn" (click)="closeForms()">
+        <i class="fas fa-times"></i>
+        Cancel
       </button>
-      <button class="cancel-btn" (click)="closeForms()">Cancel</button>
+      <button class="delete-btn" (click)="denyUser(currentUser)" [disabled]="!commentText.trim()">
+        <i class="fas fa-ban"></i>
+        Confirm Denial
+      </button>
     </div>
   </div>
 </div>

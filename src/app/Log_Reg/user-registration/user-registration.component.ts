@@ -31,6 +31,8 @@ export class UserRegistrationComponent {
   formSubmitted = false;
   showTermsModal = false;
   floatingIcons: { icon: string, top: string, left: string, right?: string, bottom?: string, size: string, duration: string }[] = [];
+  showPassword = false;
+  showConfirmPassword = false;
 
   constructor(private registrationService: RegistrationService, private router: Router, private http: HttpClient) {}
 
@@ -109,5 +111,13 @@ export class UserRegistrationComponent {
   acceptTerms(): void {
     this.formData.termsAgreement = true;
     this.closeTermsModal();
+  }
+
+  togglePasswordVisibility(field: 'password' | 'confirmPassword'): void {
+    if (field === 'password') {
+      this.showPassword = !this.showPassword;
+    } else {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    }
   }
 }

@@ -104,17 +104,22 @@
           <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">lock</i>
           Password:
         </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          class="form-control"
-          placeholder="Create your password"
-          [(ngModel)]="formData.password"
-          #password="ngModel"
-          required
-          minlength="6"
-        />
+        <div class="password-input-container">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            name="password"
+            class="form-control"
+            placeholder="Create your password"
+            [(ngModel)]="formData.password"
+            #password="ngModel"
+            required
+            minlength="6"
+          />
+          <button type="button" class="password-toggle" (click)="togglePasswordVisibility('password')">
+            <i class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</i>
+          </button>
+        </div>
         <div class="error-message" *ngIf="password.invalid && password.touched">
           Password must be at least 6 characters long.
         </div>
@@ -126,16 +131,21 @@
           <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">lock_outline</i>
           Confirm Password:
         </label>
-        <input
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          class="form-control"
-          placeholder="Confirm your password"
-          [(ngModel)]="formData.confirmPassword"
-          #confirmPassword="ngModel"
-          required
-        />
+        <div class="password-input-container">
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmPassword"
+            name="confirmPassword"
+            class="form-control"
+            placeholder="Confirm your password"
+            [(ngModel)]="formData.confirmPassword"
+            #confirmPassword="ngModel"
+            required
+          />
+          <button type="button" class="password-toggle" (click)="togglePasswordVisibility('confirmPassword')">
+            <i class="material-icons">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</i>
+          </button>
+        </div>
         <div class="error-message" *ngIf="formData.password !== formData.confirmPassword && confirmPassword.touched">
           Passwords do not match.
         </div>
