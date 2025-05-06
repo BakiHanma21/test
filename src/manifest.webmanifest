@@ -1,8 +1,8 @@
 {
   "name": "Barangay Service Xpress",
   "short_name": "Service Xpress",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "theme_color": "#FED480",
+  "background_color": "#FED480",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

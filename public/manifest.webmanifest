@@ -2,7 +2,7 @@
   "name": "Service Connect",
   "short_name": "ServConnect",
   "theme_color": "#FED480",
-  "background_color": "#fafafa",
+  "background_color": "#FED480",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
