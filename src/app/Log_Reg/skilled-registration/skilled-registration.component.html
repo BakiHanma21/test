@@ -112,6 +112,24 @@
       <div class="form-step" *ngIf="currentStep === 2">
         <h3>Security Information</h3>
         <div class="form-group">
+          <label for="profilePicture" class="required">
+            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">image</i>
+            Profile Picture:
+          </label>
+          <input
+            type="file"
+            id="profilePicture"
+            name="profilePicture"
+            class="form-control"
+            (change)="onProfilePictureChange($event)"
+            accept="image/*"
+            required
+          />
+          <div class="error-message" *ngIf="profilePictureError">
+            {{ profilePictureError }}
+          </div>
+        </div>
+        <div class="form-group">
           <label for="password" class="required">
             <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">lock</i>
             Password:
