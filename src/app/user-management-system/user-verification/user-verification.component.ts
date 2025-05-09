@@ -55,6 +55,10 @@ export class UserVerificationComponent implements OnInit {
   isCommentFormVisible = false;
   commentText: string = '';
   isCardView = false;
+  
+  // Image viewer properties
+  isImageViewerVisible = false;
+  currentViewedImage = '';
 
   constructor(
     private router: Router,
@@ -288,6 +292,28 @@ export class UserVerificationComponent implements OnInit {
       this.chatService.onNewMessage((chat) => {
         console.log('New message received:', chat);
       });
+    }
+  }
+
+  // Image Viewer Methods
+  openImageViewer(imageUrl: string): void {
+    this.currentViewedImage = imageUrl;
+    this.isImageViewerVisible = true;
+    // Prevent scrolling on the body when modal is open
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeImageViewer(): void {
+    this.isImageViewerVisible = false;
+    // Re-enable scrolling when modal is closed
+    document.body.style.overflow = '';
+  }
+
+  // Add keyboard event listener for the image viewer
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscapeKey(event: KeyboardEvent): void {
+    if (this.isImageViewerVisible) {
+      this.closeImageViewer();
     }
   }
 }

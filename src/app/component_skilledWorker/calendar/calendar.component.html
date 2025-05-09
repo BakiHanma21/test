@@ -21,7 +21,9 @@
   (datesRender)="onDatesRender($event)">
 </full-calendar>
 
-  <div class="booking-info" *ngIf="selectedEvent">
+<!-- Booking Info Modal (overlay for better mobile experience) -->
+<div class="booking-info-overlay" [class.show]="selectedEvent" (click)="closeEventDetails()">
+  <div class="booking-info" *ngIf="selectedEvent" (click)="$event.stopPropagation()">
     <div class="booking-info-header">
       <h3><span class="material-icons">info</span> Booking Details</h3>
       <button class="close-button" (click)="closeEventDetails()">

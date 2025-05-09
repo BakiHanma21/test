@@ -43,6 +43,10 @@ export class WorkerTransactionComponent implements OnInit {
   // View mode
   isTableView: boolean = false;
 
+  // Modal properties
+  selectedTransaction: Transaction | null = null;
+  showDetailsModal: boolean = false;
+
   constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -57,6 +61,12 @@ export class WorkerTransactionComponent implements OnInit {
         .subscribe(
           (response) => {
             this.transactions = response.data || [];
+            // Ensure all amount values are treated as numbers
+            this.transactions.forEach(transaction => {
+              if (typeof transaction.amount !== 'number') {
+                transaction.amount = parseFloat(transaction.amount as any) || 0;
+              }
+            });
             this.filteredTransactions = [...this.transactions];
             console.log('Loaded transactions:', this.transactions); // Debug
           },
@@ -72,6 +82,31 @@ export class WorkerTransactionComponent implements OnInit {
     } else {
       this.router.navigate(['/login']);
     }
+  }
+
+  // Modal controls
+  openDetailsModal(transaction: Transaction): void {
+    this.selectedTransaction = transaction;
+    this.showDetailsModal = true;
+    // Prevent scrolling on the background
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeDetailsModal(): void {
+    this.showDetailsModal = false;
+    this.selectedTransaction = null;
+    // Re-enable scrolling
+    document.body.style.overflow = 'auto';
+  }
+
+  // Utility method to format amount with decimal places
+  formatAmount(amount: any): string {
+    if (amount === undefined || amount === null) return '0.00';
+    
+    const numAmount = typeof amount === 'number' ? amount : parseFloat(amount);
+    if (isNaN(numAmount)) return '0.00';
+    
+    return numAmount.toFixed(2);
   }
 
   onQrCodeSelected(event: Event, transactionId: number): void {
@@ -214,8 +249,35 @@ export class WorkerTransactionComponent implements OnInit {
     console.error('Image failed to load:', {
       src: imgElement.src,
       alt: imgElement.alt,
-      event: event
+      originalSrc: imgElement.getAttribute('data-original-src')
     });
+    
+    // Try to fix the path if it's missing 'storage/' prefix
+    if (imgElement.src && !imgElement.src.includes('/storage/') && 
+        (imgElement.src.includes('/images/') || imgElement.src.includes('/qr_codes/'))) {
+      // Save original source for debugging
+      imgElement.setAttribute('data-original-src', imgElement.src);
+      
+      // Try to fix the path by adding storage prefix
+      const pathParts = imgElement.src.split('/');
+      const fileName = pathParts[pathParts.length - 1];
+      const folderName = pathParts[pathParts.length - 2];
+      
+      // Set a fallback image or attempt path correction
+      if (folderName === 'images' || folderName === 'qr_codes') {
+        const correctedPath = `${API_URL}storage/${folderName}/${fileName}`;
+        console.log('Attempting to fix image path:', correctedPath);
+        imgElement.src = correctedPath;
+      } else {
+        // Set fallback image
+        imgElement.src = folderName === 'qr_codes' ? 
+          'assets/placeholder-qr.png' : 'assets/placeholder-image.png';
+      }
+    } else {
+      // Set a fallback image if correction attempt is not possible
+      imgElement.src = imgElement.alt.includes('QR') ? 
+        'assets/placeholder-qr.png' : 'assets/placeholder-image.png';
+    }
   }
 
   // Filter functions

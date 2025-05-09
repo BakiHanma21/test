@@ -20,7 +20,7 @@ interface ChatMessage {
   receiver_id: number;
   message: string;
   file_path?: string;
-  file_url?: string; // Add file_url to the interface
+  file_url?: string; 
   file_name?: string;
   file_type?: string;
   created_at: string;
@@ -64,6 +64,8 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
   isMobileView = false;
   messages: ChatMessage[] = [];
   conversations: Conversation[] = [];
+  userConversations: Conversation[] = [];
+  workerConversations: Conversation[] = [];
   newMessage: string = '';
   selectedFile: File | undefined = undefined;
   receiverId: number | null = null;
@@ -82,6 +84,13 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
   
   // Mobile view properties
   showConversations = true;
+  
+  // Filter properties
+  filterMode: 'all' | 'users' | 'workers' = 'all';
+  
+  // Fullscreen image viewer
+  isImageViewerVisible = false;
+  currentViewedImage = '';
 
   @ViewChild('messageContainer') messageContainer!: ElementRef;
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -191,15 +200,47 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
     this.chatService.getConversations().subscribe({
       next: (conv: Conversation[]) => {
         this.conversations = conv;
+        
+        // Filter conversations by role
+        this.userConversations = this.conversations.filter(c => c.role.toLowerCase() === 'user');
+        this.workerConversations = this.conversations.filter(c => c.role.toLowerCase() === 'worker');
+        
         if (this.receiverId) {
           this.selectedConversation = this.conversations.find(c => c.id === this.receiverId) || null;
         }
+        
+        this.filterConversationsByMode();
       },
       error: (err) => {
         console.error('Failed to load conversations:', err);
         this.errorMessage = 'Failed to load conversations. Please try again.';
       }
     });
+  }
+
+  filterConversationsByMode() {
+    switch (this.filterMode) {
+      case 'users':
+        this.conversations = [...this.userConversations];
+        break;
+      case 'workers':
+        this.conversations = [...this.workerConversations];
+        break;
+      case 'all':
+      default:
+        this.conversations = [...this.userConversations, ...this.workerConversations];
+        break;
+    }
+    
+    // Apply search filter if there's any search text
+    if (this.searchText) {
+      this.onSearch();
+    }
+  }
+  
+  setFilterMode(mode: 'all' | 'users' | 'workers') {
+    this.filterMode = mode;
+    this.filterConversationsByMode();
   }
 
   loadPotentialUsers() {
@@ -306,7 +347,7 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
             ...messageToSend,
             id: response.chat?.id,
             file_path: response.chat?.file_path,
-            file_url: response.chat?.file_url, // Use file_url from the response
+            file_url: response.chat?.file_url,
             file_name: response.chat?.file_name,
             file_type: response.chat?.file_type
           };
@@ -334,8 +375,7 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
 
   onImageError(event: Event) {
     console.error('Failed to load image:', event);
-    (event.target as HTMLImageElement).style.display = 'none'; // Hide the broken image
-    // Optionally display a placeholder or error message
+    (event.target as HTMLImageElement).style.display = 'none';
   }
 
   private scrollToBottom() {
@@ -359,20 +399,35 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
     window.removeEventListener('resize', () => this.checkScreenSize());
   }
   
-  // New methods for modern design
   toggleView() {
     this.showChat = !this.showChat;
   }
 
   onSearch() {
-    // Simple search implementation that doesn't modify the original conversations array
     if (!this.searchText) {
-      this.loadConversations();
+      this.filterConversationsByMode();
       return;
     }
 
+    // First get the correct filtered list based on mode
+    let baseConversations: Conversation[] = [];
+    
+    switch (this.filterMode) {
+      case 'users':
+        baseConversations = [...this.userConversations];
+        break;
+      case 'workers':
+        baseConversations = [...this.workerConversations];
+        break;
+      case 'all':
+      default:
+        baseConversations = [...this.userConversations, ...this.workerConversations];
+        break;
+    }
+    
+    // Then apply the search filter
     const searchTerm = this.searchText.toLowerCase();
-    this.conversations = this.conversations.filter(conv => 
+    this.conversations = baseConversations.filter(conv => 
       conv.name.toLowerCase().includes(searchTerm) || 
       conv.role.toLowerCase().includes(searchTerm) ||
       (conv.latest_message && conv.latest_message.toLowerCase().includes(searchTerm))
@@ -397,6 +452,28 @@ export class AdminMessagesComponent implements OnInit, OnDestroy {
     this.showConversations = true;
     this.receiverId = null;
     this.selectedConversation = null;
+  }
+  
+  // Fullscreen Image Viewer Methods
+  openImageViewer(imageUrl: string): void {
+    this.currentViewedImage = imageUrl;
+    this.isImageViewerVisible = true;
+    // Prevent scrolling on the body when modal is open
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeImageViewer(): void {
+    this.isImageViewerVisible = false;
+    // Re-enable scrolling when modal is closed
+    document.body.style.overflow = '';
+  }
+
+  // Add keyboard event listener for the image viewer
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscapeKey(event: KeyboardEvent): void {
+    if (this.isImageViewerVisible) {
+      this.closeImageViewer();
+    }
   }
 }
 

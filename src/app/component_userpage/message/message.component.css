@@ -181,7 +181,7 @@ input[type="checkbox"] {
 
 @media screen and (max-width: 480px) {
   .message-container {
-    padding: 10px;
+    padding: 0rem;
     margin-bottom: 70px; /* More space for bottom nav */
   }
   

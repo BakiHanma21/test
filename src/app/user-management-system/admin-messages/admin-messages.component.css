@@ -1336,3 +1336,225 @@ body {
     padding-bottom: 120px;
   }
 }
+
+/* Filter Tabs */
+.filter-tabs {
+  display: flex;
+  padding: 0 12px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e4e6eb;
+}
+
+.filter-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #65676b;
+  padding: 10px 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  font-weight: 500;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.filter-tab.active {
+  color: #1877f2;
+  font-weight: 600;
+}
+
+.filter-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #1877f2;
+  border-radius: 3px 3px 0 0;
+}
+
+.filter-tab:hover:not(.active) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.count-badge {
+  background-color: #e4e6eb;
+  color: #65676b;
+  border-radius: 20px;
+  padding: 2px 6px;
+  font-size: 11px;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* User Type Styling */
+.conversation-avatar.user {
+  background: linear-gradient(45deg, #4e54c8, #8f94fb);
+}
+
+.conversation-avatar.worker {
+  background: linear-gradient(45deg, #ff9a44, #fc6076);
+}
+
+.user-type .role-indicator {
+  color: #4e54c8;
+  font-weight: 600;
+}
+
+.worker-type .role-indicator {
+  color: #ff9a44;
+  font-weight: 600;
+}
+
+/* Add hover effect to the conversation items */
+.conversation-item:hover {
+  background-color: #f0f2f5;
+  transform: translateX(3px);
+}
+
+/* Clickable Image Styles */
+.clickable-image {
+  cursor: zoom-in;
+  position: relative;
+  transition: transform 0.2s;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.clickable-image:hover {
+  transform: scale(1.02);
+}
+
+.zoom-indicator {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.clickable-image:hover .zoom-indicator {
+  opacity: 1;
+}
+
+/* Fullscreen Image Viewer */
+.fullscreen-image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1200;
+  cursor: zoom-out;
+  animation: fadeIn 0.3s ease;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.fullscreen-image-container {
+  position: relative;
+  width: 90%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: zoomIn 0.3s ease;
+}
+
+.fullscreen-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+}
+
+.close-fullscreen-btn {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+  z-index: 1201;
+}
+
+.close-fullscreen-btn:hover {
+  transform: scale(1.1);
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Mobile responsiveness for the image viewer */
+@media screen and (max-width: 768px) {
+  .fullscreen-image-container {
+    width: 95%;
+    height: 80%;
+  }
+  
+  .close-fullscreen-btn {
+    top: -45px;
+    right: 5px;
+  }
+  
+  .filter-tabs {
+    padding: 0 8px;
+  }
+  
+  .filter-tab {
+    font-size: 13px;
+    padding: 8px 4px;
+  }
+  
+  /* Make sure message form is above fullscreen viewer on mobile */
+  .message-form {
+    z-index: 1201;
+  }
+}
+
+/* Mobile adjustments for message input form when image viewer is open */
+@media screen and (max-width: 480px) {
+  .fullscreen-image-overlay .message-form {
+    display: none;
+  }
+  
+  .count-badge {
+    font-size: 10px;
+    padding: 1px 4px;
+  }
+}

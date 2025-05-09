@@ -47,6 +47,11 @@ export class HomeComponent {
   searchText = '';
   availabilityFilter: string = '';
   cardState: {[key: number]: string} = {};
+  
+  // Image viewing properties
+  isImageViewerOpen = false;
+  selectedImage: string | null = null;
+  selectedImageCaption: string = '';
 
   constructor(private router: Router, private favoriteService: FavoriteService, private http: HttpClient) {}
 
@@ -132,6 +137,23 @@ export class HomeComponent {
   closeModal() {
     this.isModalOpen = false;
     this.selectedWorker = null;
+  }
+
+  // Image viewer methods
+  openImageViewer(imageSrc: string, caption: string = '') {
+    this.selectedImage = imageSrc;
+    this.selectedImageCaption = caption;
+    this.isImageViewerOpen = true;
+    // Prevent body scrolling when modal is open
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeImageViewer() {
+    this.isImageViewerOpen = false;
+    this.selectedImage = null;
+    this.selectedImageCaption = '';
+    // Re-enable body scrolling
+    document.body.style.overflow = 'auto';
   }
 
   setRating(rating: number) {

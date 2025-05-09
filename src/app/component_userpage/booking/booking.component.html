@@ -55,17 +55,25 @@
   </div>
 
   <!-- Booking Progress -->
-  <div class="booking-progress">
+  <div class="booking-progress" [ngClass]="{'step-1': !selectedDate, 'step-2': selectedDate && !endDate, 'step-3': selectedDate && endDate}">
     <div class="progress-step" [class.active]="!selectedDate" [class.completed]="selectedDate">
-      <div class="step-number">1</div>
+      <div class="step-number">
+        <span *ngIf="!selectedDate">1</span>
+        <i *ngIf="selectedDate" class="fas fa-check"></i>
+      </div>
       <div class="step-label">Select Start Date</div>
     </div>
     <div class="progress-step" [class.active]="selectedDate && !endDate" [class.completed]="endDate">
-      <div class="step-number">2</div>
+      <div class="step-number">
+        <span *ngIf="!endDate">2</span>
+        <i *ngIf="endDate" class="fas fa-check"></i>
+      </div>
       <div class="step-label">Select End Date</div>
     </div>
     <div class="progress-step" [class.active]="selectedDate && endDate">
-      <div class="step-number">3</div>
+      <div class="step-number">
+        <span>3</span>
+      </div>
       <div class="step-label">Job Details</div>
     </div>
   </div>

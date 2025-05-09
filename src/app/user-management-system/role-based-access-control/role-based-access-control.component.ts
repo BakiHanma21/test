@@ -119,6 +119,10 @@ export class RoleBasedAccessControlComponent implements OnInit {
     if (this.isMobileView) {
       this.sidebarOpen = false;
       this.isIconOnly = false;
+      
+      // Switch to cards view on mobile for better experience
+      this.userViewMode = 'cards';
+      this.workerViewMode = 'cards';
     }
   }
 
@@ -225,6 +229,7 @@ export class RoleBasedAccessControlComponent implements OnInit {
               this.workers = response.workers || [];
               this.filteredUsers = this.users;
               this.filteredWorkers = this.workers;
+              this.snackBar.open('User account status updated successfully', 'Close', { duration: 3000 });
             },
             (error) => {
               if (error.status === 401) {
@@ -232,12 +237,12 @@ export class RoleBasedAccessControlComponent implements OnInit {
                 this.router.navigate(['/login']);
               }
               console.error('Error deleting user:', error);
+              this.snackBar.open('Error updating user account', 'Close', { duration: 3000 });
             }
           );
       } else {
         this.router.navigate(['/login']);
       }
-      console.log('User deleted:', this.selectedUser.id);
       this.closeDeleteUserModal();
     }
   }

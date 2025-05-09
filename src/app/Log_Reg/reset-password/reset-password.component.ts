@@ -20,6 +20,10 @@ export class ResetPasswordComponent implements OnInit {
   success: string = '';
   loading: boolean = false;
   passwordMismatch: boolean = false;
+  
+  // Password visibility toggles
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
   constructor(
     private router: Router,
@@ -45,6 +49,16 @@ export class ResetPasswordComponent implements OnInit {
         this.error = 'Invalid password reset link. Please request a new one.';
       }
     });
+  }
+
+  // Toggle password visibility
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  // Toggle confirm password visibility
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   onSubmit(): void {

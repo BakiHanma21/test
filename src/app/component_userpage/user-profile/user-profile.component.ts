@@ -12,7 +12,7 @@ interface UserProfile {
   email: string;
   phone?: string;
   location?: string;
-  profile_image?: string;
+  image?: string;
   purok?: string;
   street?: string;
   rating?: number;
@@ -38,7 +38,7 @@ export class UserProfileComponent implements OnInit {
     email: '',
     phone: '',
     location: '',
-    profile_image: 'assets/default-profile.png'
+    image: 'assets/default-profile.png'
   };
   
   isLoading = false;
@@ -91,11 +91,11 @@ export class UserProfileComponent implements OnInit {
           }
           
           // Ensure we have default values for optional fields
-          if (!this.userProfile.profile_image) {
-            this.userProfile.profile_image = 'assets/user-icon.jpg';
-          } else if (this.userProfile.profile_image && !this.userProfile.profile_image.includes('http')) {
+          if (!this.userProfile.image) {
+            this.userProfile.image = 'assets/user-icon.jpg';
+          } else if (this.userProfile.image && !this.userProfile.image.includes('http')) {
             // If it's a relative path, prepend the storage URL
-            this.userProfile.profile_image = `${API_URL}${this.userProfile.profile_image}`;
+            this.userProfile.image = `${API_URL}${this.userProfile.image}`;
           }
 
           this.editableProfile = { ...this.userProfile };
@@ -121,35 +121,24 @@ export class UserProfileComponent implements OnInit {
   saveProfile(): void {
     this.isLoading = true;
     
-    // Create FormData for profile update
-    const formData = new FormData();
-    formData.append('name', this.editableProfile.name);
-    formData.append('email', this.editableProfile.email);
+    // Create profile update data object
+    const profileData = {
+      name: this.editableProfile.name,
+      email: this.editableProfile.email,
+      phone: this.editableProfile.phone || null,
+      location: this.editableProfile.location || null,
+      purok: this.editableProfile.purok || null,
+      street: this.editableProfile.street || null
+    };
     
-    if (this.editableProfile.phone) {
-      formData.append('phone', this.editableProfile.phone);
-    }
-    
-    if (this.editableProfile.location) {
-      formData.append('location', this.editableProfile.location);
-    }
-    
-    if (this.editableProfile.purok) {
-      formData.append('purok', this.editableProfile.purok);
-    }
-    
-    if (this.editableProfile.street) {
-      formData.append('street', this.editableProfile.street);
-    }
-    
-    this.userProfileService.updateUserProfile(formData).subscribe({
+    this.userProfileService.updateUserProfile(profileData).subscribe({
       next: (response) => {
         if (response && response.status === 'success') {
           this.userProfile = response.data;
           
           // Ensure we have the proper image URL
-          if (this.userProfile.profile_image && !this.userProfile.profile_image.includes('http')) {
-            this.userProfile.profile_image = `${API_URL}${this.userProfile.profile_image}`;
+          if (this.userProfile.image && !this.userProfile.image.includes('http')) {
+            this.userProfile.image = `${API_URL}${this.userProfile.image}`;
           }
           
           this.editableProfile = { ...this.userProfile };
@@ -164,7 +153,7 @@ export class UserProfileComponent implements OnInit {
       error: (error) => {
         console.error('Error updating profile:', error);
         this.isLoading = false;
-        this.showNotification('Failed to update profile');
+        this.showNotification(error.error?.message || 'Failed to update profile');
       }
     });
   }
@@ -206,10 +195,10 @@ export class UserProfileComponent implements OnInit {
       next: (response) => {
         if (response && response.status === 'success') {
           // Update profile image in the model
-          if (response.profile_image) {
-            this.userProfile.profile_image = `${API_URL}${response.profile_image}`;
-          } else if (response.profile_image_url) {
-            this.userProfile.profile_image = response.profile_image_url;
+          if (response.image) {
+            this.userProfile.image = `${API_URL}${response.image}`;
+          } else if (response.image_url) {
+            this.userProfile.image = response.image_url;
           }
           
           this.editableProfile = { ...this.userProfile };

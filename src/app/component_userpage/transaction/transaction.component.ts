@@ -47,10 +47,19 @@ export class TransactionComponent implements OnInit {
   isTableView: boolean = false;
   statusToast: string | null = null;
 
+  // Add property to track transaction being reviewed
+  selectedTransaction: Transaction | null = null;
+
   constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit(): void {
     this.loadTransactions();
+    
+    // Check for user preference for table view in local storage
+    const savedViewMode = localStorage.getItem('transactionViewMode');
+    if (savedViewMode) {
+      this.isTableView = savedViewMode === 'table';
+    }
   }
 
   loadTransactions(): void {
@@ -64,6 +73,14 @@ export class TransactionComponent implements OnInit {
         .subscribe(
           (response) => {
             this.transactions = response.data || [];
+            // Process transactions to format amounts
+            this.transactions.forEach(transaction => {
+              // Ensure amount is a number
+              if (typeof transaction.amount === 'string') {
+                transaction.amount = parseFloat(transaction.amount);
+              }
+            });
+            
             this.applyFilter(this.activeFilter); // Apply initial filter
             console.log('Loaded transactions:', this.transactions);
             this.isLoading = false;
@@ -130,6 +147,27 @@ export class TransactionComponent implements OnInit {
   // Toggle view mode
   toggleView(): void {
     this.isTableView = !this.isTableView;
+    // Save preference to local storage
+    localStorage.setItem('transactionViewMode', this.isTableView ? 'table' : 'card');
+  }
+
+  // View transaction details from table
+  viewTransactionDetails(transaction: Transaction): void {
+    // Switch to card view to see details
+    this.isTableView = false;
+    
+    // Scroll to the transaction card
+    setTimeout(() => {
+      const element = document.getElementById(`transaction-${transaction.transaction_id}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Add highlight class temporarily
+        element.classList.add('highlight-transaction');
+        setTimeout(() => {
+          element.classList.remove('highlight-transaction');
+        }, 2000);
+      }
+    }, 100);
   }
 
   onFileSelected(event: Event, transactionId: number): void {

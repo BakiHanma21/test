@@ -430,7 +430,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: 1100;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -438,6 +438,8 @@
 .modal.show {
   display: flex;
   opacity: 1;
+  align-items: flex-start;
+  padding-top: 20px;
 }
 
 .modal-content {
@@ -445,7 +447,7 @@
   width: 90%;
   max-width: 800px;
   max-height: 90vh;
-  margin: auto;
+  margin: 0 auto;
   background: white;
   border-radius: 16px;
   overflow-y: auto;
@@ -695,10 +697,14 @@
 @media (max-width: 768px) {
   .modal-content {
     width: 95%;
+    max-height: 85vh;
+    margin: 20px auto;
+    padding-bottom: 80px;
   }
 
   .modal-body {
     padding: 20px;
+    padding-bottom: 60px;
   }
 
   .profile-header {
@@ -723,8 +729,19 @@
 }
 
 @media (max-width: 480px) {
+  .modal-content {
+    width: 95%;
+    max-height: 80vh;
+    margin: 30px auto;
+    border-radius: 16px;
+    overflow-y: auto;
+    position: relative;
+    top: -20px;
+  }
+
   .modal-body {
     padding: 15px;
+    padding-bottom: 70px;
   }
 
   .profile-image-container {

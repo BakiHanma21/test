@@ -73,6 +73,7 @@
           <th class="amount-column">Amount</th>
           <th class="date-column">Date</th>
           <th class="status-column">Status</th>
+          <th class="rating-column">Rating</th>
           <th class="actions-column">Actions</th>
         </tr>
       </thead>
@@ -80,30 +81,77 @@
         <tr *ngFor="let transaction of filteredTransactions" [ngClass]="transaction.payment_status.toLowerCase()">
           <td class="transaction-id-cell">#{{ transaction.transaction_id }}</td>
           <td class="service-cell" [title]="transaction.title">{{ transaction.title }}</td>
-          <td class="amount-cell">₱{{ transaction.amount }}</td>
+          <td class="amount-cell">₱{{ transaction.amount.toFixed(2) }}</td>
           <td class="date-cell">{{ transaction.payment_date || 'Not yet paid' }}</td>
           <td class="status-cell">
             <span class="status-badge" [ngClass]="transaction.payment_status.toLowerCase()">
               {{ getPaymentStatus(transaction.payment_status) }}
             </span>
           </td>
+          <td class="rating-cell">
+            <!-- Show User Rating if available -->
+            <div *ngIf="transaction.rating2" class="table-stars">
+              <span class="material-icons" *ngFor="let star of [].constructor(5); let i = index"
+                    [class.filled]="i < transaction.rating2" [class.empty]="i >= transaction.rating2">
+                star
+              </span>
+              <span class="rating-number">{{ transaction.rating2 }}</span>
+            </div>
+            <!-- Show pending review message -->
+            <span *ngIf="!transaction.rating2 && (transaction.payment_status === 'PAID' || transaction.payment_status === 'MANUALLY UPDATED')" 
+                  class="pending-review">
+              Review Pending
+            </span>
+            <!-- Show N/A for pending transactions -->
+            <span *ngIf="transaction.payment_status === 'PENDING'" class="na-rating">N/A</span>
+          </td>
           <td class="actions-cell">
-            <div class="action-buttons">
-              <ng-container *ngIf="transaction.payment_status === 'PENDING'">
-                <button class="table-action-btn upload-btn" title="Upload Receipt" (click)="isTableView = false">
-                  <span class="material-icons">upload_file</span>
-                </button>
-              </ng-container>
-              <ng-container *ngIf="transaction.receipt_url">
-                <a [href]="transaction.receipt_url" target="_blank" class="table-action-btn view-btn" title="View Receipt">
-                  <span class="material-icons">visibility</span>
-                </a>
-              </ng-container>
-              <ng-container *ngIf="(transaction.payment_status === 'PAID' || transaction.payment_status === 'MANUALLY UPDATED') && !transaction.review2">
-                <button class="table-action-btn review-btn" title="Write Review" (click)="isTableView = false">
-                  <span class="material-icons">rate_review</span>
-                </button>
-              </ng-container>
+            <div class="table-action-buttons">
+              <!-- QR code for payment -->
+              <a *ngIf="transaction.payment_status === 'PENDING' && transaction.qr_code_url" 
+                 class="action-btn qr-btn" 
+                 [href]="transaction.qr_code_url" 
+                 target="_blank"
+                 title="View QR Code">
+                <span class="material-icons">qr_code_2</span>
+                <span class="btn-text">QR</span>
+              </a>
+              
+              <!-- Upload button - shown for pending transactions -->
+              <button *ngIf="transaction.payment_status === 'PENDING'" 
+                      class="action-btn upload-btn" 
+                      (click)="isTableView = false" 
+                      title="Upload Receipt">
+                <span class="material-icons">upload_file</span>
+                <span class="btn-text">Upload</span>
+              </button>
+              
+              <!-- View receipt button - shown if receipt exists -->
+              <a *ngIf="transaction.receipt_url" 
+                 [href]="transaction.receipt_url" 
+                 target="_blank" 
+                 class="action-btn view-btn" 
+                 title="View Receipt">
+                <span class="material-icons">visibility</span>
+                <span class="btn-text">Receipt</span>
+              </a>
+              
+              <!-- Review button - shown for paid transactions without reviews -->
+              <button *ngIf="(transaction.payment_status === 'PAID' || transaction.payment_status === 'MANUALLY UPDATED') && !transaction.review2" 
+                      class="action-btn review-btn" 
+                      (click)="isTableView = false" 
+                      title="Write Review">
+                <span class="material-icons">rate_review</span>
+                <span class="btn-text">Review</span>
+              </button>
+              
+              <!-- View details button - always shown -->
+              <button class="action-btn details-btn" 
+                      (click)="viewTransactionDetails(transaction)" 
+                      title="View Full Details">
+                <span class="material-icons">info</span>
+                <span class="btn-text">Details</span>
+              </button>
             </div>
           </td>
         </tr>
@@ -114,7 +162,7 @@
   <!-- Card View -->
   <div class="transactions-container" *ngIf="!isTableView && !isLoading">
     <div *ngIf="filteredTransactions && filteredTransactions.length > 0; else noTransactions" class="transaction-grid">
-      <div *ngFor="let transaction of filteredTransactions" class="transaction-card">
+      <div *ngFor="let transaction of filteredTransactions" class="transaction-card" [id]="'transaction-' + transaction.transaction_id">
         <!-- Transaction Header -->
         <div class="card-header">
           <div class="transaction-title">
@@ -124,6 +172,7 @@
             </span>
           </div>
           <p class="description">{{ transaction.description }}</p>
+          <div class="transaction-id">Transaction #{{ transaction.transaction_id }}</div>
         </div>
 
         <!-- Transaction Details -->
@@ -131,7 +180,7 @@
           <div class="detail-row">
             <div class="detail-item">
               <span class="label">Amount</span>
-              <span class="value">₱{{ transaction.amount }}</span>
+              <span class="value">₱{{ transaction.amount.toFixed(2) }}</span>
             </div>
             <div class="detail-item">
               <span class="label">Payment Date</span>

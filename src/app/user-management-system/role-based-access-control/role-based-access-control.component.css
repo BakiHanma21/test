@@ -567,7 +567,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1050;
+  z-index: 1100; /* Increased z-index to appear above mobile nav */
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   animation: fadeIn 0.2s ease-out;
@@ -778,14 +778,43 @@ button:disabled {
   .section-header {
     flex-direction: column;
     gap: 15px;
+    margin-bottom: 15px;
   }
   
   .search-container {
     width: 100%;
+    margin-top: 10px;
+    z-index: 5;
+    position: relative;
+  }
+  
+  .search-input {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   }
   
   .header-content h1 {
     font-size: 2rem;
+  }
+  
+  /* Show bottom nav and adjust content */
+  .mobile-bottom-nav {
+    display: flex;
+  }
+  
+  .main-content {
+    padding-bottom: 80px;
+    margin-bottom: 60px; /* Extra space to prevent content being hidden behind bottom nav */
+  }
+  
+  .sidebar {
+    z-index: 1030;
+  }
+  
+  .dashboard-header {
+    z-index: 1020;
   }
   
   .header-background {
@@ -795,12 +824,50 @@ button:disabled {
   
   .modal-content {
     width: 90%;
+    max-height: 85vh; /* Adjust max height for mobile */
+  }
+  
+  /* Improve card layout on mobile */
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .card-header {
+    padding: 12px;
+  }
+  
+  .card-content {
+    padding: 12px;
+  }
+  
+  /* Center the status badges on mobile */
+  .status-badge {
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  /* Adjust table for better mobile view */
+  .data-table {
+    font-size: 14px;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 10px;
+  }
+  
+  .table-responsive {
+    margin: 0 -10px;
+    padding: 0 10px;
   }
 }
 
 @media screen and (max-width: 480px) {
   .main-content {
-    padding: 20px;
+    padding: 15px;
+    margin-top: 60px;
+    padding-bottom: 90px; /* More padding for smaller screens */
   }
   
   .header-content h1 {
@@ -810,29 +877,46 @@ button:disabled {
   .header-background {
     font-size: 3rem;
     right: 1rem;
-    }
+  }
   
   .section-container {
     margin-bottom: 20px;
-    }
+    border-radius: 12px; /* Smaller border radius on mobile */
+  }
   
   .data-table td,
   .data-table th {
-    padding: 12px 15px;
-    }
+    padding: 8px; /* Smaller padding for mobile tables */
+    font-size: 13px;
+  }
   
   .actions {
-    flex-direction: column;
-    }
+    display: flex;
+    justify-content: center; /* Center the action buttons */
+  }
   
   .action-btn {
-    width: 100%;
-    }
+    width: auto;
+    padding: 6px; /* Smaller buttons on mobile */
+  }
   
   .modal-content {
     width: 95%;
-    }
+    border-radius: 12px;
   }
+  
+  .welcome-message {
+    font-size: 0.9rem;
+  }
+  
+  /* Hide some columns on small screens */
+  .data-table th:nth-child(2),  /* Date Created */
+  .data-table td:nth-child(2),
+  .data-table th:nth-child(5),  /* Reason */
+  .data-table td:nth-child(5) {
+    display: none;
+  }
+}
 
 /* Mobile Bottom Navigation */
 .mobile-bottom-nav {

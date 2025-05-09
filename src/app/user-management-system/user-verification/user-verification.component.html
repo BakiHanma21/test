@@ -122,6 +122,13 @@
           </div>
         </div>
         <div class="header-right">
+          <div class="filter-container">
+            <select class="filter-select" [(ngModel)]="selectedFilter" (change)="filterUsers()" aria-label="Filter users by type">
+              <option value="all">All Users</option>
+              <option value="regular">Regular Users</option>
+              <option value="skilled">Skilled Workers</option>
+            </select>
+          </div>
           <div class="view-toggle">
             <button [class.active]="!isCardView" (click)="isCardView = false">
               <i class="fas fa-table"></i>
@@ -131,13 +138,6 @@
               <i class="fas fa-th-large"></i>
               <span>Cards</span>
             </button>
-          </div>
-          <div class="filter-container">
-            <select class="filter-select" [(ngModel)]="selectedFilter" (change)="filterUsers()" aria-label="Filter users by type">
-              <option value="all">All Users</option>
-              <option value="regular">Regular Users</option>
-              <option value="skilled">Skilled Workers</option>
-            </select>
           </div>
         </div>
       </div>
@@ -151,7 +151,6 @@
               <th>Email</th>
               <th>Role</th>
               <th>Location</th>
-              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -169,13 +168,8 @@
               </td>
               <td>{{ user.purok ? user.purok + ', ' + user.street : user.location }}</td>
               <td>
-                <span class="status-badge" [ngClass]="user?.status?.toLowerCase()">
-                  {{ user?.status }}
-                </span>
-              </td>
-              <td>
                 <div class="actions">
-                  <button class="action-btn view" (click)="viewProfile(user)" title="View Profile">
+                  <button class="action-btn view table-view-btn" (click)="viewProfile(user)" title="View Profile">
                     <i class="fas fa-eye"></i>
                   </button>
                   <button class="action-btn approve" (click)="openApproveForm(user)" title="Approve">
@@ -194,43 +188,42 @@
       <!-- Card View -->
       <div class="cards-grid" *ngIf="isCardView">
         <div class="user-card" *ngFor="let user of filteredUsers">
-          <div class="card-header">
-            <div class="user-info-card">
-              <img [src]="user.image || 'assets/default-avatar.png'" alt="User" class="card-avatar">
-              <div class="user-details">
-                <h3>{{ user.name }}</h3>
-                <span class="user-email">{{ user.email }}</span>
-              </div>
-            </div>
-            <span class="status-badge" [ngClass]="user?.status?.toLowerCase()">
-              {{ user?.status }}
-            </span>
-          </div>
+          <div class="card-status-indicator" [ngClass]="user?.status?.toLowerCase()"></div>
           
-          <div class="card-body">
-            <div class="info-row">
-              <span class="info-label">Role:</span>
-              <span class="role-badge" [ngClass]="user.role.toLowerCase()">{{ user.role }}</span>
+          <div class="card-header">
+            <div class="user-avatar-wrapper">
+              <img [src]="user.image || 'assets/default-avatar.png'" alt="User" class="card-avatar">
             </div>
-            <div class="info-row">
-              <span class="info-label">Location:</span>
-              <span class="info-value">{{ user.purok ? user.purok + ', ' + user.street : user.location }}</span>
+            
+            <div class="user-details">
+              <h3 class="user-name">{{ user.name }}</h3>
+              <div class="user-role">
+                <span class="role-badge" [ngClass]="user.role.toLowerCase()">{{ user.role }}</span>
+              </div>
+              <div class="user-email-container" title="{{ user.email }}">
+                <i class="fas fa-envelope"></i>
+                <span class="user-email" title="{{ user.email }}">{{ user.email }}</span>
+              </div>
+              <div class="user-location" *ngIf="user.purok || user.location">
+                <i class="fas fa-map-marker-alt"></i>
+                <span title="{{ user.purok ? user.purok + ', ' + user.street : user.location }}">{{ user.purok ? user.purok + ', ' + user.street : user.location }}</span>
+              </div>
             </div>
           </div>
           
           <div class="card-actions">
-            <button class="action-btn view" (click)="viewProfile(user)" title="View Profile">
+            <button class="action-btn view" (click)="viewProfile(user)">
               <i class="fas fa-eye"></i>
-              <span>View</span>
+              <span>View Details</span>
             </button>
-            <button class="action-btn approve" (click)="openApproveForm(user)" title="Approve">
-              <i class="fas fa-check"></i>
-              <span>Approve</span>
-            </button>
-            <button class="action-btn deny" (click)="openDenyForm(user)" title="Deny">
-              <i class="fas fa-times"></i>
-              <span>Deny</span>
-            </button>
+            <div class="approval-actions">
+              <button class="action-btn approve" (click)="openApproveForm(user)" aria-label="Approve User">
+                <i class="fas fa-check"></i>
+              </button>
+              <button class="action-btn deny" (click)="openDenyForm(user)" aria-label="Deny User">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -275,7 +268,10 @@
     </div>
     <div class="modal-body">
       <div class="profile-image">
-        <img [src]="currentUser.image || 'assets/default-avatar.png'" alt="Profile Image" class="profile-img">
+        <img [src]="currentUser.image || 'assets/default-avatar.png'" alt="Profile Image" class="profile-img clickable-image" (click)="openImageViewer(currentUser.image || 'assets/default-avatar.png')">
+        <div class="image-zoom-hint">
+          <i class="fas fa-search-plus"></i>
+        </div>
       </div>
       <div class="profile-details">
         <div class="info-group">
@@ -284,7 +280,7 @@
         </div>
         <div class="info-group">
           <label>Email:</label>
-          <p>{{ currentUser.email }}</p>
+          <p class="email-text" title="{{ currentUser.email }}">{{ currentUser.email }}</p>
         </div>
         <div class="info-group">
           <label>Role:</label>
@@ -312,9 +308,9 @@
       <div class="document-section" *ngIf="currentUser.valid_id">
         <h4>Valid ID</h4>
         <div class="document-container">
-          <img [src]="currentUser.valid_id" alt="Valid ID" class="document-img">
+          <img [src]="currentUser.valid_id" alt="Valid ID" class="document-img clickable-image" (click)="openImageViewer(currentUser.valid_id)">
           <div class="document-overlay">
-            <a [href]="currentUser.valid_id" target="_blank" class="view-full-btn">
+            <a (click)="openImageViewer(currentUser.valid_id); $event.preventDefault()" class="view-full-btn">
               <i class="fas fa-search-plus"></i> View Full Size
             </a>
           </div>
@@ -332,9 +328,9 @@
             <div class="work-example-content">
               <p>{{work.description}}</p>
               <div class="work-image-container" *ngIf="work.image">
-                <img [src]="work.image" alt="Work Example" class="work-example-img">
+                <img [src]="work.image" alt="Work Example" class="work-example-img clickable-image" (click)="openImageViewer(work.image)">
                 <div class="image-overlay">
-                  <a [href]="work.image" target="_blank" class="view-full-btn">
+                  <a (click)="openImageViewer(work.image); $event.preventDefault()" class="view-full-btn">
                     <i class="fas fa-search-plus"></i>
                   </a>
                 </div>
@@ -446,5 +442,15 @@
       </button>
       <button class="cancel-btn" (click)="closeForms()">Cancel</button>
     </div>
+  </div>
+</div>
+
+<!-- Fullscreen Image Viewer Modal -->
+<div class="fullscreen-image-overlay" *ngIf="isImageViewerVisible" (click)="closeImageViewer()">
+  <div class="fullscreen-image-container">
+    <img [src]="currentViewedImage" alt="Fullscreen Image" class="fullscreen-image">
+    <button class="close-fullscreen-btn" (click)="closeImageViewer(); $event.stopPropagation()" aria-label="Close fullscreen image">
+      <i class="fas fa-times"></i>
+    </button>
   </div>
 </div>

@@ -42,8 +42,9 @@
     <!-- Profile Header -->
     <div class="profile-header">
       <div class="profile-image-wrapper">
-        <img [src]="userProfile.profile_image || 'assets/user-icon.jpg'" alt="Profile Image" class="profile-image" />
-        <!-- Always show the camera button for better UX -->
+        <div class="image-container">
+        <img [src]="userProfile.image || 'assets/user-icon.jpg'" alt="Profile Image" class="profile-image" />
+        </div>
         <button class="edit-image-btn" (click)="openImageUpload()" aria-label="Change profile picture">
           <span class="material-icons">photo_camera</span>
         </button>
@@ -54,9 +55,9 @@
       <div class="profile-header-info">
         <h2 class="profile-name">{{ userProfile.name }}</h2>
         <div class="profile-meta">
-          <span class="profile-location" *ngIf="userProfile.location || userProfile.purok || userProfile.street">
+          <span class="profile-location" *ngIf="userProfile.location">
             <span class="material-icons">place</span>
-            {{ getFullAddress() }}
+            {{ userProfile.location }}
           </span>
           <span class="profile-contact" *ngIf="userProfile.phone">
             <span class="material-icons">phone</span>
@@ -94,11 +95,11 @@
             <p>{{ userProfile.phone }}</p>
           </div>
         </div>
-        <div class="detail-item" *ngIf="userProfile.location || userProfile.purok || userProfile.street">
-          <span class="material-icons">home</span>
+        <div class="detail-item" *ngIf="userProfile.location">
+          <span class="material-icons">place</span>
           <div class="detail-content">
-            <label>Address</label>
-            <p>{{ getFullAddress() }}</p>
+            <label>Location</label>
+            <p>{{ userProfile.location }}</p>
           </div>
         </div>
         <div class="detail-item" *ngIf="memberSince">
@@ -235,20 +236,6 @@
               Location
             </label>
             <input type="text" [(ngModel)]="editableProfile.location" name="location" placeholder="Enter your city/municipality" />
-          </div>
-          <div class="form-group">
-            <label>
-              <span class="material-icons">home</span>
-              Purok
-            </label>
-            <input type="text" [(ngModel)]="editableProfile.purok" name="purok" placeholder="Enter your purok" />
-          </div>
-          <div class="form-group">
-            <label>
-              <span class="material-icons">signpost</span>
-              Street
-            </label>
-            <input type="text" [(ngModel)]="editableProfile.street" name="street" placeholder="Enter your street" />
           </div>
         </div>
         <div class="modal-actions">

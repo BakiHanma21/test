@@ -128,6 +128,7 @@
         </div>
       </div>
 
+      <!-- Table View for Users -->
       <div class="table-responsive" *ngIf="userViewMode === 'table'">
         <table class="data-table">
           <thead>
@@ -152,9 +153,6 @@
               </td>
               <td>{{ user.report_reason || '-' }}</td>
               <td class="actions">
-                <button class="action-btn edit" (click)="editUser(user)" title="Edit user">
-                  <i class="fas fa-edit"></i>
-                </button>
                 <button class="action-btn delete" (click)="openDeleteUserModal(user.id)" title="Disable user">
                   <i class="fas fa-ban"></i>
                 </button>
@@ -187,9 +185,6 @@
                 <p *ngIf="user.report_reason"><strong>Reason:</strong> {{ user.report_reason }}</p>
               </div>
               <div class="card-actions">
-                <button class="action-btn edit" (click)="editUser(user)" title="Edit user">
-                  <i class="fas fa-edit"></i>
-                </button>
                 <button class="action-btn delete" (click)="openDeleteUserModal(user.id)" title="Disable user">
                   <i class="fas fa-ban"></i>
                 </button>

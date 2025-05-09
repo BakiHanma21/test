@@ -78,8 +78,12 @@
       
       <div class="modal-body">
         <div class="profile-header">
-          <div class="profile-image-container">
+          <div class="profile-image-container" (click)="openImageViewer(selectedWorker?.image, selectedWorker?.name)">
             <img [src]="selectedWorker?.image" alt="{{ selectedWorker?.name }}" class="profile-image" />
+            <div class="image-zoom-hint">
+              <i class="fas fa-search-plus"></i>
+              <span>Click to zoom</span>
+            </div>
           </div>
           <div class="profile-info">
             <h2>{{ selectedWorker?.name }}</h2>
@@ -113,11 +117,15 @@
         <div class="work-examples">
           <h3>Work examples</h3>
           <div class="work-grid">
-            <div class="work-item" *ngFor="let work of selectedWorker?.works">
+            <div class="work-item" *ngFor="let work of selectedWorker?.works" (click)="openImageViewer(work.image, work.title)">
               <img [src]="work.image" alt="{{ work.title }}" />
               <div class="work-overlay">
                 <h4>{{ work.title }}</h4>
                 <p>{{ work.description }}</p>
+                <div class="image-zoom-hint">
+                  <i class="fas fa-search-plus"></i>
+                  <span>View full size</span>
+                </div>
               </div>
             </div>
           </div>
@@ -158,6 +166,17 @@
           </ng-template>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Full-screen Image Viewer Modal -->
+  <div class="image-viewer-modal" [class.show]="isImageViewerOpen" (click)="closeImageViewer()">
+    <div class="image-viewer-content" (click)="$event.stopPropagation()">
+      <button class="close-image-viewer" (click)="closeImageViewer()" aria-label="Close image viewer">
+        <i class="fas fa-times"></i>
+      </button>
+      <img *ngIf="selectedImage" [src]="selectedImage" [alt]="selectedImageCaption || 'Image preview'" class="fullscreen-image" />
+      <div class="image-caption" *ngIf="selectedImageCaption">{{ selectedImageCaption }}</div>
     </div>
   </div>
 </div>

@@ -89,46 +89,70 @@
     <table class="transactions-table">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Customer</th>
-          <th>Service</th>
-          <th>Amount</th>
-          <th>Payment Date</th>
-          <th>Status</th>
-          <th>Actions</th>
+          <th class="id-column">ID</th>
+          <th class="customer-column">Customer</th>
+          <th class="service-column">Service</th>
+          <th class="description-column">Description</th>
+          <th class="amount-column">Amount</th>
+          <th class="date-column">Payment Date</th>
+          <th class="status-column">Status</th>
+          <th class="rating-column">Rating</th>
+          <th class="actions-column">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let transaction of filteredTransactions" [ngClass]="transaction?.payment_status?.toLowerCase()">
           <td class="transaction-id-cell">#{{ transaction?.transaction_id }}</td>
-          <td>{{ transaction?.name }}</td>
-          <td>{{ transaction?.title || 'N/A' }}</td>
-          <td class="amount-cell">₱{{ transaction?.amount }}</td>
-          <td>{{ transaction?.payment_date || 'Not yet paid' }}</td>
-          <td>
+          <td class="customer-cell">{{ transaction?.name }}</td>
+          <td class="service-cell" [title]="transaction?.title">{{ transaction?.title || 'N/A' }}</td>
+          <td class="description-cell" [title]="transaction?.description">{{ transaction?.description || 'No description' }}</td>
+          <td class="amount-cell">₱{{ formatAmount(transaction?.amount) }}</td>
+          <td class="date-cell">{{ transaction?.payment_date || 'Not yet paid' }}</td>
+          <td class="status-cell">
             <span class="status-badge" [ngClass]="transaction?.payment_status?.toLowerCase()">
               {{ getPaymentStatus(transaction?.payment_status) }}
             </span>
           </td>
+          <td class="rating-cell">
+            <!-- Show Customer Rating if available -->
+            <div *ngIf="transaction.rating2" class="table-stars">
+              <span class="material-icons" *ngFor="let star of [].constructor(5); let i = index"
+                    [class.filled]="i < transaction.rating2" [class.empty]="i >= transaction.rating2">
+                star
+              </span>
+              <span class="rating-number">{{ transaction.rating2 }}</span>
+            </div>
+            <!-- Show N/A for transactions without ratings -->
+            <span *ngIf="!transaction.rating2" class="na-rating">N/A</span>
+          </td>
           <td class="actions-cell">
-            <button class="table-action-btn details-btn" title="View Details" [attr.data-transaction-id]="transaction.transaction_id">
-              <span class="material-icons">visibility</span>
-            </button>
-            
-            <button 
-              *ngIf="transaction.payment_status === 'PENDING' && transaction.receipt_url"
-              class="table-action-btn approve-btn" 
-              title="Mark as Paid"
-              (click)="markAsPaidManually(transaction.transaction_id)">
-              <span class="material-icons">check_circle</span>
-            </button>
-            
-            <button 
-              *ngIf="!hasWorkerReview(transaction) && (transaction.payment_status === 'PAID' || transaction.payment_status === 'MANUALLY UPDATED')"
-              class="table-action-btn review-btn" 
-              title="Write Review">
-              <span class="material-icons">rate_review</span>
-            </button>
+            <div class="table-action-buttons">
+              <!-- View Details Button -->
+              <button class="action-btn details-btn" (click)="openDetailsModal(transaction)" title="View Details">
+                <span class="material-icons">visibility</span>
+                <span class="btn-text">Details</span>
+              </button>
+              
+              <!-- Mark as Paid Button - shown for pending transactions with receipt -->
+              <button 
+                *ngIf="transaction.payment_status === 'PENDING' && transaction.receipt_url"
+                class="action-btn approve-btn" 
+                title="Mark as Paid"
+                (click)="markAsPaidManually(transaction.transaction_id)">
+                <span class="material-icons">check_circle</span>
+                <span class="btn-text">Mark Paid</span>
+              </button>
+              
+              <!-- Write Review Button - shown for paid transactions without worker reviews -->
+              <button 
+                *ngIf="!hasWorkerReview(transaction) && (transaction.payment_status === 'PAID' || transaction.payment_status === 'MANUALLY UPDATED')"
+                class="action-btn review-btn" 
+                (click)="isTableView = false"
+                title="Write Review">
+                <span class="material-icons">rate_review</span>
+                <span class="btn-text">Review</span>
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -222,7 +246,7 @@
           <div class="review worker-review" *ngIf="transaction.review !== null">
             <div class="review-header">
               <span class="material-icons">engineering</span>
-              <h4>Your Review</h4>
+              <h4>Your Review and Rating</h4>
             </div>
             <p class="review-text">{{ transaction.review }}</p>
             <div class="rating">
@@ -237,7 +261,7 @@
           <div class="review user-review" *ngIf="transaction.review2 !== null">
             <div class="review-header">
               <span class="material-icons">person</span>
-              <h4>Customer's Review</h4>
+              <h4>Customer's Review and Rating</h4>
             </div>
             <p class="review-text">{{ transaction.review2 }}</p>
             <div class="rating">
@@ -304,6 +328,137 @@
     <div class="support-content">
       <span class="material-icons">support_agent</span>
       <p>Need assistance? Visit the barangay hall for support.</p>
+    </div>
+  </div>
+
+  <!-- Transaction Details Modal -->
+  <div class="modal-overlay" *ngIf="selectedTransaction && showDetailsModal" (click)="closeDetailsModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Transaction Details</h2>
+        <button class="close-modal-btn" (click)="closeDetailsModal()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-content" *ngIf="selectedTransaction">
+        <div class="modal-section">
+          <div class="modal-transaction-header">
+            <div class="transaction-title-details">
+              <h3>{{ selectedTransaction.title || 'No Title' }}</h3>
+              <span class="modal-transaction-id">#{{ selectedTransaction.transaction_id }}</span>
+            </div>
+            <span class="status-badge" [ngClass]="selectedTransaction.payment_status.toLowerCase()">
+              {{ getPaymentStatus(selectedTransaction.payment_status) }}
+            </span>
+          </div>
+          
+          <p class="transaction-description">{{ selectedTransaction.description || 'No description available' }}</p>
+        </div>
+        
+        <div class="modal-section details-grid">
+          <div class="detail-group">
+            <h4>Customer</h4>
+            <p>{{ selectedTransaction.name }}</p>
+          </div>
+          <div class="detail-group">
+            <h4>Amount</h4>
+            <p class="amount">₱{{ formatAmount(selectedTransaction.amount) }}</p>
+          </div>
+          <div class="detail-group">
+            <h4>Payment Date</h4>
+            <p>{{ selectedTransaction.payment_date || 'Not yet paid' }}</p>
+          </div>
+        </div>
+        
+        <!-- QR Code Section -->
+        <div class="modal-section" *ngIf="selectedTransaction.qr_code_url">
+          <h4 class="section-title">
+            <span class="material-icons">qr_code_2</span>
+            Payment QR Code
+          </h4>
+          <div class="qr-preview modal-qr">
+            <img [src]="selectedTransaction.qr_code_url" alt="QR Code" (error)="onImageError($event)">
+          </div>
+        </div>
+        
+        <!-- Receipt Section -->
+        <div class="modal-section" *ngIf="selectedTransaction.receipt_url">
+          <h4 class="section-title">
+            <span class="material-icons">receipt</span>
+            Payment Receipt
+          </h4>
+          <a [href]="selectedTransaction.receipt_url" target="_blank" class="receipt-link">
+            <span class="material-icons">visibility</span>
+            View Receipt
+          </a>
+        </div>
+        
+        <!-- Reviews Section -->
+        <div class="modal-section reviews-container" *ngIf="selectedTransaction.review !== null || selectedTransaction.review2 !== null">
+          <h4 class="section-title">
+            <span class="material-icons">rate_review</span>
+            Reviews
+          </h4>
+          
+          <div class="modal-reviews">
+            <!-- Worker Review -->
+            <div class="modal-review-card" *ngIf="selectedTransaction.review !== null">
+              <div class="review-header">
+                <span class="material-icons">engineering</span>
+                <h5>Your Review</h5>
+              </div>
+              <p class="review-text">{{ selectedTransaction.review }}</p>
+              <div class="rating">
+                <div class="stars">
+                  <span class="material-icons" *ngFor="let star of [].constructor(5); let i = index"
+                        [class.filled]="i < selectedTransaction.rating">star</span>
+                </div>
+                <span class="rating-value">{{ selectedTransaction.rating }}/5</span>
+              </div>
+            </div>
+            
+            <!-- Customer Review -->
+            <div class="modal-review-card" *ngIf="selectedTransaction.review2 !== null">
+              <div class="review-header">
+                <span class="material-icons">person</span>
+                <h5>Customer's Review</h5>
+              </div>
+              <p class="review-text">{{ selectedTransaction.review2 }}</p>
+              <div class="rating">
+                <div class="stars">
+                  <span class="material-icons" *ngFor="let star of [].constructor(5); let i = index"
+                        [class.filled]="i < selectedTransaction.rating2">star</span>
+                </div>
+                <span class="rating-value">{{ selectedTransaction.rating2 }}/5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Actions Section -->
+        <div class="modal-section modal-actions">
+          <button 
+            *ngIf="selectedTransaction.payment_status === 'PENDING' && selectedTransaction.receipt_url"
+            class="modal-action-btn approve-btn" 
+            (click)="markAsPaidManually(selectedTransaction.transaction_id); closeDetailsModal()">
+            <span class="material-icons">check_circle</span>
+            Mark as Paid
+          </button>
+          
+          <button 
+            *ngIf="!hasWorkerReview(selectedTransaction) && (selectedTransaction.payment_status === 'PAID' || selectedTransaction.payment_status === 'MANUALLY UPDATED')"
+            class="modal-action-btn review-btn" 
+            (click)="isTableView = false; closeDetailsModal()">
+            <span class="material-icons">rate_review</span>
+            Write Review
+          </button>
+          
+          <button class="modal-action-btn close-btn" (click)="closeDetailsModal()">
+            <span class="material-icons">close</span>
+            Close
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

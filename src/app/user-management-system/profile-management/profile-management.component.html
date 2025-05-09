@@ -159,7 +159,7 @@
             />
           </div>
           <div class="profile-title">
-            <h2>{{ profile.username }}</h2>
+            <h2>{{ profile.email }}</h2>
             <span class="role-badge">{{ profile.role }}</span>
           </div>
         </div>
@@ -175,14 +175,6 @@
         </div>
 
         <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">
-              <i class="fas fa-user"></i>
-              <span>Username</span>
-            </div>
-            <div class="info-value">{{ profile.username }}</div>
-          </div>
-
           <div class="info-item">
             <div class="info-label">
               <i class="fas fa-envelope"></i>
@@ -228,21 +220,6 @@
           <form (ngSubmit)="saveChanges()" class="edit-form">
             <div class="form-grid">
               <div class="form-group">
-                <label for="username">
-                  <i class="fas fa-user"></i>
-                  Username
-                </label>
-                <input 
-                  type="text" 
-                  id="username" 
-                  [(ngModel)]="editForm.username" 
-                  name="username" 
-                  required 
-                  placeholder="Enter your username"
-                />
-              </div>
-            
-              <div class="form-group">
                 <label for="email">
                   <i class="fas fa-envelope"></i>
                   Email Address
@@ -271,7 +248,7 @@
                     required 
                     placeholder="Enter current password"
                   />
-                  <button type="button" class="toggle-password-btn" (click)="togglePasswordVisibility('current')">
+                  <button type="button" class="toggle-password-btn" (click)="togglePasswordVisibility('current')" aria-label="Toggle password visibility">
                     <i class="fas" [class.fa-eye]="!showCurrentPassword" [class.fa-eye-slash]="showCurrentPassword"></i>
                   </button>
                 </div>
@@ -290,7 +267,7 @@
                     name="newPassword" 
                     placeholder="Enter new password (optional)"
                   />
-                  <button type="button" class="toggle-password-btn" (click)="togglePasswordVisibility('new')">
+                  <button type="button" class="toggle-password-btn" (click)="togglePasswordVisibility('new')" aria-label="Toggle new password visibility">
                     <i class="fas" [class.fa-eye]="!showNewPassword" [class.fa-eye-slash]="showNewPassword"></i>
                   </button>
                 </div>

@@ -19,10 +19,12 @@ export class UserprofileserviceService {
     return this.http.get(`${this.apiUrl}/view-user-profile`, { headers });
   }
 
-  updateUserProfile(formData: FormData): Observable<any> {
+  updateUserProfile(userData: any): Observable<any> {
     const token = localStorage.getItem('authToken');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.put(`${this.apiUrl}/update-user-profile`, formData, { 
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${token}`)
+      .set('Content-Type', 'application/json');
+    return this.http.put(`${this.apiUrl}/update-user-profile`, userData, { 
       headers: headers 
     });
   }
@@ -32,7 +34,7 @@ export class UserprofileserviceService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
     const formData = new FormData();
-    formData.append('profile_image', imageFile);
+    formData.append('image', imageFile);
     
     return this.http.post(`${this.apiUrl}/update-profile-image`, formData, {
       headers: headers
