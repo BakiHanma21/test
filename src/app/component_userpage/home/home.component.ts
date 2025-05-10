@@ -48,6 +48,11 @@ export class HomeComponent {
   availabilityFilter: string = '';
   cardState: {[key: number]: string} = {};
   
+  // Pagination properties
+  currentPage = 1;
+  itemsPerPage = 8;
+  totalPages = 1;
+
   // Image viewing properties
   isImageViewerOpen = false;
   selectedImage: string | null = null;
@@ -73,6 +78,7 @@ export class HomeComponent {
             this.workers.forEach(worker => {
               this.cardState[worker.id] = 'default';
             });
+            this.calculateTotalPages();
           },
           (error) => {
             if (error.status === 401) {
@@ -112,7 +118,8 @@ export class HomeComponent {
     return array;
   }
 
-  filteredWorkers() {
+  // Get filtered workers based on search and filter
+  getFilteredWorkers() {
     return this.workers.filter(worker => {
       const matchesSearch = this.searchText ? 
         worker.name.toLowerCase().includes(this.searchText.toLowerCase()) || 
@@ -120,12 +127,58 @@ export class HomeComponent {
         worker.location.toLowerCase().includes(this.searchText.toLowerCase()) 
         : true;
   
-        const matchesAvailability = this.availabilityFilter !== '' ?
+      const matchesAvailability = this.availabilityFilter !== '' ?
         worker.availability === Number(this.availabilityFilter)
         : true;
   
       return matchesSearch && matchesAvailability;
     });
+  }
+
+  // Get paginated workers for current page
+  filteredWorkers() {
+    const filtered = this.getFilteredWorkers();
+    this.calculateTotalPages(filtered);
+    
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = Math.min(startIndex + this.itemsPerPage, filtered.length);
+    
+    return filtered.slice(startIndex, endIndex);
+  }
+
+  // Calculate total pages based on filtered workers
+  calculateTotalPages(filteredWorkers?: any[]) {
+    const workers = filteredWorkers || this.getFilteredWorkers();
+    this.totalPages = Math.max(1, Math.ceil(workers.length / this.itemsPerPage));
+    
+    // Adjust current page if necessary
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+  }
+
+  // Pagination navigation methods
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  // Generate array of page numbers for pagination
+  getPagesArray(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
   openModal(worker: any) {

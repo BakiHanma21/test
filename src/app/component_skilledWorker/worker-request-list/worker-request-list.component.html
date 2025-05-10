@@ -108,9 +108,30 @@
       </div>
 
       <div class="modal-body">
+        <!-- User Information Section -->
+        <div class="user-info-section">
+          <div class="user-info-header">
+            <span class="material-icons user-icon">account_circle</span>
+            <div class="user-details">
+              <h3 class="user-name">{{ selectedRequest.name }}</h3>
+              <div class="user-rating">
+                <span *ngIf="selectedRequest.average_rating !== 'Not yet rated'">
+                  {{ selectedRequest.average_rating }}
+                  <span class="material-icons star-icon">star</span>
+                </span>
+                <span *ngIf="selectedRequest.average_rating === 'Not yet rated'" class="not-rated">
+                  Not yet rated
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        
         <div class="detail-row">
           <span class="detail-label">Service</span>
-          <span class="detail-value">{{ selectedRequest.title }}</span>
+          <span class="detail-value">{{ selectedRequest.service }}</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Date</span>
@@ -118,7 +139,7 @@
         </div>
         <div class="detail-row">
           <span class="detail-label">Time</span>
-          <span class="detail-value">{{ selectedRequest.start_time }}</span>
+          <span class="detail-value">{{ selectedRequest.start_time }} - {{ selectedRequest.end_date }}</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Description</span>
@@ -145,6 +166,16 @@
       </div>
 
       <div class="modal-footer">
+        <div class="status-actions" *ngIf="selectedRequest.status === 'PENDING'">
+          <button class="action-button approve" (click)="onApprove(selectedRequest)">
+            <span class="material-icons">check_circle</span>
+            Approve
+          </button>
+          <button class="action-button decline" (click)="onDecline(selectedRequest.id)">
+            <span class="material-icons">cancel</span>
+            Decline
+          </button>
+        </div>
         <button class="action-button close" (click)="closeModal()">Close</button>
       </div>
     </div>

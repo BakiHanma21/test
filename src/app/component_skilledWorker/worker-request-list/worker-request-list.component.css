@@ -498,7 +498,15 @@ body {
   padding: 20px;
   border-top: 1px solid rgba(255, 196, 117, 0.2);
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.modal-footer .status-actions {
+  display: flex;
+  gap: 12px;
 }
 
 .action-button.close {
@@ -613,6 +621,18 @@ body {
   .modal-footer {
     padding: 16px;
   }
+
+  .user-info-section {
+    padding: 12px;
+  }
+  
+  .user-info-header .user-icon {
+    font-size: 40px;
+  }
+  
+  .user-info-header .user-name {
+    font-size: 16px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -696,4 +716,71 @@ body {
     padding: 8px 16px;
     font-size: 13px;
   }
+
+  .user-info-section {
+    padding: 10px;
+  }
+  
+  .user-info-header {
+    gap: 12px;
+  }
+  
+  .user-info-header .user-icon {
+    font-size: 36px;
+  }
+  
+  .user-info-header .user-name {
+    font-size: 15px;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .modal-footer .status-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 12px;
+  }
+  
+  .modal-footer .action-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* User Information Section in Modal */
+.user-info-section {
+  margin-bottom: 20px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 196, 117, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.user-info-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-info-header .user-icon {
+  font-size: 48px;
+  color: #ffc475;
+}
+
+.user-info-header .user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-info-header .user-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
 }

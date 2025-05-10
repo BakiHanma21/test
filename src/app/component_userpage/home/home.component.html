@@ -19,14 +19,14 @@
           placeholder="Search by name, job, or location..."
           class="search-input"
           [(ngModel)]="searchText"
-          (input)="filteredWorkers()"
+          (input)="calculateTotalPages()"
         />
       </div>
       <div class="filter-wrapper">
         <select 
           class="filter-select" 
           [(ngModel)]="availabilityFilter" 
-          (change)="filteredWorkers()"
+          (change)="calculateTotalPages()"
           aria-label="Filter by availability status"
         >
           <option value="">All Status</option>
@@ -65,6 +65,88 @@
             View Profile <i class="fas fa-arrow-right"></i>
           </button>
         </div>
+      </div>
+    </div>
+    
+    <!-- Pagination Controls -->
+    <div class="pagination-container" *ngIf="totalPages > 1">
+      <div class="pagination-controls">
+        <button 
+          class="pagination-btn prev-btn" 
+          [disabled]="currentPage === 1"
+          (click)="previousPage()"
+          aria-label="Previous page"
+        >
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <div class="pagination-pages">
+          <!-- First page -->
+          <button 
+            class="page-btn" 
+            [class.active]="currentPage === 1" 
+            (click)="goToPage(1)"
+            *ngIf="currentPage > 3"
+          >
+            1
+          </button>
+          
+          <!-- Ellipsis for skipped pages -->
+          <span class="ellipsis" *ngIf="currentPage > 3">...</span>
+          
+          <!-- Page before current -->
+          <button 
+            class="page-btn" 
+            [class.active]="currentPage === i" 
+            *ngFor="let i of [currentPage - 1]"
+            (click)="goToPage(i)"
+            [style.display]="i < 1 ? 'none' : 'inline-flex'"
+          >
+            {{ i }}
+          </button>
+          
+          <!-- Current page -->
+          <button class="page-btn active">
+            {{ currentPage }}
+          </button>
+          
+          <!-- Page after current -->
+          <button 
+            class="page-btn" 
+            [class.active]="currentPage === i" 
+            *ngFor="let i of [currentPage + 1]"
+            (click)="goToPage(i)"
+            [style.display]="i > totalPages ? 'none' : 'inline-flex'"
+          >
+            {{ i }}
+          </button>
+          
+          <!-- Ellipsis for skipped pages -->
+          <span class="ellipsis" *ngIf="currentPage < totalPages - 2">...</span>
+          
+          <!-- Last page -->
+          <button 
+            class="page-btn" 
+            [class.active]="currentPage === totalPages" 
+            (click)="goToPage(totalPages)"
+            *ngIf="currentPage < totalPages - 2"
+          >
+            {{ totalPages }}
+          </button>
+        </div>
+        
+        <button 
+          class="pagination-btn next-btn" 
+          [disabled]="currentPage === totalPages"
+          (click)="nextPage()"
+          aria-label="Next page"
+        >
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      
+      <div class="pagination-info">
+        Page {{ currentPage }} of {{ totalPages }}
       </div>
     </div>
   </div>
@@ -175,7 +257,7 @@
       <button class="close-image-viewer" (click)="closeImageViewer()" aria-label="Close image viewer">
         <i class="fas fa-times"></i>
       </button>
-      <img *ngIf="selectedImage" [src]="selectedImage" [alt]="selectedImageCaption || 'Image preview'" class="fullscreen-image" />
+      <img *ngIf="selectedImage" [src]="selectedImage" [alt]="selectedImageCaption || 'Image preview'" [title]="selectedImageCaption || 'Image preview'" class="fullscreen-image" />
       <div class="image-caption" *ngIf="selectedImageCaption">{{ selectedImageCaption }}</div>
     </div>
   </div>

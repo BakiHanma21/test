@@ -76,15 +76,12 @@ export class WorkerRequestListComponent1 implements OnInit {
     }
   }
 
-  onApprove(requestId: any) {
+  onApprove(request: any) {
+    // Make sure we have the full request object
+    const requestId = request.id;
     
-    const id = requestId.id;
-    
-    const request = this.requests.find(req => req.id === id);
-    console.log('Found request:', request);
-    
-    if (request) {
-      this.updateRequestStatus(request.id, 'CONFIRMED');
+    if (requestId) {
+      this.updateRequestStatus(requestId, 'CONFIRMED');
       this.requestCalendarService.approveRequest(request).subscribe(
         (response: any) => {
           console.log('Request successfully confirmed:', response);
@@ -96,7 +93,7 @@ export class WorkerRequestListComponent1 implements OnInit {
         }
       );
     } else {
-      console.error('Request not found!');
+      console.error('Invalid request object!');
     }
   }
 
