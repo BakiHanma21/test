@@ -110,7 +110,7 @@
         </div>
       </div>
 
-      <!-- Reviews Section -->
+      <!-- Reviews Section with Fixed Star Rating Display -->
       <div class="reviews-section">
         <h3><span class="material-icons">star_rate</span> Ratings and Reviews</h3>
         <div class="reviews-grid">
@@ -120,11 +120,16 @@
                 <span class="material-icons">account_circle</span>
                 <h4>{{ review.name }}</h4>
               </div>
-              <div class="star-rating">
-                <span class="material-icons" *ngFor="let star of [].constructor(5); let i = index"
-                      [class.filled]="i < review.rating">
-                  star
-                </span>
+              <div class="rating-container">
+                <!-- Improved star rating display -->
+                <div class="star-rating">
+                  <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+                    <span class="material-icons" [class.filled]="i < getRatingValue(review.rating)">
+                      star
+                    </span>
+                  </ng-container>
+                </div>
+                <span class="rating-value">{{ getRatingValue(review.rating) }}/5</span>
               </div>
             </div>
             <p class="review-text">{{ review.text }}</p>

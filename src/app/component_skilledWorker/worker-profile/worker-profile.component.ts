@@ -52,8 +52,56 @@ export class WorkerProfileComponent {
           .subscribe(
             (response: any) => {
               this.worker = response.data || this.worker;
+              console.log('Worker profile loaded:', this.worker);
+              
+              // Log reviews and their ratings
+              if (this.worker && this.worker.reviews && this.worker.reviews.length > 0) {
+                console.log('Reviews found:', this.worker.reviews.length);
+                this.worker.reviews.forEach((review: any, index: number) => {
+                  console.log(`Review ${index + 1}:`, review);
+                  console.log(`Rating value for review ${index + 1} (before processing):`, review.rating);
+                  
+                  // Debug actual value from database
+                  if (review.rating !== undefined && review.rating !== null) {
+                    console.log(`Rating data type: ${typeof review.rating}`);
+                    console.log(`Rating stringified: ${JSON.stringify(review.rating)}`);
+                  }
+                  
+                  // Process rating - ensure it's a proper number between 1-5
+                  if (review.rating !== undefined && review.rating !== null) {
+                    // Convert to number if it's a string
+                    if (typeof review.rating === 'string') {
+                      review.rating = parseFloat(review.rating);
+                      console.log(`Converted rating string to number: ${review.rating}`);
+                    } else {
+                      review.rating = Number(review.rating);
+                    }
+                    
+                    // Ensure it's within 1-5 range
+                    if (isNaN(review.rating)) {
+                      review.rating = 0;
+                      console.log('Rating was NaN, set to 0');
+                    } else if (review.rating < 1) {
+                      review.rating = 1;
+                      console.log(`Fixed rating to minimum value: ${review.rating}`);
+                    } else if (review.rating > 5) {
+                      review.rating = 5;
+                      console.log(`Fixed rating to maximum value: ${review.rating}`);
+                    }
+                  } else {
+                    // Default to 0 if no rating exists
+                    review.rating = 0;
+                    console.log('No rating found, defaulting to 0');
+                  }
+                  
+                  console.log(`Final rating for review ${index + 1}:`, review.rating);
+                });
+              } else {
+                console.log('No reviews found for this worker');
+              }
             },
             (error) => {
+              console.error('Error loading profile:', error);
               if (error.status === 401) {
                 alert('Unauthorized! Please log in again.');
                 this.router.navigate(['/login']);
@@ -328,5 +376,56 @@ export class WorkerProfileComponent {
           }
         }
       );
+  }
+  
+  // Helper method to determine if a star should be filled
+  shouldFillStar(reviewRating: number, starIndex: number): boolean {
+    // This is a critical function for displaying stars correctly
+    // For a rating of 1, only the first star (index 0) should be filled
+    // For a rating of 2, stars 0 and 1 should be filled, etc.
+    console.log(`Star display check - star position: ${starIndex + 1}, rating: ${reviewRating}`);
+    const isFilled = starIndex < reviewRating;
+    console.log(`Star ${starIndex + 1} filled: ${isFilled}`);
+    return isFilled;
+  }
+  
+  // Helper method to get rating value as a number
+  getRatingValue(rating: any): number {
+    console.log('Getting rating value from:', rating, 'Type:', typeof rating);
+    
+    if (rating === null || rating === undefined) {
+      console.log('Rating is null/undefined, returning 0');
+      return 0;
+    }
+    
+    // Process the rating value
+    let numRating;
+    if (typeof rating === 'string') {
+      numRating = parseFloat(rating);
+      console.log(`Converted string rating "${rating}" to number: ${numRating}`);
+    } else {
+      numRating = Number(rating);
+      console.log(`Converted rating from ${typeof rating} to number: ${numRating}`);
+    }
+    
+    // Ensure the rating is valid
+    if (isNaN(numRating)) {
+      console.log('Rating is NaN, returning 0');
+      return 0;
+    }
+    
+    // Make sure rating is within valid range (1-5)
+    // If rating is outside this range, log it and fix it
+    let validRating = numRating;
+    if (numRating < 0) {
+      validRating = 0;
+      console.log(`Rating ${numRating} is less than 0, setting to 0`);
+    } else if (numRating > 5) {
+      validRating = 5;
+      console.log(`Rating ${numRating} is greater than 5, setting to 5`);
+    }
+    
+    console.log(`Final valid rating: ${validRating}`);
+    return validRating;
   }
 }

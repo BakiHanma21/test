@@ -60,25 +60,24 @@ html, body {
 
 .star-rating {
   display: flex;
-  gap: 10px;
-  font-size: 28px;
-  color: #ddd; /* Default unselected color */
-  cursor: pointer;
+  gap: 4px;
+  color: #d4d4d4; /* Default color for empty stars */
 }
 
-.star {
-  transition: transform 0.3s, color 0.3s ease;
+.star-rating .material-icons {
+  color: #d4d4d4; /* Explicitly set unfilled stars to light gray */
+  font-size: 18px;
+  transition: color 0.2s ease;
 }
 
-.star.filled {
-  color: #00bcd4; /* Neon blue for filled stars */
-  text-shadow: 0 0 5px rgba(0, 188, 212, 0.6);
+.star-rating .material-icons.filled {
+  color: #ffc475; /* Gold/yellow for filled stars */
+  text-shadow: 0 0 3px rgba(255, 196, 117, 0.5);
 }
 
-.star:hover {
-  transform: scale(1.2);
-  color: #008cba;
-  text-shadow: 0 0 8px rgba(0, 140, 186, 0.8);
+/* Remove animation that might cause visual confusion */
+.star-rating .material-icons.filled {
+  animation: none;
 }
 
 .page-container {
@@ -456,7 +455,7 @@ html, body {
 .review-card {
   background-color: #f8f9fa;
   border-radius: 12px;
-  padding: 20px;
+  padding: 16px;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(255, 196, 117, 0.1);
@@ -470,19 +469,19 @@ html, body {
 .review-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+  align-items: flex-start;
+  margin-bottom: 12px;
 }
 
 .reviewer-info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .reviewer-info .material-icons {
   color: #ffc475;
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .reviewer-info h4 {
@@ -1198,4 +1197,48 @@ html, body {
 
 .toggle-password-btn .material-icons {
   font-size: 20px;
+}
+
+/* Rating container styling */
+.rating-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.star-rating .material-icons {
+  color: #d4d4d4; /* Light gray for empty stars */
+  font-size: 18px;
+}
+
+.star-rating .material-icons.filled {
+  color: #ffc475; /* Gold color for filled stars */
+}
+
+.rating-value {
+  font-size: 12px;
+  color: #65676b;
+  font-weight: 600;
+}
+
+/* Star Rating Styles - Fixed */
+.stars {
+  display: flex;
+  gap: 4px;
+}
+
+.stars .material-icons {
+  color: #d4d4d4; /* Light gray for unfilled stars */
+  font-size: 16px;
+}
+
+.stars .material-icons.filled {
+  color: #ffc475; /* Gold/yellow for filled stars */
 }
