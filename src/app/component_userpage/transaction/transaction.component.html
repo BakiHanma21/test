@@ -110,8 +110,7 @@
               <!-- QR code for payment -->
               <a *ngIf="transaction.payment_status === 'PENDING' && transaction.qr_code_url" 
                  class="action-btn qr-btn" 
-                 [href]="transaction.qr_code_url" 
-                 target="_blank"
+                 (click)="openImageModal(transaction.qr_code_url, 'qrcode')"
                  title="View QR Code">
                 <span class="material-icons">qr_code_2</span>
                 <span class="btn-text">QR</span>
@@ -128,8 +127,7 @@
               
               <!-- View receipt button - shown if receipt exists -->
               <a *ngIf="transaction.receipt_url" 
-                 [href]="transaction.receipt_url" 
-                 target="_blank" 
+                 (click)="openImageModal(transaction.receipt_url, 'receipt')" 
                  class="action-btn view-btn" 
                  title="View Receipt">
                 <span class="material-icons">visibility</span>
@@ -225,7 +223,11 @@
                 <h5>Scan to complete payment</h5>
               </div>
               <div class="qr-image-container">
-                <img [src]="transaction.qr_code_url" alt="Payment QR Code" class="qr-code-image" (error)="onImageError($event)">
+                <img [src]="transaction.qr_code_url" alt="Payment QR Code" class="qr-code-image" 
+                     (error)="onImageError($event)" 
+                     (click)="openImageModal(transaction.qr_code_url, 'qrcode')"
+                     style="cursor: pointer;"
+                     title="Click to enlarge">
               </div>
               <p class="qr-instructions">Scan this QR code with your payment app to complete the transaction</p>
             </div>
@@ -287,7 +289,7 @@
               <span class="material-icons">receipt</span>
               <h4>Payment Receipt</h4>
             </div>
-            <a [href]="transaction.receipt_url" target="_blank" class="view-receipt-btn">
+            <a (click)="openImageModal(transaction.receipt_url, 'receipt')" class="view-receipt-btn">
               <span class="material-icons">visibility</span>
               View Receipt
             </a>
@@ -393,6 +395,161 @@
     <div class="notice-content">
       <h4>Need Assistance?</h4>
       <p>If you have any concerns or problems with your transactions, please visit the barangay hall for immediate assistance.</p>
+    </div>
+  </div>
+
+  <!-- Transaction Details Modal -->
+  <div class="details-modal-overlay" *ngIf="isDetailsModalOpen && selectedTransaction" (click)="closeDetailsModal()">
+    <div class="details-modal-container" (click)="$event.stopPropagation()">
+      <div class="details-modal-header">
+        <h3>Transaction Details</h3>
+        <button class="close-details-btn" (click)="closeDetailsModal()" aria-label="Close details">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="details-modal-content">
+        <!-- Transaction Header Section -->
+        <div class="modal-section">
+          <div class="modal-transaction-header">
+            <div class="transaction-title-details">
+              <h4>{{ selectedTransaction.title }}</h4>
+              <span class="modal-transaction-id">#{{ selectedTransaction.transaction_id }}</span>
+            </div>
+            <span class="status-badge" [ngClass]="selectedTransaction.payment_status.toLowerCase()">
+              {{ getPaymentStatus(selectedTransaction.payment_status) }}
+            </span>
+          </div>
+          <p class="transaction-description">{{ selectedTransaction.description }}</p>
+        </div>
+
+        <!-- Transaction Details Section -->
+        <div class="modal-section">
+          <div class="details-grid">
+            <div class="detail-group">
+              <h5>Amount</h5>
+              <p class="detail-value amount">₱{{ selectedTransaction.amount.toFixed(2) }}</p>
+            </div>
+            <div class="detail-group">
+              <h5>Payment Date</h5>
+              <p class="detail-value">{{ selectedTransaction.payment_date || 'Not yet paid' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- QR Code Section (if available) -->
+        <div class="modal-section" *ngIf="selectedTransaction.payment_status === 'PENDING' && selectedTransaction.qr_code_url">
+          <div class="modal-section-header">
+            <span class="material-icons">qr_code_2</span>
+            <h5>Payment QR Code</h5>
+          </div>
+          <div class="modal-qr-content">
+            <img [src]="selectedTransaction.qr_code_url" alt="QR Code" class="modal-qr-image" (error)="onImageError($event)" (click)="openImageModal(selectedTransaction.qr_code_url, 'qrcode')" style="cursor: pointer;">
+            <p class="modal-hint">Click on QR code to view larger image</p>
+          </div>
+        </div>
+
+        <!-- Receipt Section (if available) -->
+        <div class="modal-section" *ngIf="selectedTransaction.receipt_url">
+          <div class="modal-section-header">
+            <span class="material-icons">receipt</span>
+            <h5>Payment Receipt</h5>
+          </div>
+          <button class="modal-action-btn" (click)="openImageModal(selectedTransaction.receipt_url, 'receipt')">
+            <span class="material-icons">visibility</span>
+            View Receipt
+          </button>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="modal-section" *ngIf="selectedTransaction.review || selectedTransaction.review2">
+          <div class="modal-section-header">
+            <span class="material-icons">rate_review</span>
+            <h5>Reviews</h5>
+          </div>
+
+          <!-- User Review -->
+          <div class="modal-review" *ngIf="selectedTransaction.review2">
+            <div class="review-header">
+              <span class="material-icons">person</span>
+              <h5>Your Review</h5>
+            </div>
+            <p class="review-text">{{ selectedTransaction.review2 }}</p>
+            <div class="review-rating">
+              <div class="stars">
+                <span class="material-icons" *ngFor="let star of [].constructor(5); let i = index"
+                      [class.filled]="i < selectedTransaction.rating2">
+                  star
+                </span>
+              </div>
+              <span class="rating-value">{{ selectedTransaction.rating2 }}/5</span>
+            </div>
+          </div>
+
+          <!-- Worker Review -->
+          <div class="modal-review" *ngIf="selectedTransaction.review">
+            <div class="review-header">
+              <span class="material-icons">engineering</span>
+              <h5>Worker's Review</h5>
+            </div>
+            <p class="review-text">{{ selectedTransaction.review }}</p>
+            <div class="review-rating">
+              <div class="stars">
+                <span class="material-icons" *ngFor="let star of [].constructor(5); let i = index"
+                      [class.filled]="i < selectedTransaction.rating">
+                  star
+                </span>
+              </div>
+              <span class="rating-value">{{ selectedTransaction.rating }}/5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upload Receipt Section -->
+        <div class="modal-section" *ngIf="selectedTransaction.payment_status === 'PENDING' && !selectedTransaction.receipt_url">
+          <div class="modal-section-header">
+            <span class="material-icons">upload_file</span>
+            <h5>Upload Receipt</h5>
+          </div>
+          <button class="modal-action-btn upload-btn" (click)="closeDetailsModal(); isTableView = false;">
+            <span class="material-icons">upload_file</span>
+            Go to Upload Receipt
+          </button>
+        </div>
+
+        <!-- Add Review Section -->
+        <div class="modal-section" *ngIf="(selectedTransaction.payment_status === 'PAID' || selectedTransaction.payment_status === 'MANUALLY UPDATED') && !selectedTransaction.review2">
+          <div class="modal-section-header">
+            <span class="material-icons">rate_review</span>
+            <h5>Add Review</h5>
+          </div>
+          <button class="modal-action-btn review-btn" (click)="closeDetailsModal(); isTableView = false;">
+            <span class="material-icons">rate_review</span>
+            Write a Review
+          </button>
+        </div>
+      </div>
+
+      <div class="details-modal-footer">
+        <button class="modal-btn close-btn" (click)="closeDetailsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Image Modal -->
+  <div class="image-modal-overlay" *ngIf="isImageModalOpen" (click)="closeImageModal()">
+    <div class="image-modal-container" (click)="$event.stopPropagation()">
+      <button class="close-image-modal" (click)="closeImageModal()" aria-label="Close image preview">
+        <span class="material-icons">close</span>
+      </button>
+      <div class="image-container">
+        <img [src]="modalImageUrl" alt="Image preview" title="Image preview" (error)="onImageError($event)">
+      </div>
+      <div class="image-modal-footer">
+        <span class="image-title">{{ modalImageTitle }}</span>
+        <a [href]="modalImageUrl" target="_blank" class="open-new-tab" title="Open in new tab">
+          <span class="material-icons">open_in_new</span>
+        </a>
+      </div>
     </div>
   </div>
 </div>

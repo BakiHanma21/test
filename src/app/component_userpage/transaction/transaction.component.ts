@@ -50,6 +50,15 @@ export class TransactionComponent implements OnInit {
   // Add property to track transaction being reviewed
   selectedTransaction: Transaction | null = null;
 
+  // Image Modal properties
+  isImageModalOpen: boolean = false;
+  modalImageUrl: string | null = null;
+  modalImageTitle: string = '';
+  modalImageType: 'receipt' | 'qrcode' = 'receipt';
+
+  // Transaction Details Modal properties
+  isDetailsModalOpen: boolean = false;
+
   constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -151,23 +160,21 @@ export class TransactionComponent implements OnInit {
     localStorage.setItem('transactionViewMode', this.isTableView ? 'table' : 'card');
   }
 
-  // View transaction details from table
+  // View transaction details from table (updated method)
   viewTransactionDetails(transaction: Transaction): void {
-    // Switch to card view to see details
-    this.isTableView = false;
-    
-    // Scroll to the transaction card
-    setTimeout(() => {
-      const element = document.getElementById(`transaction-${transaction.transaction_id}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        // Add highlight class temporarily
-        element.classList.add('highlight-transaction');
-        setTimeout(() => {
-          element.classList.remove('highlight-transaction');
-        }, 2000);
-      }
-    }, 100);
+    // Set the selected transaction and open the modal
+    this.selectedTransaction = transaction;
+    this.isDetailsModalOpen = true;
+    // Prevent scrolling
+    document.body.style.overflow = 'hidden';
+  }
+  
+  // Close transaction details modal
+  closeDetailsModal(): void {
+    this.isDetailsModalOpen = false;
+    this.selectedTransaction = null;
+    // Re-enable scrolling
+    document.body.style.overflow = 'auto';
   }
 
   onFileSelected(event: Event, transactionId: number): void {
@@ -361,5 +368,23 @@ export class TransactionComponent implements OnInit {
   
   refreshTransactions(): void {
     this.loadTransactions();
+  }
+
+  // Open image modal to view receipt
+  openImageModal(imageUrl: string, type: 'receipt' | 'qrcode'): void {
+    this.modalImageUrl = imageUrl;
+    this.modalImageType = type;
+    this.modalImageTitle = type === 'receipt' ? 'Payment Receipt' : 'Payment QR Code';
+    this.isImageModalOpen = true;
+    // Prevent scrolling
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Close image modal
+  closeImageModal(): void {
+    this.isImageModalOpen = false;
+    this.modalImageUrl = null;
+    // Re-enable scrolling
+    document.body.style.overflow = 'auto';
   }
 }

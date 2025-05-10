@@ -70,6 +70,8 @@ export class WorkerMessagesComponent implements OnInit, OnDestroy {
   isMobileView: boolean = false;
   showChat: boolean = false;
   searchText: string = '';
+  isImageModalOpen: boolean = false;
+  modalImageUrl: string | null = null;
 
   @ViewChild('messageContainer') messageContainer!: ElementRef;
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -345,9 +347,13 @@ export class WorkerMessagesComponent implements OnInit, OnDestroy {
   }
 
   openImagePreview(imageUrl: string) {
-    // Open image in a new tab for now
-    // You can implement a modal dialog for a more sophisticated preview
-    window.open(imageUrl, '_blank');
+    this.modalImageUrl = imageUrl;
+    this.isImageModalOpen = true;
+  }
+
+  closeImageModal() {
+    this.isImageModalOpen = false;
+    this.modalImageUrl = null;
   }
 }
 

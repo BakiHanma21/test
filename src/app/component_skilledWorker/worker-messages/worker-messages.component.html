@@ -193,3 +193,13 @@
     </div>
   </div>
 </div>
+
+<!-- Image Modal -->
+<div class="image-modal" *ngIf="isImageModalOpen" (click)="closeImageModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-modal" (click)="closeImageModal()" aria-label="Close image preview">
+      <i class="fas fa-times"></i>
+    </button>
+    <img [src]="modalImageUrl" alt="Full size image" class="modal-image">
+  </div>
+</div>

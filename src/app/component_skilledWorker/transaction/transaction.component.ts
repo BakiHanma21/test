@@ -47,6 +47,11 @@ export class WorkerTransactionComponent implements OnInit {
   selectedTransaction: Transaction | null = null;
   showDetailsModal: boolean = false;
 
+  // Image Modal properties
+  isImageModalOpen: boolean = false;
+  modalImageUrl: string | null = null;
+  modalImageAlt: string = '';
+
   constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -346,5 +351,22 @@ export class WorkerTransactionComponent implements OnInit {
   // Helper function to determine if a transaction has a review from the customer
   hasCustomerReview(transaction: Transaction): boolean {
     return transaction.review2 !== null && transaction.review2 !== undefined;
+  }
+
+  // Open image modal to view receipt
+  openReceiptModal(receiptUrl: string): void {
+    this.modalImageUrl = receiptUrl;
+    this.modalImageAlt = 'Payment Receipt';
+    this.isImageModalOpen = true;
+    // Prevent scrolling
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Close image modal
+  closeImageModal(): void {
+    this.isImageModalOpen = false;
+    this.modalImageUrl = null;
+    // Re-enable scrolling
+    document.body.style.overflow = 'auto';
   }
 }

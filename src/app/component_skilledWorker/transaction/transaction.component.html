@@ -237,7 +237,7 @@
           <div class="receipt-preview">
             <span class="material-icons">description</span>
             <span>Payment Receipt</span>
-            <a [href]="transaction.receipt_url" target="_blank" class="view-receipt">View Receipt</a>
+            <a (click)="openReceiptModal(transaction.receipt_url)" class="view-receipt">View Receipt</a>
           </div>
         </div>
 
@@ -377,7 +377,7 @@
             Payment QR Code
           </h4>
           <div class="qr-preview modal-qr">
-            <img [src]="selectedTransaction.qr_code_url" alt="QR Code" (error)="onImageError($event)">
+            <img [src]="selectedTransaction.qr_code_url" alt="QR Code" [attr.title]="selectedTransaction.qr_code_url" (error)="onImageError($event)">
           </div>
         </div>
         
@@ -387,7 +387,7 @@
             <span class="material-icons">receipt</span>
             Payment Receipt
           </h4>
-          <a [href]="selectedTransaction.receipt_url" target="_blank" class="receipt-link">
+          <a (click)="openReceiptModal(selectedTransaction.receipt_url)" class="receipt-link">
             <span class="material-icons">visibility</span>
             View Receipt
           </a>
@@ -458,6 +458,24 @@
             Close
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Modal for Receipt Viewing -->
+  <div class="image-modal-overlay" *ngIf="isImageModalOpen" (click)="closeImageModal()">
+    <div class="image-modal-container" (click)="$event.stopPropagation()">
+      <button class="close-image-modal" (click)="closeImageModal()" aria-label="Close image preview">
+        <span class="material-icons">close</span>
+      </button>
+      <div class="image-container">
+        <img [src]="modalImageUrl" [attr.alt]="modalImageAlt" [attr.title]="modalImageAlt" (error)="onImageError($event)">
+      </div>
+      <div class="image-modal-footer">
+        <span class="image-title">Payment Receipt</span>
+        <a [href]="modalImageUrl" target="_blank" class="open-new-tab" title="Open in new tab">
+          <span class="material-icons">open_in_new</span>
+        </a>
       </div>
     </div>
   </div>

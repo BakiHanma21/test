@@ -254,9 +254,6 @@
               </td>
               <td>{{ worker.report_reason || '-' }}</td>
               <td class="actions">
-                <button class="action-btn edit" (click)="editWorker(worker)" title="Edit worker">
-                  <i class="fas fa-edit"></i>
-                </button>
                 <button class="action-btn delete" (click)="openDeleteWorkerModal(worker.id)" title="Disable worker">
                   <i class="fas fa-ban"></i>
                 </button>
@@ -290,9 +287,6 @@
                 <p *ngIf="worker.report_reason"><strong>Reason:</strong> {{ worker.report_reason }}</p>
               </div>
               <div class="card-actions">
-                <button class="action-btn edit" (click)="editWorker(worker)" title="Edit worker">
-                  <i class="fas fa-edit"></i>
-                </button>
                 <button class="action-btn delete" (click)="openDeleteWorkerModal(worker.id)" title="Disable worker">
                   <i class="fas fa-ban"></i>
                 </button>
